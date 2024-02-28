@@ -1,0 +1,135 @@
+/* ========================================================================= */
+/*     general                                                               */
+/* ========================================================================= */
+
+html, body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #222;
+}
+
+button, div, table, textarea {
+  box-sizing: border-box;
+}
+
+textarea {
+  padding: 0.3rem;
+  font-family:
+    'Noto Sans Mono CJK JP',
+    'Source Han Code JP',
+    SFMono-Regular,
+    Consolas,
+    'Roboto Mono',
+    'Courier New',
+    Meiryo,
+    monospace;
+}
+
+/* ========================================================================= */
+/*     id                                                                    */
+/* ========================================================================= */
+
+#button-wrapper {
+  width: 100%;
+  padding: 10px;
+  padding-bottom: 0;
+}
+
+#play {
+  padding: 0.75rem 1.5rem;
+  background-color: #a00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#play:hover {
+  background-color: #b11;
+}
+
+#play:active {
+  outline: 3px solid #c22;
+  outline-offset: -3px;
+}
+
+#textarea-wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 10px;
+  flex-grow: 1;
+}
+
+#textarea-table {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+}
+
+#mml-td {
+  width: 60%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#mml {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.3rem;
+  background-color: #222;
+  border: 3px solid #999;
+  color: white;
+  outline: none;
+  resize: none;
+}
+
+#inst-td {
+  width: auto;
+  height: 60%;
+  margin: 0;
+  padding: 0;
+}
+
+#inst {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.3rem;
+  background-color: #222;
+  border: 3px solid #999;
+  border-left: none;
+  color: white;
+  outline: none;
+  resize: none;
+}
+
+#status-td {
+  width: auto;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#status {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0.3rem;
+  background-color: #222;
+  border: 3px solid #999;
+  border-top: none;
+  border-left: none;
+  color: white;
+  outline: none;
+  resize: none;
+}
