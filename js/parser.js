@@ -83,8 +83,139 @@ function getParts(lines) {
   return parts
 }
 
+/**
+ * A function to eat one character if chars matches matches.
+ * [
+ *   string|null, // matched character
+ *   number,      // next index
+ * ]
+ */
+function eatChar(chars, i, matches) {
+  if (i < chars.length && matches.includes(chars[i].c)) {
+    return [chars[i].c, i + 1]
+  } else {
+    return [null, i]
+  }
+}
+
+/**
+ * A function to eat an integer.
+ * [
+ *   number|null, // eatern integer
+ *   number,      // next index
+ * ]
+ */
+function eatInteger(chars, i) {
+  let buf = ""
+  while (i < chars.length) {
+    const [c, newi] = eatChar(chars, i, ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
+    if (c === null) {
+      break
+    }
+    buf += c
+    i = newi
+  }
+  if (buf === "") {
+    return [null, i]
+  } else {
+    return [Number(buf), i]
+  }
+}
+
+/**
+ * A function to eat a note.
+ * [
+ *   Note {
+ *     type: string,       // the object type tag
+ *     startLn: number,    // the token start line number
+ *     startCn: number,    // the token start char number
+ *     scale: string,      // the musical scale
+ *     accidental: string, // the accidental
+ *     noteValue: number,  // the note value
+ *     dot: boolean,       // is the note dotted
+ *   }|null, // eaten note
+ *   number, // next index
+ * ]
+ */
+function eatNote(chars, i) {
+  switch (chars[i].c) {
+    case "a":
+    case "b":
+    case "c":
+    case "d":
+    case "e":
+    case "f":
+    case "g":
+    case "r":
+      break
+    default:
+      return [null, i]
+  }
+  const i0 = i
+  const [scale, i1] = [chars[i0].c, i0 + 1]
+  const [accidental, i2] = eatChar(chars, i1, ["+", "-", "="])
+  const [noteValue, i3] = eatInteger(chars, i2)
+  const [dot, i4] = eatChar(chars, i3, ["."])
+  const note = {
+    type: "note",
+    startLn: chars[i0].ln,
+    startCn: chars[i0].cn,
+    scale: scale,
+    accidental: accidental,
+    noteValue: noteValue,
+    dot: dot !== null,
+  }
+  return [note, i4]
+}
+
+/**
+ * A function to get a token.
+ * [
+ *   Note,   // token
+ *   number, // next index
+ * ]
+ * If it cannot find any valid token, it throws an error.
+ */
+function getToken(chars, i) {
+  if (i >= chars.length) {
+    throw new Error(`[ syntax error ] Tried to get a token out of range.`)
+  }
+  const i0 = i
+  // note
+  const [note, i1] = eatNote(chars, i0)
+  if (note !== null) {
+    return [note, i1]
+  }
+  // error
+  throw new Error(`[ syntax error ] Undefined token found: ${chars[i0].ln} line, ${chars[i0].cn} char.`)
+}
+
+/**
+ * A function to parse into tokens per part.
+ * Map<
+ *   string, // the name of the part
+ *   Token[] // the tokens of the part
+ * >
+ * If it cannot find any valid token, it throws an error.
+ */
+function getPartsTokens(parts) {
+  const partsTokens = new Map()
+  for (const [partName, chars] of parts) {
+    const tokens = []
+    let i = 0
+    while (i < chars.length) {
+      const [token, newi] = getToken(chars, i)
+      tokens.push(token)
+      i = newi
+    }
+    partsTokens.set(partName, tokens)
+  }
+  return partsTokens
+}
+
 function parseMML(mml) {
   const lines = getLines(mml)
   const parts = getParts(lines)
-  console.log(parts)
+  const partsTokens = getPartsTokens(parts)
+  console.log(partsTokens)
 }
