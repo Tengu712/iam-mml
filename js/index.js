@@ -1,3 +1,5 @@
+/* require parser.js */
+
 const SAMPLE_RATE = 44100
 const PER_SAMPLE_RATE = 1 / SAMPLE_RATE
 const SIZE_OF_32BITS = 4
@@ -35,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // add the event listener when clicking the play button
   btnPlay.addEventListener("click", () => {
-    parseMML(taMML.value)
+    console.log(parseMML(taMML.value))
     /*
     const wave = createWave()
 
