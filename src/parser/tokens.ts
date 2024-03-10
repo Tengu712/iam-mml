@@ -1,16 +1,22 @@
-/* require parser/tokens/eat.js */
-/* require parser/tokens/note.js */
+import type {Character} from './lines'
+import {eatSpaces} from './tokens/eat'
+import {eatNote, type Note} from './tokens/note'
+
+export type TokenID = 'Note'
+export type Token = {
+  id: TokenID
+  value: Note
+}
 
 /**
- * [PRIVATE]
  * A function to get a token.
- * 
- * @param {{c:string, ln:number, cn:number}[]} chars - the line of the part
- * @param {number} i - the current char index
- * @returns {[Object, number]} the token and the next index.
+ *
+ * @param chars - the line of the part
+ * @param i - the current char index
+ * @returns the token and the next index.
  * @throws an error if it cannot find any valid token.
  */
-function getToken(chars, i) {
+function getToken(chars: Character[], i: number): [Token, number] {
   if (i >= chars.length) {
     throw new Error(`[ syntax error ] Tried to get a token out of range.`)
   }
@@ -20,20 +26,28 @@ function getToken(chars, i) {
   // note
   const [note, i2] = eatNote(chars, i1)
   if (note !== null) {
-    return [note, i2]
+    const token: Token = {
+      id: 'Note',
+      value: note,
+    }
+    return [token, i2]
   }
   // error
-  throw new Error(`[ syntax error ] Undefined token found: ${chars[i0].ln} line, ${chars[i0].cn} char.`)
+  throw new Error(
+    `[ syntax error ] Undefined token found: ${chars[i0].ln} line, ${chars[i0].cn} char.`
+  )
 }
 
 /**
  * A function to parse into tokens per part.
- * 
- * @param {Map<string, {c:string, ln:number, cn:number}[]>} parts lines per part.
- * @returns {Map<string, Object[]>} tokens per part.
+ *
+ * @param parts lines per part.
+ * @returns tokens per part.
  * @throws an error if it cannot find any valid token.
  */
-function getTokensPerPart(parts) {
+export function getTokensPerPart(
+  parts: Map<string, Character[]>
+): Map<string, Token[]> {
   const tokensPerPart = new Map()
   for (const [partName, chars] of parts) {
     const tokens = []

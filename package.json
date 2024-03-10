@@ -1,0 +1,16 @@
+{
+  "name": "iam-mml",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "bunx prettier --write ./src && bun build ./src/index.ts --outdir ./pages",
+    "format": "bunx prettier --write ./src"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.2.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
