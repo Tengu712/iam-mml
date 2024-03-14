@@ -21,7 +21,7 @@ export function eatChar(
 }
 
 /**
- * A function to eat spaces.
+ * A function to eat spaces or tabs.
  *
  * @param  chars - the line of the part
  * @param i - the current char index
@@ -39,7 +39,7 @@ export function eatSpaces(chars: Character[], i: number): number {
 }
 
 /**
- * A function to eat an integer.
+ * A function to eat an integer on the same line.
  *
  * @param chars - the line of the part
  * @param i - the current char index
@@ -49,8 +49,12 @@ export function eatInteger(
   chars: Character[],
   i: number
 ): [number | null, number] {
+  if (i >= chars.length) {
+    return [null, i]
+  }
+  const ln = chars[i].ln
   let buf = ''
-  while (i < chars.length) {
+  while (i < chars.length && chars[i].ln === ln) {
     const [c, newi] = eatChar(chars, i, [
       '0',
       '1',
