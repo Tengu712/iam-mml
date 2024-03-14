@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "bunx prettier --write ./src && bun build ./src/index.ts --outdir ./pages",
-    "format": "bunx prettier --write ./src"
+    "format": "bunx prettier --write ./src",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "latest",
