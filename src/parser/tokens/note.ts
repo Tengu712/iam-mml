@@ -1,11 +1,14 @@
 import type {Character} from '../lines'
 import {eatChar, eatInteger} from './eat'
 
+export type Scale = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'r'
+export type Accidental = '+' | '-' | '='
+
 export type Note = {
   startLn: number
   startCn: number
-  scale: string
-  accidental: string | null
+  scale: Scale
+  accidental: Accidental | null
   noteValue: number | null
   dotted: boolean
 }
@@ -18,6 +21,9 @@ export type Note = {
  * @returns the eaten note and the next index.
  */
 export function eatNote(chars: Character[], i: number): [Note | null, number] {
+  if (i >= chars.length) {
+    return [null, i]
+  }
   switch (chars[i].c) {
     case 'a':
     case 'b':
@@ -39,8 +45,8 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   const note = {
     startLn: chars[i0].ln,
     startCn: chars[i0].cn,
-    scale: scale,
-    accidental: accidental,
+    scale: scale as Scale,
+    accidental: accidental as Accidental,
     noteValue: noteValue,
     dotted: dot !== null,
   }
