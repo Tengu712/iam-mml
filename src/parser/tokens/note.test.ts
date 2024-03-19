@@ -143,4 +143,25 @@ describe('eatNote', () => {
     const expected: [Note | null, number] = [expectedNote, i + 5]
     expect(eatNote(chars, i)).toStrictEqual(expected)
   })
+
+  test('When a note spanning multiple lines is found, it returns the note found on the same line and the index of the next line character.', () => {
+    const chars = [
+      {c: 'f', ln: 1, cn: 1},
+      {c: '=', ln: 1, cn: 2},
+      {c: '3', ln: 1, cn: 3},
+      {c: '2', ln: 2, cn: 1},
+      {c: '.', ln: 2, cn: 2},
+    ]
+    const i = 0
+    const expectedNote: Note = {
+      startLn: 1,
+      startCn: 1,
+      scale: 'f',
+      accidental: '=',
+      noteValue: 3,
+      dotted: false,
+    }
+    const expected: [Note | null, number] = [expectedNote, i + 3]
+    expect(eatNote(chars, i)).toStrictEqual(expected)
+  })
 })
