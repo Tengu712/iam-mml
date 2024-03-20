@@ -24,6 +24,15 @@ describe('eatNote', () => {
     expect(eatNote(chars, i)).toStrictEqual(expected)
   })
 
+  test('When a note whose value is 0 is found, it throws an error.', () => {
+    const chars = [
+      {c: 'a', ln: 1, cn: 1},
+      {c: '0', ln: 1, cn: 2},
+    ]
+    const i = 0
+    expect(() => eatNote(chars, i)).toThrow()
+  })
+
   test('When "aa" is found, it eats "a".', () => {
     const chars = [
       {c: 'a', ln: 1, cn: 1},
