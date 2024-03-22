@@ -1,5 +1,5 @@
 import type {Character} from '../lines'
-import {eatChar, eatInteger} from './eat'
+import {eatChar, eatNaturalNumber} from './eat'
 
 export type Scale = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'r'
 export type Accidental = '+' | '-' | '='
@@ -59,7 +59,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
     if (idx >= chars.length || chars[idx].ln !== startLn) {
       return [null, idx]
     } else {
-      return eatInteger(chars, idx)
+      return eatNaturalNumber(chars, idx)
     }
   }
 

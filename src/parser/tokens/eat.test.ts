@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'bun:test'
-import {eatChar, eatInteger, eatSpaces} from './eat'
+import {eatChar, eatNaturalNumber, eatSpaces} from './eat'
 
 describe('eatChar', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
@@ -77,7 +77,7 @@ describe('eatSpaces', () => {
   })
 })
 
-describe('eatInteger', () => {
+describe('eatNaturalNumber', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
     const chars = [
       {c: '0', ln: 1, cn: 1},
@@ -86,7 +86,7 @@ describe('eatInteger', () => {
     ]
     const i = 3
     const expected: [number | null, number] = [null, i]
-    expect(eatInteger(chars, i)).toStrictEqual(expected)
+    expect(eatNaturalNumber(chars, i)).toStrictEqual(expected)
   })
 
   test('When no integer is found, it returns null and the current index.', () => {
@@ -98,7 +98,7 @@ describe('eatInteger', () => {
     ]
     const i = 1
     const expected: [number | null, number] = [null, i]
-    expect(eatInteger(chars, i)).toStrictEqual(expected)
+    expect(eatNaturalNumber(chars, i)).toStrictEqual(expected)
   })
 
   test('When an integer is found, it returns the integer and the index of the next non-digit character.', () => {
@@ -112,7 +112,7 @@ describe('eatInteger', () => {
     ]
     const i = 1
     const expected: [number | null, number] = [12, i + 3]
-    expect(eatInteger(chars, i)).toStrictEqual(expected)
+    expect(eatNaturalNumber(chars, i)).toStrictEqual(expected)
   })
 
   test('When an integer spanning multiple lines is found, it returns the integer found on the same line and the index of the next non-digit character.', () => {
@@ -126,6 +126,6 @@ describe('eatInteger', () => {
     ]
     const i = 1
     const expected: [number | null, number] = [123, i + 4]
-    expect(eatInteger(chars, i)).toStrictEqual(expected)
+    expect(eatNaturalNumber(chars, i)).toStrictEqual(expected)
   })
 })

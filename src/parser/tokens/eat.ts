@@ -45,7 +45,7 @@ export function eatSpaces(chars: Character[], i: number): number {
  * @param i - the current char index
  * @returns the eaten integer and the next index.
  */
-export function eatInteger(
+export function eatNaturalNumber(
   chars: Character[],
   i: number
 ): [number | null, number] {
