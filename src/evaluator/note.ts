@@ -1,5 +1,4 @@
 import {SAMPLE_RATE, type Buffer, PER_SAMPLE_RATE} from '../evaluator'
-import type {Token} from '../parser/tokens'
 import type {Note, Scale} from '../parser/tokens/note'
 
 const SEMITONE_STEP = 2 ** (1 / 12)
@@ -41,8 +40,7 @@ function getFrequency(note: Note, buffer: Buffer): number {
   return 440 * SEMITONE_STEP ** d
 }
 
-export function evaluateNote(token: Token, buffer: Buffer) {
-  const note = token.value as Note
+export function evaluateNote(note: Note, buffer: Buffer) {
   const current = buffer.seek
 
   const value = note.noteValue ?? buffer.value

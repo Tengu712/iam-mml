@@ -1,6 +1,7 @@
 import {evaluateNote} from './evaluator/note'
 import {evaluateOctave} from './evaluator/octave'
 import type {Token} from './parser/tokens'
+import type {Note} from './parser/tokens/note'
 import type {Octave} from './parser/tokens/octave'
 
 export const SAMPLE_RATE = 44100
@@ -20,7 +21,7 @@ function evaluateTokens(tokens: Token[], buffer: Buffer) {
   for (const token of tokens) {
     switch (token.id) {
       case 'Note':
-        evaluateNote(token, buffer)
+        evaluateNote(token.value as Note, buffer)
         break
       case 'Octave':
         evaluateOctave(token.value as Octave, buffer)
