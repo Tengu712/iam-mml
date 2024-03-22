@@ -1,11 +1,12 @@
 import type {Character} from './lines'
 import {eatSpaces} from './tokens/eat'
 import {eatNote, type Note} from './tokens/note'
+import {eatOctave, type Octave} from './tokens/octave'
 
-export type TokenID = 'Note'
+export type TokenID = 'Note' | 'Octave'
 export type Token = {
   id: TokenID
-  value: Note
+  value: Note | Octave
 }
 
 /**
@@ -31,6 +32,15 @@ function getToken(chars: Character[], i: number): [Token, number] {
       value: note,
     }
     return [token, i2]
+  }
+  // octave
+  const [octave, i3] = eatOctave(chars, i2)
+  if (octave !== null) {
+    const token: Token = {
+      id: 'Octave',
+      value: octave,
+    }
+    return [token, i3]
   }
   // error
   throw new Error(
