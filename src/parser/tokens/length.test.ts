@@ -51,7 +51,7 @@ describe('eatLength', () => {
     const expectedLength: Length = {
       startLn: 1,
       startCn: 1,
-      length: 16,
+      noteValue: 16,
     }
     const expected: [Length | null, number] = [expectedLength, i + 3]
     expect(eatLength(chars, i)).toStrictEqual(expected)

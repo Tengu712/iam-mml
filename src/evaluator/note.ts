@@ -43,9 +43,8 @@ function getFrequency(note: Note, buffer: Buffer): number {
 export function evaluateNote(note: Note, buffer: Buffer) {
   const current = buffer.seek
 
-  const value = note.noteValue ?? buffer.value
   const spb = 60 / buffer.bpm
-  const v = 4 / value
+  const v = 4 / (note.noteValue ?? buffer.noteValue)
   const d = note.dotted ? 1.5 : 1
   const length = SAMPLE_RATE * spb * v * d
   buffer.seek += length

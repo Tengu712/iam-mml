@@ -4,7 +4,7 @@ import {eatNaturalNumber} from './eat'
 export type Length = {
   startLn: number
   startCn: number
-  length: number
+  noteValue: number
 }
 
 /**
@@ -31,8 +31,8 @@ export function eatLength(
       `[ syntax error ] The length number is not found on the same line.: ${startLn} line, ${startCn} char.`
     )
   }
-  const [length, i2] = eatNaturalNumber(chars, i1)
-  if (length === null) {
+  const [noteValue, i2] = eatNaturalNumber(chars, i1)
+  if (noteValue === null) {
     throw new Error(
       `[ syntax error ] The length number is not found.: ${startLn} line, ${startCn} char.`
     )
@@ -40,7 +40,7 @@ export function eatLength(
   const envelope: Length = {
     startLn: startLn,
     startCn: startCn,
-    length: length,
+    noteValue: noteValue,
   }
   return [envelope, i2]
 }

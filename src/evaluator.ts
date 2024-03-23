@@ -15,7 +15,7 @@ export type Buffer = {
   amplitude: number
   octave: number
   bpm: number
-  value: number
+  noteValue: number
   buffer: Float32Array | null
 }
 
@@ -23,13 +23,13 @@ function evaluateTokens(tokens: Token[], buffer: Buffer) {
   for (const token of tokens) {
     switch (token.id) {
       case 'Note':
-        evaluateNote(token.value as Note, buffer)
+        evaluateNote(token.payload as Note, buffer)
         break
       case 'Length':
-        evaluateLength(token.value as Length, buffer)
+        evaluateLength(token.payload as Length, buffer)
         break
       case 'Octave':
-        evaluateOctave(token.value as Octave, buffer)
+        evaluateOctave(token.payload as Octave, buffer)
         break
     }
   }
@@ -42,7 +42,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
     amplitude: 0.8,
     octave: 4,
     bpm: 120,
-    value: 4,
+    noteValue: 4,
     buffer: null,
   }
   evaluateTokens(tokens, preBuffer)
@@ -52,7 +52,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
     amplitude: 0.8,
     octave: 4,
     bpm: 120,
-    value: 4,
+    noteValue: 4,
     buffer: new Float32Array(preBuffer.size),
   }
   evaluateTokens(tokens, buffer)

@@ -5,13 +5,13 @@ import {eatLength, type Length} from './tokens/length'
 import {eatOctave, type Octave} from './tokens/octave'
 
 export type TokenID = 'Note' | 'Length' | 'Octave'
-export type Value = Note | Length | Octave
+export type Payload = Note | Length | Octave
 export type Token = {
   id: TokenID
-  value: Value
+  payload: Payload
 }
 
-type EatFunction = (chars: Character[], i: number) => [Value | null, number]
+type EatFunction = (chars: Character[], i: number) => [Payload | null, number]
 type Closure = (f: EatFunction, id: TokenID) => [Token, number] | null
 
 /**
@@ -34,11 +34,11 @@ function getToken(chars: Character[], i: number): [Token, number] {
 
   // create closure
   const closure: Closure = (f, id) => {
-    const [value, newi] = f(chars, i1)
-    if (value !== null) {
+    const [payload, newi] = f(chars, i1)
+    if (payload !== null) {
       const token: Token = {
         id: id,
-        value: value,
+        payload: payload,
       }
       return [token, newi]
     } else {
