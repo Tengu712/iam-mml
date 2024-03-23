@@ -1,6 +1,8 @@
+import {evaluateLength} from './evaluator/length'
 import {evaluateNote} from './evaluator/note'
 import {evaluateOctave} from './evaluator/octave'
 import type {Token} from './parser/tokens'
+import type {Length} from './parser/tokens/length'
 import type {Note} from './parser/tokens/note'
 import type {Octave} from './parser/tokens/octave'
 
@@ -22,6 +24,9 @@ function evaluateTokens(tokens: Token[], buffer: Buffer) {
     switch (token.id) {
       case 'Note':
         evaluateNote(token.value as Note, buffer)
+        break
+      case 'Length':
+        evaluateLength(token.value as Length, buffer)
         break
       case 'Octave':
         evaluateOctave(token.value as Octave, buffer)

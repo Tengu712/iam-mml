@@ -1,13 +1,18 @@
 import type {Character} from './lines'
 import {eatSpaces} from './tokens/eat'
 import {eatNote, type Note} from './tokens/note'
+import {eatLength, type Length} from './tokens/length'
 import {eatOctave, type Octave} from './tokens/octave'
 
-export type TokenID = 'Note' | 'Octave'
+export type TokenID = 'Note' | 'Length' | 'Octave'
+export type Value = Note | Length | Octave
 export type Token = {
   id: TokenID
-  value: Note | Octave
+  value: Value
 }
+
+type EatFunction = (chars: Character[], i: number) => [Value | null, number]
+type Closure = (f: EatFunction, id: TokenID) => [Token, number] | null
 
 /**
  * A function to get a token.
@@ -21,30 +26,45 @@ function getToken(chars: Character[], i: number): [Token, number] {
   if (i >= chars.length) {
     throw new Error(`[ syntax error ] Tried to get a token out of range.`)
   }
-  const i0 = i
-  // spaces
-  const i1 = eatSpaces(chars, i0)
-  // note
-  const [note, i2] = eatNote(chars, i1)
-  if (note !== null) {
-    const token: Token = {
-      id: 'Note',
-      value: note,
+  const startLn = chars[i].ln
+  const startCn = chars[i].cn
+
+  // skip spaces
+  const i1 = eatSpaces(chars, i)
+
+  // create closure
+  const closure: Closure = (f, id) => {
+    const [value, newi] = f(chars, i1)
+    if (value !== null) {
+      const token: Token = {
+        id: id,
+        value: value,
+      }
+      return [token, newi]
+    } else {
+      return null
     }
-    return [token, i2]
+  }
+
+  // note
+  const note = closure(eatNote, 'Note')
+  if (note !== null) {
+    return note
+  }
+  // length
+  const length = closure(eatLength, 'Length')
+  if (length !== null) {
+    return length
   }
   // octave
-  const [octave, i3] = eatOctave(chars, i2)
+  const octave = closure(eatOctave, 'Octave')
   if (octave !== null) {
-    const token: Token = {
-      id: 'Octave',
-      value: octave,
-    }
-    return [token, i3]
+    return octave
   }
+
   // error
   throw new Error(
-    `[ syntax error ] Undefined token found: ${chars[i0].ln} line, ${chars[i0].cn} char.`
+    `[ syntax error ] Undefined token found: ${startLn} line, ${startCn} char.`
   )
 }
 
