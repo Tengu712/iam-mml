@@ -39,7 +39,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
   const preBuffer: Buffer = {
     seek: 0,
     size: 0,
-    amplitude: 0.8,
+    amplitude: 0.5,
     octave: 4,
     bpm: 120,
     noteValue: 4,
@@ -49,7 +49,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
   const buffer: Buffer = {
     seek: 0,
     size: 0,
-    amplitude: 0.8,
+    amplitude: 0.5,
     octave: 4,
     bpm: 120,
     noteValue: 4,
