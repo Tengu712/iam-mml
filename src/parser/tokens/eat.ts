@@ -79,3 +79,35 @@ export function eatNaturalNumber(
     return [Number(buf), i]
   }
 }
+
+/**
+ * A function to eat an integer on the same line.
+ *
+ * @param chars - the line of the part
+ * @param i - the current char index
+ * @returns the eaten integer and the next index.
+ */
+export function eatFloatingPointNumber(
+  chars: Character[],
+  i: number
+): [number | null, number] {
+  if (i >= chars.length) {
+    return [null, i]
+  }
+  const [former, i1] = eatNaturalNumber(chars, i)
+  const [dot, i2] = eatChar(chars, i1, ['.'])
+  const [latter, i3] = eatNaturalNumber(chars, i2)
+  if (
+    former !== null &&
+    dot !== null &&
+    latter !== null &&
+    chars[i].ln === chars[i1].ln &&
+    chars[i].ln === chars[i2].ln
+  ) {
+    const s = '' + former + '.' + latter
+    const n = Number(s)
+    return [n, i3]
+  } else {
+    return [null, i]
+  }
+}

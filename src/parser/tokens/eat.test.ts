@@ -1,5 +1,5 @@
 import {describe, expect, test} from 'bun:test'
-import {eatChar, eatNaturalNumber, eatSpaces} from './eat'
+import {eatChar, eatFloatingPointNumber, eatNaturalNumber, eatSpaces} from './eat'
 
 describe('eatChar', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
@@ -127,5 +127,70 @@ describe('eatNaturalNumber', () => {
     const i = 1
     const expected: [number | null, number] = [123, i + 4]
     expect(eatNaturalNumber(chars, i)).toStrictEqual(expected)
+  })
+})
+
+describe('eatFloatingPointNumber', () => {
+  test('When trying to eat out of range, it returns null and the current index.', () => {
+    const chars = [
+      {c: '0', ln: 1, cn: 1},
+      {c: '1', ln: 1, cn: 2},
+      {c: '.', ln: 1, cn: 3},
+      {c: '2', ln: 1, cn: 4},
+    ]
+    const i = 4
+    const expected: [number | null, number] = [null, i]
+    expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When no number is found, it returns null and the current index.', () => {
+    const chars = [
+      {c: '0', ln: 1, cn: 1},
+      {c: 'a', ln: 1, cn: 2},
+      {c: '1', ln: 1, cn: 3},
+      {c: '2', ln: 1, cn: 4},
+    ]
+    const i = 1
+    const expected: [number | null, number] = [null, i]
+    expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When no floating-point number is found, it returns null and the current index.', () => {
+    const chars = [
+      {c: '1', ln: 1, cn: 1},
+      {c: '2', ln: 1, cn: 2},
+    ]
+    const i = 0
+    const expected: [number | null, number] = [null, i]
+    expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When a floating-point number is found, it returns the floating-point number and the index of the next non-digit character.', () => {
+    const chars = [
+      {c: 'a', ln: 1, cn: 1},
+      {c: '0', ln: 1, cn: 2},
+      {c: '1', ln: 1, cn: 3},
+      {c: '2', ln: 1, cn: 4},
+      {c: '.', ln: 1, cn: 5},
+      {c: '3', ln: 1, cn: 6},
+      {c: 'b', ln: 1, cn: 7},
+    ]
+    const i = 1
+    const expected: [number | null, number] = [12.3, i + 5]
+    expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When a floating-point number spanning multiple lines is found, it returns the floating-point number found on the same line and the index of the next non-digit character.', () => {
+    const chars = [
+      {c: 'a', ln: 1, cn: 1},
+      {c: '0', ln: 1, cn: 2},
+      {c: '1', ln: 1, cn: 3},
+      {c: '.', ln: 1, cn: 4},
+      {c: '2', ln: 1, cn: 5},
+      {c: '3', ln: 2, cn: 1},
+    ]
+    const i = 1
+    const expected: [number | null, number] = [1.2, i + 4]
+    expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
   })
 })
