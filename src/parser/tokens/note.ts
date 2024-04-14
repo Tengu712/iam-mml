@@ -71,7 +71,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   const [dot, i4] = eatCharWrapper(i3, ['.'])
   if (noteValue === 0) {
     throw new Error(
-      `[ syntax error ] Note value must be greater than 0.: ${startLn} line, ${startCn} char.`
+      `[ syntax error ] Note value must be greater than 0: ${startLn} line, ${startCn} char.`
     )
   }
   const note = {

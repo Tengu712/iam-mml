@@ -22,24 +22,29 @@ export function eatVolume(
   chars: Character[],
   i: number
 ): [Volume | null, number] {
-  if (i >= chars.length || chars[i].c !== 'v') {
-    return [null, i]
-  }
-  const startLn = chars[i].ln
-  const startCn = chars[i].cn
+  const i0 = i
   const [v, i1] = eatChar(chars, i, ['v'])
   const [command, i2] = eatChar(chars, i1, ['+', '-'])
   const [volume, i3] = eatFloatingPointNumber(chars, i2)
-  if (
-    v === null ||
-    volume === null ||
-    startLn !== chars[i1].ln ||
-    startLn !== chars[i2].ln
-  ) {
+
+  if (v === null) {
+    return [null, i]
+  }
+
+  const startLn = chars[i0].ln
+  const startCn = chars[i0].cn
+
+  if (volume === null) {
     throw new Error(
-      `[ syntax error ] Invalid volume command is found: ${startLn} line, ${startCn} char.`
+      `[ syntax error ] The volume number is not found: ${startLn} line, ${startCn} char.`
     )
   }
+  if (startLn !== chars[i1].ln || startLn !== chars[i2].ln) {
+    throw new Error(
+      `[ syntax error ] The volume number is not found on the same line: ${startLn} line, ${startCn} char.`
+    )
+  }
+
   const envelope: Volume = {
     startLn: startLn,
     startCn: startCn,

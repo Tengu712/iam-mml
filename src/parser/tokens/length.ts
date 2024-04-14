@@ -1,5 +1,5 @@
 import type {Character} from '../lines'
-import {eatNaturalNumber} from './eat'
+import {eatChar, eatNaturalNumber} from './eat'
 
 export type Length = {
   startLn: number
@@ -19,24 +19,28 @@ export function eatLength(
   chars: Character[],
   i: number
 ): [Length | null, number] {
-  if (i >= chars.length || chars[i].c !== 'l') {
+  const i0 = i
+  const [l, i1] = eatChar(chars, i, ['l'])
+  const [noteValue, i2] = eatNaturalNumber(chars, i1)
+
+  if (l === null) {
     return [null, i]
   }
-  const startLn = chars[i].ln
-  const startCn = chars[i].cn
-  const i0 = i
-  const i1 = i0 + 1
-  if (i1 >= chars.length || chars[i1].ln !== startLn) {
-    throw new Error(
-      `[ syntax error ] The length number is not found on the same line.: ${startLn} line, ${startCn} char.`
-    )
-  }
-  const [noteValue, i2] = eatNaturalNumber(chars, i1)
+
+  const startLn = chars[i0].ln
+  const startCn = chars[i0].cn
+
   if (noteValue === null) {
     throw new Error(
-      `[ syntax error ] The length number is not found.: ${startLn} line, ${startCn} char.`
+      `[ syntax error ] The note value is not found: ${startLn} line, ${startCn} char.`
     )
   }
+  if (startLn !== chars[i1].ln) {
+    throw new Error(
+      `[ syntax error ] The note value is not found on the same line: ${startLn} line, ${startCn} char.`
+    )
+  }
+
   const envelope: Length = {
     startLn: startLn,
     startCn: startCn,

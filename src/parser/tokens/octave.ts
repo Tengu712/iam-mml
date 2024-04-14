@@ -1,5 +1,5 @@
 import type {Character} from '../lines'
-import {eatNaturalNumber} from './eat'
+import {eatChar, eatNaturalNumber} from './eat'
 
 export type Octave = {
   startLn: number
@@ -19,24 +19,28 @@ export function eatOctave(
   chars: Character[],
   i: number
 ): [Octave | null, number] {
-  if (i >= chars.length || chars[i].c !== 'o') {
+  const i0 = i
+  const [o, i1] = eatChar(chars, i, ['o'])
+  const [octave, i2] = eatNaturalNumber(chars, i1)
+
+  if (o === null) {
     return [null, i]
   }
-  const startLn = chars[i].ln
-  const startCn = chars[i].cn
-  const i0 = i
-  const i1 = i0 + 1
-  if (i1 >= chars.length || chars[i1].ln !== startLn) {
-    throw new Error(
-      `[ syntax error ] The octave number is not found on the same line.: ${startLn} line, ${startCn} char.`
-    )
-  }
-  const [octave, i2] = eatNaturalNumber(chars, i1)
+
+  const startLn = chars[i0].ln
+  const startCn = chars[i0].cn
+
   if (octave === null) {
     throw new Error(
-      `[ syntax error ] The octave number is not found.: ${startLn} line, ${startCn} char.`
+      `[ syntax error ] The octave number is not found: ${startLn} line, ${startCn} char.`
     )
   }
+  if (startLn !== chars[i1].ln) {
+    throw new Error(
+      `[ syntax error ] The octave number is not found on the same line: ${startLn} line, ${startCn} char.`
+    )
+  }
+
   const envelope: Octave = {
     startLn: startLn,
     startCn: startCn,
