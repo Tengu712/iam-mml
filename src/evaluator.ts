@@ -1,10 +1,12 @@
 import {evaluateLength} from './evaluator/length'
 import {evaluateNote} from './evaluator/note'
 import {evaluateOctave} from './evaluator/octave'
+import {evaluateVolume} from './evaluator/volume'
 import type {Token} from './parser/tokens'
 import type {Length} from './parser/tokens/length'
 import type {Note} from './parser/tokens/note'
 import type {Octave} from './parser/tokens/octave'
+import type {Volume} from './parser/tokens/volume'
 
 export const SAMPLE_RATE = 44100
 export const PER_SAMPLE_RATE = 1 / SAMPLE_RATE
@@ -30,6 +32,9 @@ function evaluateTokens(tokens: Token[], buffer: Buffer) {
         break
       case 'Octave':
         evaluateOctave(token.payload as Octave, buffer)
+        break
+      case 'Volume':
+        evaluateVolume(token.payload as Volume, buffer)
         break
     }
   }
