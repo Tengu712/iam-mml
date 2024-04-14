@@ -45,10 +45,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   const startCn = chars[i].cn
 
   // create wrapper closures
-  const eatCharWrapper = (
-    idx: number,
-    matches: string[]
-  ): [string | null, number] => {
+  const eatCharWrapper = (idx: number, matches: string[]): [string | null, number] => {
     if (idx >= chars.length || chars[idx].ln !== startLn) {
       return [null, idx]
     } else {

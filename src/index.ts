@@ -13,16 +13,9 @@ function getMaxWaveSize(waves: Float32Array[]): number {
   return max
 }
 
-function createAudioBuffer(
-  audioContext: AudioContext,
-  waves: Float32Array[]
-): AudioBuffer {
+function createAudioBuffer(audioContext: AudioContext, waves: Float32Array[]): AudioBuffer {
   const maxWaveSize = getMaxWaveSize(waves)
-  const audioBuffer = audioContext.createBuffer(
-    waves.length,
-    maxWaveSize,
-    SAMPLE_RATE
-  )
+  const audioBuffer = audioContext.createBuffer(waves.length, maxWaveSize, SAMPLE_RATE)
   for (let i = 0; i < waves.length; ++i) {
     audioBuffer.copyToChannel(waves[i], i)
   }

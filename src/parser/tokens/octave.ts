@@ -15,10 +15,7 @@ export type Octave = {
  * @returns the eaten octave and the next index.
  * @throws an error when the octave number is not found.
  */
-export function eatOctave(
-  chars: Character[],
-  i: number
-): [Octave | null, number] {
+export function eatOctave(chars: Character[], i: number): [Octave | null, number] {
   const i0 = i
   const [o, i1] = eatChar(chars, i, ['o'])
   const [octave, i2] = eatNaturalNumber(chars, i1)

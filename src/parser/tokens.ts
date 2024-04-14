@@ -69,9 +69,7 @@ function getToken(chars: Character[], i: number): [Token, number] {
   }
 
   // error
-  throw new Error(
-    `[ syntax error ] Undefined token found: ${startLn} line, ${startCn} char.`
-  )
+  throw new Error(`[ syntax error ] Undefined token found: ${startLn} line, ${startCn} char.`)
 }
 
 /**
@@ -81,9 +79,7 @@ function getToken(chars: Character[], i: number): [Token, number] {
  * @returns tokens per part.
  * @throws an error if it cannot find any valid token.
  */
-export function getTokensPerPart(
-  parts: Map<string, Character[]>
-): Map<string, Token[]> {
+export function getTokensPerPart(parts: Map<string, Character[]>): Map<string, Token[]> {
   const tokensPerPart = new Map()
   for (const [partName, chars] of parts) {
     const tokens = []

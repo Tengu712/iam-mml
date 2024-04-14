@@ -15,10 +15,7 @@ export type Length = {
  * @returns the eaten octave and the next index.
  * @throws an error when the length number is not found.
  */
-export function eatLength(
-  chars: Character[],
-  i: number
-): [Length | null, number] {
+export function eatLength(chars: Character[], i: number): [Length | null, number] {
   const i0 = i
   const [l, i1] = eatChar(chars, i, ['l'])
   const [noteValue, i2] = eatNaturalNumber(chars, i1)

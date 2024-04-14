@@ -17,9 +17,7 @@ function getPartName(chars: Character[]): {name: string; next: number} {
       return {name: name, next: i + 1}
     }
   }
-  throw new Error(
-    `[ syntax error ] The ${chars[0].ln}th line consists only of part names.`
-  )
+  throw new Error(`[ syntax error ] The ${chars[0].ln}th line consists only of part names.`)
 }
 
 /**

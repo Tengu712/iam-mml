@@ -1,10 +1,5 @@
 import {describe, expect, test} from 'bun:test'
-import {
-  eatChar,
-  eatFloatingPointNumber,
-  eatNaturalNumber,
-  eatSpaces,
-} from './eat'
+import {eatChar, eatFloatingPointNumber, eatNaturalNumber, eatSpaces} from './eat'
 
 describe('eatChar', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {

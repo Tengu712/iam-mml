@@ -21,9 +21,7 @@ function convertScaleToNumber(scale: Scale): number {
     case 'b':
       return 11
     default:
-      throw new Error(
-        `[ unexpected error ] Tried to convert '${scale}' to number.`
-      )
+      throw new Error(`[ unexpected error ] Tried to convert '${scale}' to number.`)
   }
 }
 

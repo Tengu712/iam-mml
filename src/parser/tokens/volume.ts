@@ -18,10 +18,7 @@ export type Volume = {
  * @returns the eaten octave and the next index.
  * @throws an error when the octave number is not found.
  */
-export function eatVolume(
-  chars: Character[],
-  i: number
-): [Volume | null, number] {
+export function eatVolume(chars: Character[], i: number): [Volume | null, number] {
   const i0 = i
   const [v, i1] = eatChar(chars, i, ['v'])
   const [command, i2] = eatChar(chars, i1, ['+', '-'])
