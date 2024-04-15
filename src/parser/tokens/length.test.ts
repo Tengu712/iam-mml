@@ -41,6 +41,15 @@ describe('eatLength', () => {
     expect(() => eatLength(chars, i)).toThrow()
   })
 
+  test('When the Length number is 0, it throws an error.', () => {
+    const chars = [
+      {c: 'l', ln: 1, cn: 1},
+      {c: '0', ln: 1, cn: 2},
+    ]
+    const i = 0
+    expect(() => eatLength(chars, i)).toThrow()
+  })
+
   test('When an Length is found, it returns Length and the next index.', () => {
     const chars = [
       {c: 'l', ln: 1, cn: 1},

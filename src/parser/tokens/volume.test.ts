@@ -38,6 +38,27 @@ describe('eatVolume', () => {
     expect(() => eatVolume(chars, i)).toThrow()
   })
 
+  test('When the volume number is greater than 1.0, it throws an error. (1)', () => {
+    const chars = [
+      {c: 'v', ln: 1, cn: 1},
+      {c: '2', ln: 1, cn: 2},
+    ]
+    const i = 0
+    expect(() => eatVolume(chars, i)).toThrow()
+  })
+
+  test('When the volume number is greater than 1.0, it throws an error. (2)', () => {
+    const chars = [
+      {c: 'v', ln: 1, cn: 1},
+      {c: '+', ln: 1, cn: 2},
+      {c: '1', ln: 1, cn: 3},
+      {c: '.', ln: 1, cn: 4},
+      {c: '1', ln: 1, cn: 5},
+    ]
+    const i = 0
+    expect(() => eatVolume(chars, i)).toThrow()
+  })
+
   test('When "v0.5" is found, it returns volume and the next index.', () => {
     const chars = [
       {c: 'v', ln: 1, cn: 1},

@@ -1,3 +1,4 @@
+import {MAX_AMPLITUDE, MIN_AMPLITUDE} from '../../constants'
 import type {Character} from '../lines'
 import {eatChar, eatFloatingPointNumber} from './eat'
 
@@ -15,8 +16,8 @@ export type Volume = {
  *
  * @param chars - the line of the part
  * @param i - the current char index
- * @returns the eaten octave and the next index.
- * @throws an error when the octave number is not found.
+ * @returns the eaten volume and the next index.
+ * @throws an error when invalid volume command is found.
  */
 export function eatVolume(chars: Character[], i: number): [Volume | null, number] {
   const i0 = i
@@ -39,6 +40,11 @@ export function eatVolume(chars: Character[], i: number): [Volume | null, number
   if (startLn !== chars[i1].ln || startLn !== chars[i2].ln) {
     throw new Error(
       `[ syntax error ] The volume number is not found on the same line: ${startLn} line, ${startCn} char.`
+    )
+  }
+  if (volume < MIN_AMPLITUDE || volume > MAX_AMPLITUDE) {
+    throw new Error(
+      `[ syntax error ] The volume number must be in [${MIN_AMPLITUDE}, ${MAX_AMPLITUDE}]: ${startLn} line, ${startCn} char.`
     )
   }
 

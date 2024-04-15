@@ -12,8 +12,8 @@ export type Length = {
  *
  * @param chars - the line of the part
  * @param i - the current char index
- * @returns the eaten octave and the next index.
- * @throws an error when the length number is not found.
+ * @returns the eaten length and the next index.
+ * @throws an error when invalid length command is found.
  */
 export function eatLength(chars: Character[], i: number): [Length | null, number] {
   const i0 = i
@@ -35,6 +35,11 @@ export function eatLength(chars: Character[], i: number): [Length | null, number
   if (startLn !== chars[i1].ln) {
     throw new Error(
       `[ syntax error ] The note value is not found on the same line: ${startLn} line, ${startCn} char.`
+    )
+  }
+  if (noteValue <= 0) {
+    throw new Error(
+      `[ syntax error ] The note value must be greater than 0: ${startLn} line, ${startCn} char.`
     )
   }
 
