@@ -3,10 +3,11 @@ import {eatSpaces} from './tokens/eat'
 import {eatNote, type Note} from './tokens/note'
 import {eatLength, type Length} from './tokens/length'
 import {eatOctave, type Octave} from './tokens/octave'
+import {eatTempo, type Tempo} from './tokens/tempo'
 import {eatVolume, type Volume} from './tokens/volume'
 
-export type TokenID = 'Note' | 'Length' | 'Octave' | 'Volume'
-export type Payload = Note | Length | Octave | Volume
+export type TokenID = 'Note' | 'Length' | 'Octave' | 'Tempo' | 'Volume'
+export type Payload = Note | Length | Octave | Tempo | Volume
 export type Token = {
   id: TokenID
   payload: Payload
@@ -61,6 +62,11 @@ function getToken(chars: Character[], i: number): [Token, number] {
   const octave = closure(eatOctave, 'Octave')
   if (octave !== null) {
     return octave
+  }
+  // tempo
+  const tempo = closure(eatTempo, 'Tempo')
+  if (tempo !== null) {
+    return tempo
   }
   // volume
   const volume = closure(eatVolume, 'Volume')
