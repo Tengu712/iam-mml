@@ -17,16 +17,24 @@
   <div id="textarea-wrapper">
     <table id="textarea-table">
       <tr>
-        <td id="mml-td" rowspan="2">
-          <textarea id="mml"></textarea>
+        <td id="mml-td">
+          <div id="mml-wrapper">
+            <textarea id="mml-numbers" readonly></textarea>
+            <textarea id="mml" spellcheck="false"></textarea>
+          </div>
         </td>
         <td id="inst-td">
-          <textarea id="inst"></textarea>
+          <div id="inst-wrapper">
+            <textarea id="inst-numbers" readonly></textarea>
+            <textarea id="inst" spellcheck="false"></textarea>
+          </div>
         </td>
       </tr>
       <tr>
-        <td id="status-td">
-          <textarea id="status" readonly></textarea>
+        <td id="status-td" colspan="2">
+          <div id="status-wrapper">
+            <textarea id="status" readonly></textarea>
+          </div>
         </td>
       </tr>
     </table>
