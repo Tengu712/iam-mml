@@ -1,10 +1,30 @@
 import type {Character} from '../lines'
 import {eatChar, eatNaturalNumber} from './eat'
 
+export type OctaveCommand = '<' | '>' | null
+
 export type Octave = {
   startLn: number
   startCn: number
+  command: OctaveCommand
   octave: number
+}
+
+function eatOctaveCommand(chars: Character[], i: number): [Octave | null, number] {
+  const i0 = i
+  const [oc, i1] = eatChar(chars, i0, ['<', '>'])
+
+  if (oc === null) {
+    return [null, i0]
+  }
+
+  const envelope: Octave = {
+    startLn: chars[i0].ln,
+    startCn: chars[i0].cn,
+    command: oc as OctaveCommand,
+    octave: 0,
+  }
+  return [envelope, i1]
 }
 
 /**
@@ -17,11 +37,11 @@ export type Octave = {
  */
 export function eatOctave(chars: Character[], i: number): [Octave | null, number] {
   const i0 = i
-  const [o, i1] = eatChar(chars, i, ['o'])
+  const [o, i1] = eatChar(chars, i0, ['o'])
   const [octave, i2] = eatNaturalNumber(chars, i1)
 
   if (o === null) {
-    return [null, i]
+    return eatOctaveCommand(chars, i0)
   }
 
   const startLn = chars[i0].ln
@@ -41,6 +61,7 @@ export function eatOctave(chars: Character[], i: number): [Octave | null, number
   const envelope: Octave = {
     startLn: startLn,
     startCn: startCn,
+    command: null,
     octave: octave,
   }
   return [envelope, i2]

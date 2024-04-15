@@ -41,7 +41,7 @@ describe('eatOctave', () => {
     expect(() => eatOctave(chars, i)).toThrow()
   })
 
-  test('When an octave is found, it returns Octave and the next index.', () => {
+  test('When "o4" is found, it returns Octave and the next index.', () => {
     const chars = [
       {c: 'o', ln: 1, cn: 1},
       {c: '4', ln: 1, cn: 2},
@@ -50,9 +50,46 @@ describe('eatOctave', () => {
     const expectedOctave: Octave = {
       startLn: 1,
       startCn: 1,
+      command: null,
       octave: 4,
     }
     const expected: [Octave | null, number] = [expectedOctave, i + 2]
+    expect(eatOctave(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When ">" is found, it returns Octave and the next index.', () => {
+    const chars = [
+      {c: 'a', ln: 1, cn: 1},
+      {c: '>', ln: 1, cn: 2},
+      {c: 'o', ln: 1, cn: 3},
+      {c: '4', ln: 1, cn: 4},
+    ]
+    const i = 1
+    const expectedOctave: Octave = {
+      startLn: 1,
+      startCn: 2,
+      command: '>',
+      octave: 0,
+    }
+    const expected: [Octave | null, number] = [expectedOctave, i + 1]
+    expect(eatOctave(chars, i)).toStrictEqual(expected)
+  })
+
+  test('When "<" is found, it returns Octave and the next index.', () => {
+    const chars = [
+      {c: 'a', ln: 1, cn: 1},
+      {c: '<', ln: 1, cn: 2},
+      {c: 'o', ln: 1, cn: 3},
+      {c: '4', ln: 1, cn: 4},
+    ]
+    const i = 1
+    const expectedOctave: Octave = {
+      startLn: 1,
+      startCn: 2,
+      command: '<',
+      octave: 0,
+    }
+    const expected: [Octave | null, number] = [expectedOctave, i + 1]
     expect(eatOctave(chars, i)).toStrictEqual(expected)
   })
 })
