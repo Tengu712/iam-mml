@@ -86,7 +86,9 @@ export function eatFloatingPointNumber(chars: Character[], i: number): [number |
     const s = '' + former + '.' + latter
     const n = Number(s)
     return [n, i3]
-  } else {
-    return [null, i]
   }
+  if (former !== null) {
+    return [Number(former), i1]
+  }
+  return [null, i]
 }

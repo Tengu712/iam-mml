@@ -8,10 +8,8 @@ describe('eatTempo', () => {
       {c: '1', ln: 1, cn: 2},
       {c: '2', ln: 1, cn: 3},
       {c: '0', ln: 1, cn: 4},
-      {c: '.', ln: 1, cn: 5},
-      {c: '0', ln: 1, cn: 6},
     ]
-    const i = 6
+    const i = 4
     const expected: [Tempo | null, number] = [null, i]
     expect(eatTempo(chars, i)).toStrictEqual(expected)
   })
@@ -22,8 +20,6 @@ describe('eatTempo', () => {
       {c: '1', ln: 1, cn: 2},
       {c: '2', ln: 1, cn: 3},
       {c: '0', ln: 1, cn: 4},
-      {c: '.', ln: 1, cn: 5},
-      {c: '0', ln: 1, cn: 6},
     ]
     const i = 1
     const expected: [Tempo | null, number] = [null, i]
@@ -37,8 +33,6 @@ describe('eatTempo', () => {
       {c: '1', ln: 2, cn: 1},
       {c: '2', ln: 2, cn: 2},
       {c: '0', ln: 2, cn: 3},
-      {c: '.', ln: 2, cn: 4},
-      {c: '0', ln: 2, cn: 5},
     ]
     const i = 0
     expect(() => eatTempo(chars, i)).toThrow()
@@ -69,14 +63,12 @@ describe('eatTempo', () => {
     expect(() => eatTempo(chars, i)).toThrow()
   })
 
-  test('When "t120.0" is found, it returns tempo and the next index.', () => {
+  test('When "t120" is found, it returns tempo and the next index.', () => {
     const chars = [
       {c: 't', ln: 1, cn: 1},
       {c: '1', ln: 1, cn: 2},
       {c: '2', ln: 1, cn: 3},
       {c: '0', ln: 1, cn: 4},
-      {c: '.', ln: 1, cn: 5},
-      {c: '0', ln: 1, cn: 6},
     ]
     const i = 0
     const expectedTempo: Tempo = {
@@ -85,7 +77,7 @@ describe('eatTempo', () => {
       command: null,
       tempo: 120.0,
     }
-    const expected: [Tempo | null, number] = [expectedTempo, i + 6]
+    const expected: [Tempo | null, number] = [expectedTempo, i + 4]
     expect(eatTempo(chars, i)).toStrictEqual(expected)
   })
 
@@ -108,23 +100,20 @@ describe('eatTempo', () => {
     expect(eatTempo(chars, i)).toStrictEqual(expected)
   })
 
-  test('When "t-15.0" is found, it returns tempo and the next index.', () => {
+  test('When "t-2" is found, it returns tempo and the next index.', () => {
     const chars = [
       {c: 't', ln: 1, cn: 1},
       {c: '-', ln: 1, cn: 2},
-      {c: '1', ln: 1, cn: 3},
-      {c: '5', ln: 1, cn: 4},
-      {c: '.', ln: 1, cn: 5},
-      {c: '0', ln: 1, cn: 6},
+      {c: '2', ln: 1, cn: 3},
     ]
     const i = 0
     const expectedTempo: Tempo = {
       startLn: 1,
       startCn: 1,
       command: '-',
-      tempo: 15.0,
+      tempo: 2.0,
     }
-    const expected: [Tempo | null, number] = [expectedTempo, i + 6]
+    const expected: [Tempo | null, number] = [expectedTempo, i + 3]
     expect(eatTempo(chars, i)).toStrictEqual(expected)
   })
 })

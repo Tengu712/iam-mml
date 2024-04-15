@@ -38,17 +38,6 @@ describe('eatVolume', () => {
     expect(() => eatVolume(chars, i)).toThrow()
   })
 
-  test('When the volume number is not floating-point number, it throws an error.', () => {
-    const chars = [
-      {c: 'v', ln: 1, cn: 1},
-      {c: '0', ln: 1, cn: 2},
-      {c: '.', ln: 2, cn: 1},
-      {c: '5', ln: 2, cn: 2},
-    ]
-    const i = 0
-    expect(() => eatVolume(chars, i)).toThrow()
-  })
-
   test('When "v0.5" is found, it returns volume and the next index.', () => {
     const chars = [
       {c: 'v', ln: 1, cn: 1},

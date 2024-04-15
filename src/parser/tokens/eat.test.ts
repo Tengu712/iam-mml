@@ -155,17 +155,19 @@ describe('eatFloatingPointNumber', () => {
     expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
   })
 
-  test('When no floating-point number is found, it returns null and the current index.', () => {
+  test('When "12" is found, it returns "12" and the index of the next non-digit character.', () => {
     const chars = [
       {c: '1', ln: 1, cn: 1},
       {c: '2', ln: 1, cn: 2},
+      {c: '.', ln: 2, cn: 1},
+      {c: '5', ln: 2, cn: 2},
     ]
     const i = 0
-    const expected: [number | null, number] = [null, i]
+    const expected: [number | null, number] = [12.0, i + 2]
     expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
   })
 
-  test('When a floating-point number is found, it returns the floating-point number and the index of the next non-digit character.', () => {
+  test('When "012.3b" is found, it returns "12.3" and the index of the next non-digit character.', () => {
     const chars = [
       {c: 'a', ln: 1, cn: 1},
       {c: '0', ln: 1, cn: 2},
@@ -180,17 +182,17 @@ describe('eatFloatingPointNumber', () => {
     expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
   })
 
-  test('When a floating-point number spanning multiple lines is found, it returns the floating-point number found on the same line and the index of the next non-digit character.', () => {
+  test('When "01.\\n23" is found, it returns "1" and the index of the next non-digit character.', () => {
     const chars = [
       {c: 'a', ln: 1, cn: 1},
       {c: '0', ln: 1, cn: 2},
       {c: '1', ln: 1, cn: 3},
       {c: '.', ln: 1, cn: 4},
-      {c: '2', ln: 1, cn: 5},
+      {c: '2', ln: 2, cn: 5},
       {c: '3', ln: 2, cn: 1},
     ]
     const i = 1
-    const expected: [number | null, number] = [1.2, i + 4]
+    const expected: [number | null, number] = [1.0, i + 2]
     expect(eatFloatingPointNumber(chars, i)).toStrictEqual(expected)
   })
 })
