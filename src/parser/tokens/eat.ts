@@ -8,7 +8,11 @@ import type {Character} from '../lines'
  * @param matches - characters to check match
  * @returns the matched character and the next index.
  */
-export function eatChar(chars: Character[], i: number, matches: string[]): [string | null, number] {
+export function eatChar(
+  chars: readonly Character[],
+  i: number,
+  matches: readonly string[]
+): [string | null, number] {
   if (i < chars.length && matches.includes(chars[i].c)) {
     return [chars[i].c, i + 1]
   } else {
@@ -23,7 +27,7 @@ export function eatChar(chars: Character[], i: number, matches: string[]): [stri
  * @param i - the current char index
  * @returns the next index.
  */
-export function eatSpaces(chars: Character[], i: number): number {
+export function eatSpaces(chars: readonly Character[], i: number): number {
   while (i < chars.length) {
     const [space, newi] = eatChar(chars, i, [' ', '\t'])
     if (space === null) {
@@ -41,7 +45,7 @@ export function eatSpaces(chars: Character[], i: number): number {
  * @param i - the current char index
  * @returns the eaten integer and the next index.
  */
-export function eatNaturalNumber(chars: Character[], i: number): [number | null, number] {
+export function eatNaturalNumber(chars: readonly Character[], i: number): [number | null, number] {
   if (i >= chars.length) {
     return [null, i]
   }
@@ -69,7 +73,10 @@ export function eatNaturalNumber(chars: Character[], i: number): [number | null,
  * @param i - the current char index
  * @returns the eaten integer and the next index.
  */
-export function eatFloatingPointNumber(chars: Character[], i: number): [number | null, number] {
+export function eatFloatingPointNumber(
+  chars: readonly Character[],
+  i: number
+): [number | null, number] {
   if (i >= chars.length) {
     return [null, i]
   }

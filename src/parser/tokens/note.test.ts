@@ -43,7 +43,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 2,
-      scale: 'a',
+      pitch: 'a',
       accidental: null,
       noteValue: null,
       dotted: false,
@@ -62,7 +62,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'b',
+      pitch: 'b',
       accidental: '+',
       noteValue: null,
       dotted: false,
@@ -81,7 +81,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'c',
+      pitch: 'c',
       accidental: null,
       noteValue: 4,
       dotted: false,
@@ -102,7 +102,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'd',
+      pitch: 'd',
       accidental: '-',
       noteValue: 16,
       dotted: false,
@@ -122,7 +122,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'e',
+      pitch: 'e',
       accidental: null,
       noteValue: 8,
       dotted: true,
@@ -144,7 +144,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'f',
+      pitch: 'f',
       accidental: '=',
       noteValue: 32,
       dotted: true,
@@ -165,7 +165,7 @@ describe('eatNote', () => {
     const expectedNote: Note = {
       startLn: 1,
       startCn: 1,
-      scale: 'f',
+      pitch: 'f',
       accidental: '=',
       noteValue: 3,
       dotted: false,

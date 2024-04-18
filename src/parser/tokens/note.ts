@@ -1,13 +1,13 @@
+import {ACCIDENTALS, PITCHES, type Accidental} from '../../constants'
 import type {Character} from '../lines'
 import {eatChar, eatNaturalNumber} from './eat'
 
-export type Scale = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'r'
-export type Accidental = '+' | '-' | '='
-
+const PITCHES_WITH_REST = [...PITCHES, 'r'] as const
+export type PitchWithRest = (typeof PITCHES_WITH_REST)[number]
 export type Note = {
   startLn: number
   startCn: number
-  scale: Scale
+  pitch: PitchWithRest
   accidental: Accidental | null
   noteValue: number | null
   dotted: boolean
@@ -25,7 +25,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   if (i >= chars.length) {
     return [null, i]
   }
-  // check if the first character is a scale
+  // check if the first character is a pitch name
   switch (chars[i].c) {
     case 'a':
     case 'b':
@@ -45,7 +45,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   const startCn = chars[i].cn
 
   // create wrapper closures
-  const eatCharWrapper = (idx: number, matches: string[]): [string | null, number] => {
+  const eatCharWrapper = (idx: number, matches: readonly string[]): [string | null, number] => {
     if (idx >= chars.length || chars[idx].ln !== startLn) {
       return [null, idx]
     } else {
@@ -62,8 +62,8 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
 
   // parse
   const i0 = i
-  const [scale, i1] = [chars[i0].c, i0 + 1]
-  const [accidental, i2] = eatCharWrapper(i1, ['+', '-', '='])
+  const [pitch, i1] = [chars[i0].c, i0 + 1]
+  const [accidental, i2] = eatCharWrapper(i1, ACCIDENTALS)
   const [noteValue, i3] = eatIntegerWrapper(i2)
   const [dot, i4] = eatCharWrapper(i3, ['.'])
   if (noteValue === 0) {
@@ -74,7 +74,7 @@ export function eatNote(chars: Character[], i: number): [Note | null, number] {
   const note = {
     startLn: startLn,
     startCn: startCn,
-    scale: scale as Scale,
+    pitch: pitch as PitchWithRest,
     accidental: accidental as Accidental,
     noteValue: noteValue,
     dotted: dot !== null,

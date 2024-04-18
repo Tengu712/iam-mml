@@ -1,9 +1,12 @@
+import type {Pitch} from './constants'
+import {evaluateKey} from './evaluator/key'
 import {evaluateLength} from './evaluator/length'
 import {evaluateNote} from './evaluator/note'
 import {evaluateOctave} from './evaluator/octave'
 import {evaluateTempo} from './evaluator/tempo'
 import {evaluateVolume} from './evaluator/volume'
 import type {Token} from './parser/tokens'
+import type {Key} from './parser/tokens/key'
 import type {Length} from './parser/tokens/length'
 import type {Note} from './parser/tokens/note'
 import type {Octave} from './parser/tokens/octave'
@@ -20,6 +23,7 @@ export type Buffer = {
   octave: number
   bpm: number
   noteValue: number
+  shift: Map<Pitch, number>
   buffer: Float32Array | null
 }
 
@@ -28,6 +32,9 @@ function evaluateTokens(tokens: Token[], buffer: Buffer) {
     switch (token.id) {
       case 'Note':
         evaluateNote(token.payload as Note, buffer)
+        break
+      case 'Key':
+        evaluateKey(token.payload as Key, buffer)
         break
       case 'Length':
         evaluateLength(token.payload as Length, buffer)
@@ -53,6 +60,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
     octave: 4,
     bpm: 120,
     noteValue: 4,
+    shift: new Map(),
     buffer: null,
   }
   evaluateTokens(tokens, preBuffer)
@@ -63,6 +71,7 @@ function evaluatePart(tokens: Token[]): Float32Array {
     octave: 4,
     bpm: 120,
     noteValue: 4,
+    shift: new Map(),
     buffer: new Float32Array(preBuffer.size),
   }
   evaluateTokens(tokens, buffer)

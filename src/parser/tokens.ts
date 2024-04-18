@@ -1,13 +1,14 @@
 import type {Character} from './lines'
 import {eatSpaces} from './tokens/eat'
 import {eatNote, type Note} from './tokens/note'
+import {eatKey, type Key} from './tokens/key'
 import {eatLength, type Length} from './tokens/length'
 import {eatOctave, type Octave} from './tokens/octave'
 import {eatTempo, type Tempo} from './tokens/tempo'
 import {eatVolume, type Volume} from './tokens/volume'
 
-export type TokenID = 'Note' | 'Length' | 'Octave' | 'Tempo' | 'Volume'
-export type Payload = Note | Length | Octave | Tempo | Volume
+export type TokenID = 'Note' | 'Key' | 'Length' | 'Octave' | 'Tempo' | 'Volume'
+export type Payload = Note | Key | Length | Octave | Tempo | Volume
 export type Token = {
   id: TokenID
   payload: Payload
@@ -52,6 +53,11 @@ function getToken(chars: Character[], i: number): [Token, number] {
   const note = closure(eatNote, 'Note')
   if (note !== null) {
     return note
+  }
+  // key
+  const key = closure(eatKey, 'Key')
+  if (key !== null) {
+    return key
   }
   // length
   const length = closure(eatLength, 'Length')

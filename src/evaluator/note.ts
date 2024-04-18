@@ -1,11 +1,12 @@
-import {SAMPLE_RATE, type Buffer, PER_SAMPLE_RATE} from '../evaluator'
-import type {Note, Scale} from '../parser/tokens/note'
+import type {Accidental, Pitch} from '../constants'
+import {type Buffer, SAMPLE_RATE, PER_SAMPLE_RATE} from '../evaluator'
+import type {Note} from '../parser/tokens/note'
 
 const SEMITONE_STEP = 2 ** (1 / 12)
 const FADE_INTERVAL = 150
 
-function convertScaleToNumber(scale: Scale): number {
-  switch (scale) {
+function convertScaleToNumber(pitch: Pitch): number {
+  switch (pitch) {
     case 'c':
       return 0
     case 'd':
@@ -20,21 +21,24 @@ function convertScaleToNumber(scale: Scale): number {
       return 9
     case 'b':
       return 11
-    default:
-      throw new Error(`[ unexpected error ] Tried to convert '${scale}' to number.`)
   }
 }
 
-function getFrequency(note: Note, buffer: Buffer): number {
-  let n = convertScaleToNumber(note.scale) + 12 * buffer.octave
-  // TODO: key signature
-  if (note.accidental === '+') {
-    n += 1
+function getFrequency(pitch: Pitch, accidental: Accidental | null, buffer: Buffer): number {
+  let n = convertScaleToNumber(pitch) + 12 * buffer.octave
+  switch (accidental) {
+    case '+':
+      n += 1
+      break
+    case '-':
+      n -= 1
+      break
+    case '=':
+      break
+    case null:
+      n += buffer.shift.get(pitch) ?? 0
+      break
   }
-  if (note.accidental === '-') {
-    n -= 1
-  }
-  // TODO: natural
   const d = n - 57
   return 440 * SEMITONE_STEP ** d
 }
@@ -75,11 +79,11 @@ export function evaluateNote(note: Note, buffer: Buffer) {
     return
   }
 
-  if (note.scale === 'r') {
+  if (note.pitch === 'r') {
     return
   }
 
-  const frequency = getFrequency(note, buffer) * PER_SAMPLE_RATE
+  const frequency = getFrequency(note.pitch, note.accidental, buffer) * PER_SAMPLE_RATE
   // TODO: modulate
   for (let i = current; i < current + length; ++i) {
     const t = i - current
