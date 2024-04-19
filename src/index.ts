@@ -1,5 +1,6 @@
-import {SAMPLE_RATE, evaluate} from './evaluator'
-import {parseMML} from './parser'
+import {SAMPLE_RATE} from './constants'
+import {Evaluator} from './evaluate/Evaluator'
+import {Parser} from './parse/Parser'
 
 function getElementById<T>(id: string): T {
   return document.getElementById(id)! as T
@@ -19,16 +20,8 @@ function addLineNumbersEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaEle
   taNumbers.value = '1\n'
 }
 
-function getMaxWaveSize(waves: Float32Array[]): number {
-  let max = 0
-  for (const wave of waves) {
-    max = wave.length > max ? wave.length : max
-  }
-  return max
-}
-
 function createAudioBuffer(audioContext: AudioContext, waves: Float32Array[]): AudioBuffer {
-  const maxWaveSize = getMaxWaveSize(waves)
+  const maxWaveSize = waves.reduce((r, n) => (n.length > r ? n.length : r), 0)
   const audioBuffer = audioContext.createBuffer(waves.length, maxWaveSize, SAMPLE_RATE)
   for (let i = 0; i < waves.length; ++i) {
     audioBuffer.copyToChannel(waves[i], i)
@@ -57,8 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // add the event listener when clicking the play button
   btnPlay.addEventListener('click', () => {
-    const tokensPerPart = parseMML(taMML.value)
-    const waves = evaluate(tokensPerPart)
+    const commandMap = Parser.parse(taMML.value)
+    const waves = []
+    for (const [_, commands] of commandMap) {
+      waves.push(Evaluator.eval(commands))
+    }
     const audioContext = new AudioContext()
     const audioBuffer = createAudioBuffer(audioContext, waves)
     playAudioBuffer(audioContext, audioBuffer)
