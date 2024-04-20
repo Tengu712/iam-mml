@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>標準音価: IAM.mml Docs</title>
+  <link rel="stylesheet" type="text/css" href="../index.css?20240420">
+  <script src="../index.js?20240420"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <div id="main">
+    <h1>標準音価</h1>
+
+    <hr>
+
+    <h2>文法</h2>
+
+    <pre><code class="ebnf">number = natural-number ;
+length = "l" , number ;</code></pre>
+
+    <h2>解説</h2>
+
+    <p>
+      音符コマンドにおいて音価が指定されなかったときの音価を指定するコマンド。
+    </p>
+
+    <ul>
+      <li>
+        <code>number</code>は音価を指定する。
+        0より大きい自然数でなければならない。
+      </li>
+    </ul>
+
+    <p>
+      標準で<code>l4</code>が評価されている。
+    </p>
+  </div>
+</body>
+
+</html>

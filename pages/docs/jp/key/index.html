@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>調号: IAM.mml Docs</title>
+  <link rel="stylesheet" type="text/css" href="../index.css?20240420">
+  <script src="../index.js?20240420"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <div id="main">
+    <h1>調号</h1>
+
+    <hr>
+
+    <h2>文法</h2>
+
+    <pre><code class="ebnf">pitch   = "a" | "b" | "c" | "d" | "e" | "f" | "g" ;
+command = "+" | "-" | "=" ;
+key     = "k" , [ { pitch } ] , command ;</code></pre>
+
+    <h2>解説</h2>
+
+    <p>
+      調号を指定するコマンド。
+    </p>
+
+    <ul>
+      <li>
+        <code>pitch</code>は操作が行われる対象となる音名を指定する。
+        複数指定することができる。
+        重複がある場合、重複分は無視される。
+        音名が与えられていない場合、すべての音階に対して操作が行われる。
+      </li>
+      <li><code>command</code>は変化記号を指定する。</li>
+    </ul>
+  </div>
+</body>
+
+</html>

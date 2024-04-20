@@ -1,0 +1,56 @@
+body {
+  display: flex;
+}
+
+code {
+  border-radius: 10px;
+  font-family:
+    'Noto Sans Mono CJK JP',
+    'Source Han Code JP',
+    SFMono-Regular,
+    Consolas,
+    'Roboto Mono',
+    'Courier New',
+    Meiryo,
+    monospace;
+}
+
+ul>li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+a {
+  color: rgb(230, 45, 45);
+}
+
+h1 {
+  margin-bottom: 0;
+}
+
+h2 {
+  margin-top: 2.5rem;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid black;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+#main {
+  margin: 0;
+  width: 780px;
+  max-width: 780px;
+}
+
+#sidebar-wrapper {
+  width: calc(50vw - 390px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+#sidebar {
+  padding: 0 2rem;
+}
