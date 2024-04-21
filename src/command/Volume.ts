@@ -1,6 +1,5 @@
 import type {ICommand} from './ICommand'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 import {MAX_AMPLITUDE, MIN_AMPLITUDE} from '../constants'
 
@@ -26,17 +25,17 @@ export class Volume implements ICommand {
     const cn = first.cn
 
     // 'v'
-    const t = Eat.char(chars, ['v'])
+    const t = chars.eatChar(['v'])
     if (t === null) {
       return null
     }
     // (NNFloat)
-    const volume = Eat.nnfloat(chars, ln)
+    const volume = chars.eatNNFloat(ln)
     if (volume === null) {
       throw new Error(`[ syntax error ] The volume number is not found: ${ln} line, ${cn} char.`)
     }
     // ('+'|'-'|)
-    const command = Eat.char(chars, ['+', '-'], ln)
+    const command = chars.eatChar(['+', '-'], ln)
 
     // check
     if (volume < MIN_AMPLITUDE || volume > MAX_AMPLITUDE) {

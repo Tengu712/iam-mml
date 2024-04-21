@@ -9,7 +9,6 @@ import {
   type PitchWithRest,
 } from '../constants'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 
 const SEMITONE_STEP = 2 ** (1 / 12)
@@ -86,16 +85,16 @@ export class Note implements ICommand {
     const cn = first.cn
 
     // (PITCH_WITH_REST)
-    const pitch = Eat.char(chars, PITCHES_WITH_REST)
+    const pitch = chars.eatChar(PITCHES_WITH_REST)
     if (pitch === null) {
       return null
     }
     // (ACCIDENTAL)
-    const accidental = Eat.char(chars, ACCIDENTALS, ln)
+    const accidental = chars.eatChar(ACCIDENTALS, ln)
     // (NATURAL)
-    const noteValue = Eat.natural(chars, ln)
+    const noteValue = chars.eatNatural(ln)
     // ('.'|)
-    const dot = Eat.char(chars, ['.'], ln)
+    const dot = chars.eatChar(['.'], ln)
     const dotted = dot !== null
 
     // check

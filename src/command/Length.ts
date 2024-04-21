@@ -1,6 +1,5 @@
 import type {ICommand} from './ICommand'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 
 export class Length implements ICommand {
@@ -21,12 +20,12 @@ export class Length implements ICommand {
     const cn = first.cn
 
     // 'l'
-    const k = Eat.char(chars, ['l'])
+    const k = chars.eatChar(['l'])
     if (k === null) {
       return null
     }
     // (NATURAL)
-    const noteValue = Eat.natural(chars, ln)
+    const noteValue = chars.eatNatural(ln)
     if (noteValue === null) {
       throw new Error(`[ syntax error ] The note value is not found: ${ln} line, ${cn} char.`)
     }

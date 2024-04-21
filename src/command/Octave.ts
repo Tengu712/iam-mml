@@ -1,6 +1,5 @@
 import type {ICommand} from './ICommand'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 import {MAX_OCTAVE, MIN_OCTAVE} from '../constants'
 
@@ -26,18 +25,18 @@ export class Octave implements ICommand {
     const cn = first.cn
 
     // '<'|'>'
-    const command = Eat.char(chars, ['<', '>'])
+    const command = chars.eatChar(['<', '>'])
     if (command !== null) {
       return new Octave(command as OctaveCommand, 0)
     }
 
     // 'o'
-    const o = Eat.char(chars, ['o'])
+    const o = chars.eatChar(['o'])
     if (o === null) {
       return null
     }
     // (NATURAL)
-    const octave = Eat.natural(chars, ln)
+    const octave = chars.eatNatural(ln)
     if (octave === null) {
       throw new Error(`[ syntax error ] The octave number is not found: ${ln} line, ${cn} char.`)
     }

@@ -1,7 +1,6 @@
 import type {ICommand} from './ICommand'
 import {ACCIDENTALS, PITCHES, type Accidental, type Pitch} from '../constants'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 
 export type KeyCommand = Accidental
@@ -26,21 +25,21 @@ export class Key implements ICommand {
     const cn = first.cn
 
     // 'k'
-    const k = Eat.char(chars, ['k'])
+    const k = chars.eatChar(['k'])
     if (k === null) {
       return null
     }
     // (PITCH)+
     const pitches = []
     while (true) {
-      const pitch = Eat.char(chars, PITCHES, ln)
+      const pitch = chars.eatChar(PITCHES, ln)
       if (pitch === null) {
         break
       }
       pitches.push(pitch)
     }
     // (ACCIDENTAL)
-    const command = Eat.char(chars, ACCIDENTALS, ln)
+    const command = chars.eatChar(ACCIDENTALS, ln)
     if (command === null) {
       throw new Error(
         `[ syntax error ] The key command must have an accidental: ${ln} line, ${cn} char.`

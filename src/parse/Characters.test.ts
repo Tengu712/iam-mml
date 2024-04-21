@@ -1,8 +1,7 @@
 import {describe, expect, test} from 'bun:test'
-import {Eat} from './Eat'
 import {Characters} from './Characters'
 
-describe('Eat.char', () => {
+describe('eatChar', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
     const chars = new Characters([
       {c: 'a', ln: 1, cn: 1},
@@ -13,7 +12,7 @@ describe('Eat.char', () => {
     const matches = ['a', 'b', 'c']
     const expected = null
     const expected2 = null
-    expect(Eat.char(chars, matches)).toStrictEqual(expected)
+    expect(chars.eatChar(matches)).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -27,7 +26,7 @@ describe('Eat.char', () => {
     const matches = ['a', 'c', 'd']
     const expected = null
     const expected2 = {c: 'b', ln: 1, cn: 2}
-    expect(Eat.char(chars, matches)).toStrictEqual(expected)
+    expect(chars.eatChar(matches)).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -41,12 +40,12 @@ describe('Eat.char', () => {
     const matches = ['a', 'b', 'c']
     const expected = 'b'
     const expected2 = {c: 'c', ln: 1, cn: 3}
-    expect(Eat.char(chars, matches)).toStrictEqual(expected)
+    expect(chars.eatChar(matches)).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 })
 
-describe('Eat.spaces', () => {
+describe('eatSpaces', () => {
   test('When trying to eat out of range, it returns the current index.', () => {
     const chars = new Characters([
       {c: 'a', ln: 1, cn: 1},
@@ -54,7 +53,7 @@ describe('Eat.spaces', () => {
       {c: 'c', ln: 1, cn: 3},
     ])
     chars.forward(3)
-    Eat.spaces(chars)
+    chars.eatSpaces()
     const expected = null
     expect(chars.get()).toStrictEqual(expected)
   })
@@ -66,7 +65,7 @@ describe('Eat.spaces', () => {
       {c: 'c', ln: 1, cn: 3},
     ])
     chars.forward(1)
-    Eat.spaces(chars)
+    chars.eatSpaces()
     const expected = {c: 'b', ln: 1, cn: 2}
     expect(chars.get()).toStrictEqual(expected)
   })
@@ -81,13 +80,13 @@ describe('Eat.spaces', () => {
       {c: 'c', ln: 2, cn: 3},
     ])
     chars.forward(1)
-    Eat.spaces(chars)
+    chars.eatSpaces()
     const expected = {c: 'c', ln: 2, cn: 3}
     expect(chars.get()).toStrictEqual(expected)
   })
 })
 
-describe('Eat.natural', () => {
+describe('eatNatural', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
     const chars = new Characters([
       {c: '0', ln: 1, cn: 1},
@@ -97,7 +96,7 @@ describe('Eat.natural', () => {
     chars.forward(3)
     const expected = null
     const expected2 = null
-    expect(Eat.natural(chars)).toStrictEqual(expected)
+    expect(chars.eatNatural()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -111,7 +110,7 @@ describe('Eat.natural', () => {
     chars.forward(1)
     const expected = null
     const expected2 = {c: 'a', ln: 1, cn: 2}
-    expect(Eat.natural(chars)).toStrictEqual(expected)
+    expect(chars.eatNatural()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -127,7 +126,7 @@ describe('Eat.natural', () => {
     chars.forward(1)
     const expected = 12
     const expected2 = {c: '.', ln: 1, cn: 5}
-    expect(Eat.natural(chars)).toStrictEqual(expected)
+    expect(chars.eatNatural()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -143,12 +142,12 @@ describe('Eat.natural', () => {
     chars.forward(1)
     const expected = 1
     const expected2 = {c: '2', ln: 2, cn: 1}
-    expect(Eat.natural(chars)).toStrictEqual(expected)
+    expect(chars.eatNatural()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 })
 
-describe('Eat.nnfloat', () => {
+describe('eatNNFloat', () => {
   test('When trying to eat out of range, it returns null and the current index.', () => {
     const chars = new Characters([
       {c: '0', ln: 1, cn: 1},
@@ -159,7 +158,7 @@ describe('Eat.nnfloat', () => {
     chars.forward(4)
     const expected = null
     const expected2 = null
-    expect(Eat.nnfloat(chars)).toStrictEqual(expected)
+    expect(chars.eatNNFloat()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -173,7 +172,7 @@ describe('Eat.nnfloat', () => {
     chars.forward(1)
     const expected = null
     const expected2 = {c: 'a', ln: 1, cn: 2}
-    expect(Eat.nnfloat(chars)).toStrictEqual(expected)
+    expect(chars.eatNNFloat()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -186,7 +185,7 @@ describe('Eat.nnfloat', () => {
     ])
     const expected = 12
     const expected2 = {c: '.', ln: 2, cn: 1}
-    expect(Eat.nnfloat(chars)).toStrictEqual(expected)
+    expect(chars.eatNNFloat()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -203,7 +202,7 @@ describe('Eat.nnfloat', () => {
     chars.forward(1)
     const expected = 12.3
     const expected2 = {c: 'b', ln: 1, cn: 7}
-    expect(Eat.nnfloat(chars)).toStrictEqual(expected)
+    expect(chars.eatNNFloat()).toStrictEqual(expected)
     expect(chars.get()).toStrictEqual(expected2)
   })
 
@@ -217,6 +216,6 @@ describe('Eat.nnfloat', () => {
       {c: '3', ln: 2, cn: 1},
     ])
     chars.forward(1)
-    expect(() => Eat.nnfloat(chars)).toThrow()
+    expect(() => chars.eatNNFloat()).toThrow()
   })
 })

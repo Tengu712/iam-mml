@@ -1,6 +1,5 @@
 import type {ICommand} from './ICommand'
 import type {Buffer} from '../evaluate/Buffer'
-import {Eat} from '../parse/Eat'
 import {Characters} from '../parse/Characters'
 import {MAX_BPM, MIN_BPM} from '../constants'
 
@@ -26,17 +25,17 @@ export class Tempo implements ICommand {
     const cn = first.cn
 
     // 't'
-    const t = Eat.char(chars, ['t'])
+    const t = chars.eatChar(['t'])
     if (t === null) {
       return null
     }
     // (NNFloat)
-    const tempo = Eat.nnfloat(chars, ln)
+    const tempo = chars.eatNNFloat(ln)
     if (tempo === null) {
       throw new Error(`[ syntax error ] The tempo number is not found: ${ln} line, ${cn} char.`)
     }
     // ('+'|'-'|)
-    const command = Eat.char(chars, ['+', '-'], ln)
+    const command = chars.eatChar(['+', '-'], ln)
 
     // check
     if (command === null && (tempo < MIN_BPM || tempo > MAX_BPM)) {
