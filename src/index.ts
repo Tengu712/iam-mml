@@ -1,6 +1,4 @@
-import {SAMPLE_RATE} from './constants'
-import {Evaluator} from './evaluate/Evaluator'
-import {Parser} from './parse/Parser'
+import {App} from './App'
 
 function getElementById<T>(id: string): T {
   return document.getElementById(id)! as T
@@ -20,22 +18,6 @@ function addLineNumbersEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaEle
   taNumbers.value = '1\n'
 }
 
-function createAudioBuffer(audioContext: AudioContext, waves: Float32Array[]): AudioBuffer {
-  const maxWaveSize = waves.reduce((r, n) => (n.length > r ? n.length : r), 0)
-  const audioBuffer = audioContext.createBuffer(waves.length, maxWaveSize, SAMPLE_RATE)
-  for (let i = 0; i < waves.length; ++i) {
-    audioBuffer.copyToChannel(waves[i], i)
-  }
-  return audioBuffer
-}
-
-function playAudioBuffer(audioContext: AudioContext, audioBuffer: AudioBuffer) {
-  const source = audioContext.createBufferSource()
-  source.buffer = audioBuffer
-  source.connect(audioContext.destination)
-  source.start()
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   // get elements
   const btnPlay = getElementById<HTMLButtonElement>('play')
@@ -48,15 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
   addLineNumbersEvent(taMML, taMMLNumbers)
   addLineNumbersEvent(taInst, taInstNumbers)
 
+  // create an app
+  const app = new App()
+
   // add the event listener when clicking the play button
-  btnPlay.addEventListener('click', () => {
-    const commandMap = Parser.parse(taMML.value)
-    const waves = []
-    for (const [_, commands] of commandMap) {
-      waves.push(Evaluator.eval(commands))
-    }
-    const audioContext = new AudioContext()
-    const audioBuffer = createAudioBuffer(audioContext, waves)
-    playAudioBuffer(audioContext, audioBuffer)
-  })
+  btnPlay.addEventListener('click', () => app.play(taMML.value))
 })
