@@ -32,7 +32,7 @@ export class Volume implements ICommand {
     // (NNFloat)
     const volume = chars.eatNNFloat(ln)
     if (volume === null) {
-      throw new Error(`[ syntax error ] The volume number is not found: ${ln} line, ${cn} char.`)
+      throw new Error(`[syntax error] The volume number is not found: ${ln} line, ${cn} char.`)
     }
     // ('+'|'-'|)
     const command = chars.eatChar(['+', '-'], ln)
@@ -40,7 +40,7 @@ export class Volume implements ICommand {
     // check
     if (volume < MIN_AMPLITUDE || volume > MAX_AMPLITUDE) {
       throw new Error(
-        `[ syntax error ] The volume number must be in [${MIN_AMPLITUDE}, ${MAX_AMPLITUDE}]: ${ln} line, ${cn} char.`
+        `[syntax error] The volume number must be in [${MIN_AMPLITUDE}, ${MAX_AMPLITUDE}]: ${ln} line, ${cn} char.`
       )
     }
 

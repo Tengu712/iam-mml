@@ -56,7 +56,7 @@ function getParts(lines: readonly Character[][]): Map<string, readonly Character
         return {name: name, next: i + 1}
       }
     }
-    throw new Error(`[ syntax error ] The ${chars[0].ln}th line consists only of part names.`)
+    throw new Error(`[syntax error] The ${chars[0].ln}th line consists only of part names.`)
   }
   const parts = new Map()
   for (const chars of lines) {
@@ -116,7 +116,7 @@ export class Parser {
           cmds.push(volume)
           continue
         }
-        throw new Error(`[ syntax error ] Undefined token found: ${ln} line, ${cn} char.`)
+        throw new Error(`[syntax error] Undefined token found: ${ln} line, ${cn} char.`)
       }
       commands.set(partName, cmds)
     }

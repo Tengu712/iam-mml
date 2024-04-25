@@ -27,13 +27,13 @@ export class Length implements ICommand {
     // (NATURAL)
     const noteValue = chars.eatNatural(ln)
     if (noteValue === null) {
-      throw new Error(`[ syntax error ] The note value is not found: ${ln} line, ${cn} char.`)
+      throw new Error(`[syntax error] The note value is not found: ${ln} line, ${cn} char.`)
     }
 
     // check
     if (noteValue <= 0) {
       throw new Error(
-        `[ syntax error ] The note value must be greater than 0: ${ln} line, ${cn} char.`
+        `[syntax error] The note value must be greater than 0: ${ln} line, ${cn} char.`
       )
     }
 

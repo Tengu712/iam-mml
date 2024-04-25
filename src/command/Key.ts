@@ -42,7 +42,7 @@ export class Key implements ICommand {
     const command = chars.eatChar(ACCIDENTALS, ln)
     if (command === null) {
       throw new Error(
-        `[ syntax error ] The key command must have an accidental: ${ln} line, ${cn} char.`
+        `[syntax error] The key command must have an accidental: ${ln} line, ${cn} char.`
       )
     }
 

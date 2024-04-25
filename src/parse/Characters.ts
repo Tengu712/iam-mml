@@ -108,7 +108,7 @@ export class Characters {
     const latter = this.eatNatural(fln)
     if (latter === null) {
       throw new Error(
-        `[ syntax error ] Invalid non-negative floating point number is found: ${first.ln} line, ${first.cn} eatChar.`
+        `[syntax error] Invalid non-negative floating point number is found: ${first.ln} line, ${first.cn} eatChar.`
       )
     }
 

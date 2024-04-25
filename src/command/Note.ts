@@ -99,7 +99,7 @@ export class Note implements ICommand {
 
     // check
     if (noteValue !== null && noteValue <= 0) {
-      throw new Error(`[ syntax error ] Note value must be greater than 0: ${ln} line, ${cn} char.`)
+      throw new Error(`[syntax error] Note value must be greater than 0: ${ln} line, ${cn} char.`)
     }
 
     return new Note(pitch as PitchWithRest, accidental as Accidental, noteValue, dotted)

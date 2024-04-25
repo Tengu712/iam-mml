@@ -32,7 +32,7 @@ export class Tempo implements ICommand {
     // (NNFloat)
     const tempo = chars.eatNNFloat(ln)
     if (tempo === null) {
-      throw new Error(`[ syntax error ] The tempo number is not found: ${ln} line, ${cn} char.`)
+      throw new Error(`[syntax error] The tempo number is not found: ${ln} line, ${cn} char.`)
     }
     // ('+'|'-'|)
     const command = chars.eatChar(['+', '-'], ln)
@@ -40,7 +40,7 @@ export class Tempo implements ICommand {
     // check
     if (command === null && (tempo < MIN_BPM || tempo > MAX_BPM)) {
       throw new Error(
-        `[ syntax error ] The tempo number must be in [${MIN_BPM}, ${MAX_BPM}]: ${ln} line, ${cn} char.`
+        `[syntax error] The tempo number must be in [${MIN_BPM}, ${MAX_BPM}]: ${ln} line, ${cn} char.`
       )
     }
 

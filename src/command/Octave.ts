@@ -38,7 +38,7 @@ export class Octave implements ICommand {
     // (NATURAL)
     const octave = chars.eatNatural(ln)
     if (octave === null) {
-      throw new Error(`[ syntax error ] The octave number is not found: ${ln} line, ${cn} char.`)
+      throw new Error(`[syntax error] The octave number is not found: ${ln} line, ${cn} char.`)
     }
 
     return new Octave(null, octave)
