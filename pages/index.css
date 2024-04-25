@@ -119,7 +119,8 @@ textarea {
 #mml-numbers,
 #inst,
 #inst-numbers,
-#status {
+#status,
+#log {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -140,4 +141,67 @@ textarea {
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+#blinder {
+  position: absolute;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#sidebar-wrapper {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  right: 0;
+  width: 40rem;
+  height: 100%;
+  pointer-events: none;
+}
+
+#sidebar-button {
+  max-width: 1.5rem;
+  min-width: 1.5rem;
+  max-height: 3rem;
+  min-height: 3rem;
+  background-color: #a00;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+#sidebar-button:hover {
+  background-color: #b11;
+}
+
+#sidebar-button:active {
+  outline: 3px solid #c22;
+  outline-offset: -3px;
+}
+
+#sidebar-button-icon {
+  margin-left: 25%;
+  margin-top: 25%;
+}
+
+#sidebar {
+  display: none;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.left-triangle {
+  background: #eee;
+  height: 75%;
+  width: 50%;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+}
+
+.right-triangle {
+  background: #eee;
+  height: 75%;
+  width: 50%;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }

@@ -18,13 +18,50 @@ function addLineNumbersEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaEle
   taNumbers.value = '1\n'
 }
 
+function hhmmss(date: Date) {
+  return (
+    ('0' + date.getHours()).slice(-2) +
+    ':' +
+    ('0' + date.getMinutes()).slice(-2) +
+    ':' +
+    ('0' + date.getSeconds()).slice(-2)
+  )
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  // sidebar
+  const openLog = (() => {
+    const divBlinder = getElementById<HTMLDivElement>('blinder')
+    const divSidebar = getElementById<HTMLDivElement>('sidebar')
+    const divSidebarButton = getElementById<HTMLDivElement>('sidebar-button')
+    const divSidebarButtonIcon = getElementById<HTMLDivElement>('sidebar-button-icon')
+    let isSidebarShown = false
+    const close = () => {
+      divBlinder.style.display = 'none'
+      divSidebar.style.display = 'none'
+      divSidebarButtonIcon.classList.remove('right-triangle')
+      divSidebarButtonIcon.classList.add('left-triangle')
+      isSidebarShown = false
+    }
+    const open = () => {
+      divBlinder.style.display = 'block'
+      divSidebar.style.display = 'block'
+      divSidebarButtonIcon.classList.remove('left-triangle')
+      divSidebarButtonIcon.classList.add('right-triangle')
+      isSidebarShown = true
+    }
+    divBlinder.addEventListener('click', () => close())
+    divSidebarButton.addEventListener('click', () => (isSidebarShown ? close() : open()))
+    return open
+  })()
+
   // get elements
   const btnPlay = getElementById<HTMLButtonElement>('play')
   const taMML = getElementById<HTMLTextAreaElement>('mml')
   const taMMLNumbers = getElementById<HTMLTextAreaElement>('mml-numbers')
   const taInst = getElementById<HTMLTextAreaElement>('inst')
   const taInstNumbers = getElementById<HTMLTextAreaElement>('inst-numbers')
+  const taLog = getElementById<HTMLTextAreaElement>('log')
 
   // add line numbers event
   addLineNumbersEvent(taMML, taMMLNumbers)
@@ -34,5 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = new App()
 
   // add the event listener when clicking the play button
-  btnPlay.addEventListener('click', () => app.play(taMML.value))
+  btnPlay.addEventListener('click', () => {
+    try {
+      app.play(taMML.value)
+    } catch (err: unknown) {
+      taLog.value += '(' + hhmmss(new Date()) + ') '
+      if (err instanceof Error) {
+        taLog.value += err.message
+      } else {
+        taLog.value += err
+      }
+      openLog()
+    }
+  })
 })
