@@ -3,8 +3,6 @@
 /* ========================================================================= */
 
 html, body {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -34,6 +32,13 @@ textarea {
 /*     id                                                                    */
 /* ========================================================================= */
 
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 #button-wrapper {
   width: 100%;
   padding: 10px;
@@ -59,45 +64,58 @@ textarea {
   outline-offset: -3px;
 }
 
+/* MML or instruments or status textarea */
+
 #textarea-wrapper {
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
   margin: 0;
   padding: 10px;
   flex-grow: 1;
 }
 
-#textarea-table {
+#textarea-upper {
+  display: flex;
   width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
-}
-
-#mml-td {
-  width: 60%;
-  height: 100%;
+  height: calc(100% - 1.5rem);
   margin: 0;
   padding: 0;
 }
 
-#inst-td {
-  width: auto;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#status-td {
-  width: auto;
+#textarea-lower {
+  width: 100%;
   height: 1.5rem;
   margin: 0;
   padding: 0;
 }
 
-#mml-wrapper,
-#inst-wrapper,
+#textarea-resizer {
+  width: 3px;
+  height: 100%;
+  background-color: #999;
+  cursor: ew-resize;
+}
+
+#mml-wrapper {
+  display: flex;
+  width: 60%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 3px solid #999;
+  border-right: none;
+}
+
+#inst-wrapper {
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 3px solid #999;
+  border-left: none;
+}
+
 #status-wrapper {
   display: flex;
   width: 100%;
@@ -105,13 +123,6 @@ textarea {
   margin: 0;
   padding: 0;
   border: 3px solid #999;
-}
-
-#inst-wrapper {
-  border-left: none;
-}
-
-#status-wrapper {
   border-top: none;
 }
 
@@ -143,9 +154,13 @@ textarea {
   -ms-overflow-style: none;
 }
 
+/* sidebar */
+
 #blinder {
   position: absolute;
   display: none;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -155,6 +170,7 @@ textarea {
   position: absolute;
   display: flex;
   justify-content: flex-end;
+  top: 0;
   right: 0;
   width: 40rem;
   height: 100%;
@@ -190,6 +206,13 @@ textarea {
   width: 100%;
   height: 100%;
   pointer-events: auto;
+}
+
+#sidebar-resizer {
+  width: 2px;
+  height: 100%;
+  background-color: #a00;
+  cursor: ew-resize;
 }
 
 .left-triangle {

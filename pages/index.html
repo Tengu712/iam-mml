@@ -10,34 +10,30 @@
 
 <body>
 
-  <div id="button-wrapper">
-    <button id="play">Play</button>
-  </div>
+  <div id="wrapper">
+    <div id="button-wrapper">
+      <button id="play">Play</button>
+    </div>
 
-  <div id="textarea-wrapper">
-    <table id="textarea-table">
-      <tr>
-        <td id="mml-td">
-          <div id="mml-wrapper">
-            <textarea id="mml-numbers" readonly></textarea>
-            <textarea id="mml" spellcheck="false"></textarea>
-          </div>
-        </td>
-        <td id="inst-td">
-          <div id="inst-wrapper">
-            <textarea id="inst-numbers" readonly></textarea>
-            <textarea id="inst" spellcheck="false"></textarea>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td id="status-td" colspan="2">
-          <div id="status-wrapper">
-            <textarea id="status" readonly></textarea>
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div id="textarea-wrapper">
+      <div id="textarea-upper">
+        <div id="mml-wrapper">
+          <textarea id="mml-numbers" readonly></textarea>
+          <textarea id="mml" spellcheck="false"></textarea>
+        </div>
+        <div id="textarea-resizer"></div>
+        <div id="inst-wrapper">
+          <textarea id="inst-numbers" readonly></textarea>
+          <textarea id="inst" spellcheck="false"></textarea>
+        </div>
+      </div>
+      
+      <div id="textarea-lower">
+        <div id="status-wrapper">
+          <textarea id="status" readonly></textarea>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="blinder"></div>
@@ -47,6 +43,7 @@
       <div id="sidebar-button-icon" class="left-triangle"></div>
     </div>
     <div id="sidebar">
+      <div id="sidebar-resizer"></div>
       <textarea id="log"></textarea>
     </div>
   </div>

@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const open = () => {
       divBlinder.style.display = 'block'
-      divSidebar.style.display = 'block'
+      divSidebar.style.display = 'flex'
       divSidebarButtonIcon.classList.remove('left-triangle')
       divSidebarButtonIcon.classList.add('right-triangle')
       isSidebarShown = true
@@ -54,6 +54,26 @@ document.addEventListener('DOMContentLoaded', () => {
     divSidebarButton.addEventListener('click', () => (isSidebarShown ? close() : open()))
     return open
   })()
+
+  // resizer
+  const divSidebarWrapper = getElementById<HTMLDivElement>('sidebar-wrapper')
+  const divSidebarResizer = getElementById<HTMLDivElement>('sidebar-resizer')
+  divSidebarResizer.addEventListener('mousedown', (downEvent: MouseEvent) => {
+    const up = (upEvent: MouseEvent) => {
+      divSidebarWrapper.style.width = downEvent.x - upEvent.x + divSidebarWrapper.clientWidth + 'px'
+      document.removeEventListener('mouseup', up)
+    }
+    document.addEventListener('mouseup', up)
+  })
+  const divMMLWrapper = getElementById<HTMLDivElement>('mml-wrapper')
+  const divTextareaResizer = getElementById<HTMLDivElement>('textarea-resizer')
+  divTextareaResizer.addEventListener('mousedown', (downEvent: MouseEvent) => {
+    const up = (upEvent: MouseEvent) => {
+      divMMLWrapper.style.width = upEvent.x - downEvent.x + divMMLWrapper.clientWidth + 'px'
+      document.removeEventListener('mouseup', up)
+    }
+    document.addEventListener('mouseup', up)
+  })
 
   // get elements
   const btnPlay = getElementById<HTMLButtonElement>('play')
