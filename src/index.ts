@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // get elements
   const btnPlay = getElementById<HTMLButtonElement>('play')
+  const btnInfo = getElementById<HTMLButtonElement>('info')
   const taMML = getElementById<HTMLTextAreaElement>('mml')
   const taMMLNumbers = getElementById<HTMLTextAreaElement>('mml-numbers')
   const taInst = getElementById<HTMLTextAreaElement>('inst')
@@ -104,4 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       openLog()
     }
   })
+
+  // add the event listener when clicking the info button
+  btnInfo.addEventListener('click', () => window.open('./docs/jp/about'))
 })
