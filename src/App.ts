@@ -43,6 +43,9 @@ export class App {
   public play(mml: string) {
     // parse mml into commands
     const commandMap = Parser.parse(mml)
+    if (commandMap.size === 0) {
+      throw new Error('[fatal error] No parts found.')
+    }
 
     // evaluate commands and create wave
     const waves = []
