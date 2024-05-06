@@ -7,6 +7,8 @@ import {Note} from '../command/Note'
 import {Octave} from '../command/Octave'
 import {Tempo} from '../command/Tempo'
 import {Volume} from '../command/Volume'
+import {Insts} from '../inst/Insts'
+import {Instrument} from '../command/Instrument'
 
 /**
  * - no head spaces
@@ -73,7 +75,7 @@ function getParts(lines: readonly Character[][]): Map<string, readonly Character
 export class Parser {
   private constructor() {}
 
-  public static parse(mml: string): Map<string, readonly ICommand[]> {
+  public static parse(mml: string, insts: Insts): Map<string, readonly ICommand[]> {
     const lines = getLines(mml)
     const parts = getParts(lines)
 
@@ -85,6 +87,8 @@ export class Parser {
         const first = chars.get()!
         const ln = first.ln
         const cn = first.cn
+
+        chars.eatSpaces()
 
         const key = Key.from(chars)
         if (key !== null) {
@@ -114,6 +118,11 @@ export class Parser {
         const volume = Volume.from(chars)
         if (volume !== null) {
           cmds.push(volume)
+          continue
+        }
+        const instrument = Instrument.from(chars, insts)
+        if (instrument !== null) {
+          cmds.push(instrument)
           continue
         }
         throw new Error(`[syntax error] Undefined token found: ${ln} line, ${cn} char.`)

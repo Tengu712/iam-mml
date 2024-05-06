@@ -58,9 +58,6 @@ export class Characters {
     }
 
     const fln = first.ln
-    if (fln === null) {
-      return null
-    }
     if (ln !== undefined && fln !== ln) {
       return null
     }
@@ -88,9 +85,6 @@ export class Characters {
     }
 
     const fln = first.ln
-    if (fln === null) {
-      return null
-    }
     if (ln !== undefined && fln !== ln) {
       return null
     }
@@ -113,5 +107,32 @@ export class Characters {
     }
 
     return Number('' + former + '.' + latter)
+  }
+
+  public eatIdentifier(ln?: number): string | null {
+    const first = this.get()
+    if (first === null) {
+      return null
+    }
+
+    const fln = first.ln
+    if (ln !== undefined && fln !== ln) {
+      return null
+    }
+
+    let s = ''
+    while (true) {
+      const c = this.get()
+      if (c === null || c.ln !== fln || c.c === ' ' || c.c === '\t') {
+        break
+      }
+      s += c.c
+      this.forward(1)
+    }
+    if (s.length > 0) {
+      return s
+    } else {
+      return null
+    }
   }
 }

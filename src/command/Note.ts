@@ -51,11 +51,6 @@ function getFrequency(pitch: Pitch, accidental: Accidental | null, buffer: Buffe
   return 440 * SEMITONE_STEP ** d
 }
 
-// TODO: move into tone generator
-function triangle(t: number, frequency: number): number {
-  return (2 / Math.PI) * Math.acos(Math.cos(2 * Math.PI * frequency * t)) - 1
-}
-
 export class Note implements ICommand {
   private readonly pitch: PitchWithRest
   private readonly accidental: Accidental | null
@@ -120,14 +115,14 @@ export class Note implements ICommand {
 
   public eval(buffer: Buffer): void {
     const current = buffer.seek
+    const release = buffer.inst.getRelease() * SAMPLE_RATE
 
     const spb = 60 / buffer.bpm
     const v = 4 / (this.noteValue ?? buffer.noteValue)
     const d = this.dotted ? 1.5 : 1
     const length = Math.ceil(SAMPLE_RATE * spb * v * d)
     buffer.seek += length
-    // TODO: adsr
-    buffer.size += length
+    buffer.size = Math.max(buffer.seek + release, buffer.size)
 
     if (buffer.buffer === null) {
       return
@@ -137,11 +132,9 @@ export class Note implements ICommand {
       return
     }
 
-    const frequency = getFrequency(this.pitch, this.accidental, buffer) * PER_SAMPLE_RATE
-    // TODO: modulate
-    for (let i = current; i < current + length; ++i) {
-      const t = i - current
-      buffer.buffer[i] += buffer.amplitude * triangle(t, frequency)
+    const frequency = getFrequency(this.pitch, this.accidental, buffer)
+    for (let i = current; i < current + length + release; ++i) {
+      buffer.buffer[i] += buffer.amplitude * buffer.inst.run(frequency, length, i - current)
     }
   }
 }

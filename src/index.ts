@@ -4,7 +4,7 @@ function getElementById<T>(id: string): T {
   return document.getElementById(id)! as T
 }
 
-function addLineNumbersEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaElement) {
+function addTaEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaElement, callback: () => void) {
   ta.addEventListener('input', () => {
     const count = ta.value.split('\n').length
     let text = ''
@@ -13,6 +13,7 @@ function addLineNumbersEvent(ta: HTMLTextAreaElement, taNumbers: HTMLTextAreaEle
     }
     taNumbers.value = text
     taNumbers.scrollTop = ta.scrollTop
+    callback()
   })
   ta.addEventListener('scroll', () => (taNumbers.scrollTop = ta.scrollTop))
   taNumbers.value = '1\n'
@@ -85,8 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const taLog = getElementById<HTMLTextAreaElement>('log')
 
   // add line numbers event
-  addLineNumbersEvent(taMML, taMMLNumbers)
-  addLineNumbersEvent(taInst, taInstNumbers)
+  let isMMLChanged = false
+  let isInstChanged = false
+  addTaEvent(taMML, taMMLNumbers, () => (isMMLChanged = true))
+  addTaEvent(taInst, taInstNumbers, () => (isInstChanged = true))
 
   // create an app
   const app = new App()
@@ -94,13 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // add the event listener when clicking the play button
   btnPlay.addEventListener('click', () => {
     try {
-      app.play(taMML.value)
+      app.play(taMML.value, taInst.value, isMMLChanged, isInstChanged)
+      isMMLChanged = false
+      isInstChanged = false
     } catch (err: unknown) {
       taLog.value += '(' + hhmmss(new Date()) + ') '
       if (err instanceof Error) {
-        taLog.value += err.message
+        taLog.value += err.message + '\n'
       } else {
-        taLog.value += err
+        taLog.value += err + '\n\n'
       }
       openLog()
     }

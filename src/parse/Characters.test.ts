@@ -219,3 +219,59 @@ describe('eatNNFloat', () => {
     expect(() => chars.eatNNFloat()).toThrow()
   })
 })
+
+describe('eatIdentifier', () => {
+  test('When trying to eat out of range, it returns null and the current index.', () => {
+    const chars = new Characters([
+      {c: 'a', ln: 1, cn: 1},
+      {c: '1', ln: 1, cn: 2},
+      {c: ' ', ln: 1, cn: 3},
+      {c: '.', ln: 1, cn: 4},
+    ])
+    chars.forward(4)
+    const expected = null
+    const expected2 = null
+    expect(chars.eatIdentifier()).toStrictEqual(expected)
+    expect(chars.get()).toStrictEqual(expected2)
+  })
+
+  test('When no identifier is found, it returns null and the current index.', () => {
+    const chars = new Characters([
+      {c: 'a', ln: 1, cn: 1},
+      {c: '1', ln: 1, cn: 2},
+      {c: ' ', ln: 1, cn: 3},
+      {c: '.', ln: 1, cn: 4},
+    ])
+    chars.forward(2)
+    const expected = null
+    const expected2 = {c: ' ', ln: 1, cn: 3}
+    expect(chars.eatIdentifier()).toStrictEqual(expected)
+    expect(chars.get()).toStrictEqual(expected2)
+  })
+
+  test('When "a1 ." is found, it returns "a1" and the index of the next character.', () => {
+    const chars = new Characters([
+      {c: 'a', ln: 1, cn: 1},
+      {c: '1', ln: 1, cn: 2},
+      {c: ' ', ln: 1, cn: 3},
+      {c: '.', ln: 1, cn: 4},
+    ])
+    const expected = 'a1'
+    const expected2 = {c: ' ', ln: 1, cn: 3}
+    expect(chars.eatIdentifier()).toStrictEqual(expected)
+    expect(chars.get()).toStrictEqual(expected2)
+  })
+
+  test('When "1.\\n23" is found, it returns "1." and the index of the next character.', () => {
+    const chars = new Characters([
+      {c: '1', ln: 1, cn: 1},
+      {c: '.', ln: 1, cn: 2},
+      {c: '2', ln: 2, cn: 1},
+      {c: '3', ln: 2, cn: 2},
+    ])
+    const expected = '1.'
+    const expected2 = {c: '2', ln: 2, cn: 1}
+    expect(chars.eatIdentifier()).toStrictEqual(expected)
+    expect(chars.get()).toStrictEqual(expected2)
+  })
+})
