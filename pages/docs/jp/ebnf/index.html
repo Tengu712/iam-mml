@@ -13,6 +13,8 @@
 
 <body>
   <div id="menu"></div>
+  <script>createMenu("")</script>
+
   <div id="main">
     <h1>EBNF</h1>
 
@@ -34,6 +36,7 @@
       <li><code>[]</code>で囲われた記号列は0回または1回だけ出現することを意味する。</li>
       <li><code>{}</code>で囲われた記号列は1回以上繰り返されることを意味する。</li>
       <li><code>()</code>で囲われた記号列はグループ化されることを意味する。</li>
+      <li><code>??</code>で囲われた記号は特殊記号。</li>
     </ul>
 
     <p>
@@ -41,7 +44,9 @@
     </p>
 
     <pre><code class="ebnf">natural-number     = { "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" } ;
-non-negative-float = natural-number , [ "." , natural-number ] ;</code></pre>
+non-negative-float = natural-number , [ "." , natural-number ] ;
+line-break         = "\r\n" | "\r" | "\n" ;
+identifier         = ? any string until a space, a tab space or a line break ? ;</code></pre>
   </div>
 </body>
 

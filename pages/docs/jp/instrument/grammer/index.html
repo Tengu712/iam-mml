@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>音源/文法: IAM.mml Docs</title>
+  <link rel="stylesheet" type="text/css" href="../../index.css?20240420">
+  <script src="../../index.js?20240420"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+  
+  <div id="main">
+    <h1>音源/文法</h1>
+
+    <hr>
+
+    <pre><code class="ebnf">indent      = [ { " " } ] ;
+end-of-line = { [ { space } ] , line-break } ;
+
+name        = "@" , identifier ;
+volume      = non-negative-float ;
+freqratio   = non-negative-float ;
+attack      = non-negative-float ;
+decay       = non-negative-float ;
+sustain     = non-negative-float ;
+release     = non-negative-float ;
+operator    = volume , " " ,  frequency , " " , attack , " " , decay , " " , sustain , " " , release ;
+instrument  = name , end-of-line , { indent , operator , end-of-line } ;
+instruments = [ { instrument } ] ;</code></pre>
+
+    <ul>
+      <li>
+        <code>name</code>は音源名を定義する。
+        音源名は音源定義エリア全体においてユニークでなければならない。
+      </li>
+      <li><code>volume</code>はオペレータの振幅を指定する。</li>
+      <li><code>freqratio</code>は音源への周波数比。</li>
+      <li><code>attack</code>はADSRエンベロープのアタックタイムを指定する。単位は秒である。</li>
+      <li><code>decay</code>はADSRエンベロープのディケイタイムを指定する。単位は秒である。</li>
+      <li><code>sustain</code>はADSRエンベロープのサステインレベルを指定する。単位は秒である。</li>
+      <li><code>release</code>はADSRエンベロープのリリースタイムを指定する。単位は秒である。</li>
+      <li><code>operator</code>はオペレータを定義する。</li>
+      <li><code>instrument</code>は1音源を定義する。</li>
+      <li><code>instruments</code>は音源定義エリア全体の文法である。</li>
+    </ul>
+  </div>
+</body>
+
+</html>

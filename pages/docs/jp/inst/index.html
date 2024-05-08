@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf8">
-  <title>標準音価: IAM.mml Docs</title>
+  <title>音源: IAM.mml Docs</title>
   <link rel="stylesheet" type="text/css" href="../index.css?20240420">
   <script src="../index.js?20240420"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
@@ -16,30 +16,30 @@
   <script>createMenu("")</script>
 
   <div id="main">
-    <h1>標準音価</h1>
+    <h1>音源</h1>
 
     <hr>
 
     <h2>文法</h2>
 
-    <pre><code class="ebnf">number = natural-number ;
-length = "l" , number ;</code></pre>
+    <pre><code class="ebnf">instrument = "@" , identifier ;</code></pre>
 
     <h2>解説</h2>
 
     <p>
-      音符コマンドにおいて音価が指定されなかったときの音価を指定するコマンド。
+      音源を指定するコマンド。
     </p>
 
     <ul>
       <li>
-        <code>number</code>は音価を指定する。
-        0より大きい自然数でなければならない。
+        <code>instrument</code>は音源名を指定する。
+        音源は画面右側の音源定義で定義されていなければならない。
       </li>
     </ul>
 
     <p>
-      標準で<code>l4</code>が評価されている。
+      <code>identifier</code>は空白・タブあるいは改行までの任意の文字列を取得する。
+      従って、音源コマンドに続くコマンドの前には、空白・タブあるいは改行を入れなければならない。
     </p>
   </div>
 </body>
