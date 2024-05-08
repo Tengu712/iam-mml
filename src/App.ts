@@ -1,24 +1,8 @@
+import {Player} from './Player'
 import type {ICommand} from './command/ICommand'
-import {SAMPLE_RATE} from './constants'
 import {Evaluator} from './evaluate/Evaluator'
 import {Insts} from './inst/Insts'
 import {Parser} from './parse/Parser'
-
-function createAudioBuffer(audioContext: AudioContext, waves: Float32Array[]): AudioBuffer {
-  const maxWaveSize = waves.reduce((r, n) => (n.length > r ? n.length : r), 0)
-  const audioBuffer = audioContext.createBuffer(waves.length, maxWaveSize, SAMPLE_RATE)
-  for (let i = 0; i < waves.length; ++i) {
-    audioBuffer.copyToChannel(waves[i], i)
-  }
-  return audioBuffer
-}
-
-function playAudioBuffer(audioContext: AudioContext, audioBuffer: AudioBuffer) {
-  const source = audioContext.createBufferSource()
-  source.buffer = audioBuffer
-  source.connect(audioContext.destination)
-  source.start()
-}
 
 function isCommandsSame(a: readonly ICommand[] | undefined, b: readonly ICommand[]): boolean {
   if (a === undefined) {
@@ -36,25 +20,30 @@ function isCommandsSame(a: readonly ICommand[] | undefined, b: readonly ICommand
 }
 
 export class App {
-  private insts: Insts | null
+  private insts: Insts
   private readonly commandssCache: Map<string, readonly ICommand[]>
   private readonly waveCache: Map<string, Float32Array>
 
   public constructor() {
-    this.insts = null
+    this.insts = new Insts('')
     this.commandssCache = new Map()
     this.waveCache = new Map()
   }
 
-  public play(mml: string, inst: string, isMMLChanged: boolean, isInstChanged: boolean) {
+  public play(mml: string | null, inst: string | null) {
     // parse inst
-    if (isInstChanged || this.insts === null) {
+    if (inst !== null) {
       this.insts = new Insts(inst)
     }
 
     // parse mml into commands
     let commandss = this.commandssCache
-    if (isInstChanged || isMMLChanged) {
+    if (inst !== null && mml === null) {
+      throw new Error(
+        `[unexpected error] If the instrument definition is changed, mml is needed to be reparsed.`
+      )
+    }
+    if (mml !== null) {
       commandss = Parser.parse(mml, this.insts)
       if (commandss.size === 0) {
         throw new Error('[fatal error] No parts found.')
@@ -65,8 +54,8 @@ export class App {
     const waves = []
     for (const [partName, commands] of commandss) {
       if (
-        !isInstChanged &&
-        !isMMLChanged &&
+        inst === null &&
+        mml === null &&
         isCommandsSame(this.commandssCache.get(partName), commands) &&
         this.waveCache.has(partName)
       ) {
@@ -80,8 +69,6 @@ export class App {
     }
 
     // play
-    const audioContext = new AudioContext()
-    const audioBuffer = createAudioBuffer(audioContext, waves)
-    playAudioBuffer(audioContext, audioBuffer)
+    new Player(waves).play()
   }
 }

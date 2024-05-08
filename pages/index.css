@@ -271,7 +271,7 @@ textarea {
 }
 
 #sidebar-resizer {
-  width: 2px;
+  width: 3px;
   height: 100%;
   background-color: #a00;
   cursor: ew-resize;
