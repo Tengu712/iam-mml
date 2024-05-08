@@ -61,5 +61,6 @@ export class Sidebar {
     this.taLog.value += hhmmss(new Date())
     this.taLog.value += ') '
     this.taLog.value += message
+    this.open()
   }
 }
