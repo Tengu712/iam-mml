@@ -80,10 +80,10 @@ export class Operator {
   }
 
   public run(f: number, g: number, t: number): number {
-    // TODO: modulator
     const i = t * PER_SAMPLE_RATE
     const j = g * PER_SAMPLE_RATE
-    const base = this.v * Math.sin(2 * Math.PI * f * this.f * i)
+    const m = this.modulator?.run(f, g, t) ?? 0
+    const base = this.v * Math.sin(2 * Math.PI * f * this.f * i + m)
     if (i < this.a) {
       return (1 - (this.a - i) / this.a) * base
     }
