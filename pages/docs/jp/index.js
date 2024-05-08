@@ -15,13 +15,13 @@ function createMenu(path) {
         <br>
         <div>
           <b>コマンド</b><br>
-          　<a href="${path}../note">音符</a><br>
-          　<a href="${path}../length">標準音価</a><br>
-          　<a href="${path}../key">調号</a><br>
-          　<a href="${path}../octave">オクターブ</a><br>
-          　<a href="${path}../tempo">テンポ</a><br>
-          　<a href="${path}../volume">音量</a><br>
-          　<a href="${path}../instrument">音源</a>
+          　<a href="${path}../command/note">音符</a><br>
+          　<a href="${path}../command/length">標準音価</a><br>
+          　<a href="${path}../command/key">調号</a><br>
+          　<a href="${path}../command/octave">オクターブ</a><br>
+          　<a href="${path}../command/tempo">テンポ</a><br>
+          　<a href="${path}../command/volume">音量</a><br>
+          　<a href="${path}../command/instrument">音源</a>
         </div>
         <br>
         <div>
