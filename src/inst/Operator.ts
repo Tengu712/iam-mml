@@ -85,7 +85,7 @@ export class Operator {
     const m = this.modulator?.run(f, g, t) ?? 0
     const base = this.v * Math.sin(2 * Math.PI * f * this.f * i + m)
     if (i < this.a) {
-      return (1 - (this.a - i) / this.a) * base
+      return (i / this.a) * base
     }
     if (i < j && i < this.a + this.d) {
       return (this.s + (1 - this.s) * (1 - (i - this.a) / this.d)) * base
