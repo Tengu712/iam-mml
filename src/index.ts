@@ -31,6 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
+  // build button
+  const btnBuild = getElementById<HTMLButtonElement>('build')
+  btnBuild.addEventListener('click', () => {
+    try {
+      app.build(caMML.get(), caInst.get())
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        sidebar.log(err.message + '\n')
+      } else {
+        sidebar.log(err + '\n\n')
+      }
+    }
+  })
+
   // info button
   const btnInfo = getElementById<HTMLButtonElement>('info')
   btnInfo.addEventListener('click', () => window.open('./docs/jp/about'))

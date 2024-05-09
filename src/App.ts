@@ -1,4 +1,5 @@
 import {Player} from './Player'
+import {Wave} from './Wave'
 import type {ICommand} from './command/ICommand'
 import {Evaluator} from './evaluate/Evaluator'
 import {Insts} from './inst/Insts'
@@ -69,6 +70,19 @@ export class App {
     }
 
     // play
-    new Player(waves).play()
+    new Player(new Wave(waves)).play()
+  }
+
+  public build(mml: string, inst: string) {
+    this.insts = new Insts(inst)
+    const commandss = Parser.parse(mml, this.insts)
+    const waves = []
+    for (const [partName, commands] of commandss) {
+      const wave = Evaluator.eval(commands)
+      waves.push(wave)
+      this.commandssCache.set(partName, commands)
+      this.waveCache.set(partName, wave)
+    }
+    new Wave(waves).build()
   }
 }
