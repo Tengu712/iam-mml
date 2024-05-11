@@ -10,6 +10,7 @@ function createMenu(path) {
         <div>
           <b>一般</b><br>
           　<a href="${path}../about">IAM.mmlとは？</a><br>
+          　<a href="${path}../releasenote">リリースノート</a><br>
           　<a href="${path}../ebnf">EBNF</a>
         </div>
         <br>
@@ -26,6 +27,7 @@ function createMenu(path) {
         <br>
         <div>
           <b>音源</b><br>
+          　<a href="${path}../instrument/tutorial">チュートリアル</a><br>
           　<a href="${path}../instrument/theory">理論</a><br>
           　<a href="${path}../instrument/grammer">文法</a>
         </div>

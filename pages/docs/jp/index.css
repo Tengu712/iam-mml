@@ -54,3 +54,7 @@ hr {
 #sidebar {
   padding: 0 2rem;
 }
+
+.center {
+  text-align: center;
+}
