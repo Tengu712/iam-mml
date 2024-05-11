@@ -2,15 +2,6 @@ import {PER_SAMPLE_RATE} from '../constants'
 import {Lines} from './Lines'
 import {Operators} from './Operators'
 
-function getIndent(s: string): number {
-  for (let i = 0; i < s.length; ++i) {
-    if (s[i] !== ' ') {
-      return i
-    }
-  }
-  throw new Error(`[unexpected error] A blank line is passed to getIndent().`)
-}
-
 export class Operator {
   private readonly v: number
   private readonly f: number
@@ -26,11 +17,6 @@ export class Operator {
       throw new Error(`[unexpected error] Tried to an inexistent operator.`)
     }
     lines.forward()
-
-    const lineIndent = getIndent(line.body)
-    if (lineIndent !== indent) {
-      throw new Error(`[syntax error] An airborne operator is found: ${line.ln} line.`)
-    }
 
     const params = line.body
       .trim()
@@ -66,12 +52,9 @@ export class Operator {
     this.r = params[5]
 
     this.modulator = null
-    const nextLine = lines.get()
-    if (nextLine !== null) {
-      const nextLineIndent = getIndent(nextLine.body)
-      if (nextLineIndent > indent) {
-        this.modulator = new Operators(lines, nextLineIndent)
-      }
+    const nextLineIndent = lines.getIndent()
+    if (nextLineIndent > indent) {
+      this.modulator = new Operators(lines, nextLineIndent)
     }
   }
 

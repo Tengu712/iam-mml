@@ -11,6 +11,10 @@ export class Operators {
       if (line === null || line.body.startsWith('@')) {
         break
       }
+      const curIndent = lines.getIndent()
+      if (curIndent !== indent) {
+        break
+      }
       operators.push(new Operator(lines, indent))
     }
     if (operators.length === 0) {

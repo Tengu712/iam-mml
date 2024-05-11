@@ -31,6 +31,19 @@ export class Lines {
     }
   }
 
+  public getIndent(): number {
+    const line = this.get()
+    if (line === null) {
+      return -1
+    }
+    for (let i = 0; i < line.body.length; ++i) {
+      if (line.body[i] !== ' ') {
+        return i
+      }
+    }
+    throw new Error(`[unexpected error] Tried to get the indent of a blank line.`)
+  }
+
   public forward() {
     this.idx += 1
   }
