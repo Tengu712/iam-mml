@@ -15,6 +15,12 @@ function createMenu(path) {
         </div>
         <br>
         <div>
+          <b>楽譜</b><br>
+          　<a href="${path}../score/tutorial">チュートリアル</a><br>
+          　<a href="${path}../score/grammer">文法</a>
+        </div>
+        <br>
+        <div>
           <b>コマンド</b><br>
           　<a href="${path}../command/note">音符</a><br>
           　<a href="${path}../command/length">標準音価</a><br>

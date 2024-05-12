@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>楽譜/文法: IAM.mml Docs</title>
+  <link rel="icon" href="../../../../iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" type="text/css" href="../../index.css?20240420">
+  <script src="../../index.js?20240420"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+  
+  <div id="main">
+    <h1>楽譜/文法</h1>
+
+    <hr>
+
+    <pre><code class="ebnf">partname   = identifier ;
+command    = ? a command ? ;
+commands   = { command , [ { space } ] } ;
+line       = [ { space } ] , partname , { space } , commands , line-break ;
+blank-line = [ { space } ] , line-break ;
+score      = { line | blank-line } ;</code></pre>
+
+    <ul>
+      <li>
+        <code>partname</code>はパート名を定義する。
+        パート名が同じである行は楽譜が繋がっていると解釈される。
+        ただし、コード上行番号が若い行が時間的に前の部分となる。
+      </li>
+      <li><code>command</code>は各種コマンド。</li>
+      <li><code>commands</code>はコマンド列挙部分の文法。</li>
+      <li><code>line</code>は一行全体の文法。</li>
+      <li><code>blank-line</code>は空白行。</li>
+      <li><code>score</code>は楽譜定義エリア全体の文法。</li>
+    </ul>
+
+    <p>
+      セミコロン「;」以降行末まではコメントとして解釈される。
+    </p>
+  </div>
+</body>
+
+</html>
