@@ -18,4 +18,8 @@ export class Player {
     source.connect(this.audioContext.destination)
     source.start()
   }
+
+  public close() {
+    this.audioContext.close()
+  }
 }

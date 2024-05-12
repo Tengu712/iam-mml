@@ -24,14 +24,22 @@ export class App {
   private insts: Insts
   private readonly commandssCache: Map<string, readonly ICommand[]>
   private readonly waveCache: Map<string, Float32Array>
+  private player: Player | null
 
   public constructor() {
     this.insts = new Insts('')
     this.commandssCache = new Map()
     this.waveCache = new Map()
+    this.player = null
   }
 
   public play(mml: string | null, inst: string | null) {
+    // if there are no changes
+    if (mml === null && inst === null && this.player !== null) {
+      this.player.play()
+      return
+    }
+
     // parse inst
     if (inst !== null) {
       this.insts = new Insts(inst)
@@ -70,10 +78,15 @@ export class App {
     }
 
     // play
-    new Player(new Wave(waves)).play()
+    if (this.player !== null) {
+      this.player.close()
+    }
+    this.player = new Player(new Wave(waves))
+    this.player.play()
   }
 
   public build(mml: string, inst: string) {
+    this.player = null
     this.insts = new Insts(inst)
     const commandss = Parser.parse(mml, this.insts)
     const waves = []
