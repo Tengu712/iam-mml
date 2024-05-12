@@ -31,7 +31,8 @@ attack      = non-negative-float ;
 decay       = non-negative-float ;
 sustain     = non-negative-float ;
 release     = non-negative-float ;
-operator    = volume , " " ,  frequency , " " , attack , " " , decay , " " , sustain , " " , release ;
+feedback    = non-negative-float ;
+operator    = volume , " " ,  frequency , " " , attack , " " , decay , " " , sustain , " " , release , [ " " , feedback ] ;
 instrument  = name , end-of-line , { indent , operator , end-of-line } ;
 instruments = [ { instrument } ] ;</code></pre>
 
@@ -46,6 +47,7 @@ instruments = [ { instrument } ] ;</code></pre>
       <li><code>decay</code>はADSRエンベロープのディケイタイムを指定する。単位は秒である。</li>
       <li><code>sustain</code>はADSRエンベロープのサステインレベルを指定する。単位は秒である。</li>
       <li><code>release</code>はADSRエンベロープのリリースタイムを指定する。単位は秒である。</li>
+      <li><code>feedback</code>はフィードバックを行う回数を指定する。自然数以外が与えられた場合、小数点以下は切り捨てられる。葉ノードのオペレータでなければならない。</li>
       <li><code>operator</code>はオペレータを定義する。</li>
       <li><code>instrument</code>は1音源を定義する。</li>
       <li><code>instruments</code>は音源定義エリア全体の文法である。</li>
