@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100pt" height="100pt">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <rect class="cls-1" y="50" width="20" height="50"/>
+  <rect class="cls-1" x="80" y="50" width="20" height="50"/>
+  <rect class="cls-1" y="80" width="100" height="20"/>
+  <rect class="cls-1" x="35" width="30" height="50"/>
+  <polygon class="cls-1" points="50 80 87.5 30 12.5 30 50 80"/>
+</svg>
