@@ -98,4 +98,12 @@ export class App {
     }
     new Wave(waves).build()
   }
+
+  public pause() {
+    this.player?.pause()
+  }
+
+  public stop() {
+    this.player?.stop()
+  }
 }

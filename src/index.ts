@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const _sidebarResizer = new Resizer('sidebar-resizer', 'sidebar-wrapper', false)
   const _mmlResizer = new Resizer('textarea-resizer', 'mml-wrapper', true)
 
-  // add the event listener when clicking the play button
+  // add an event listener to the play button
   const btnPlay = getElementById<HTMLButtonElement>('play')
   btnPlay.addEventListener('click', () => {
     try {
@@ -30,6 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   })
+
+  // add an event listener to the pause button
+  const btnPause = getElementById<HTMLButtonElement>('pause')
+  btnPause.addEventListener('click', () => app.pause())
+
+  // add an event listener to the stop button
+  const btnStop = getElementById<HTMLButtonElement>('stop')
+  btnStop.addEventListener('click', () => app.stop())
 
   // build button
   const btnBuild = getElementById<HTMLButtonElement>('build')
