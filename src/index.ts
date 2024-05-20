@@ -39,6 +39,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnStop = getElementById<HTMLButtonElement>('stop')
   btnStop.addEventListener('click', () => app.stop())
 
+  // add an event listener to the import button
+  const btnImport = getElementById<HTMLButtonElement>('import')
+  btnImport.addEventListener('click', () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'text/*'
+    input.onchange = () => {
+      if (input.files === null || input.files.length === 0) {
+        return
+      }
+      const fileReader = new FileReader()
+      fileReader.onload = () => {
+        if (fileReader.result === null) {
+          sidebar.log(`[io error] Failed to read the imported file.`)
+          return
+        }
+        const result = fileReader.result.toString()
+        const index = result.indexOf('\n%%\n')
+        if (index < 0) {
+          sidebar.log(`[io error] Invalid MML is imported.`)
+          return
+        }
+        const inst = result.slice(0, index)
+        const mml = result.slice(index + 4)
+        caInst.set(inst)
+        caMML.set(mml)
+      }
+      fileReader.readAsText(input.files[0])
+    }
+    input.click()
+  })
+
+  // add an event listener to the export button
+  const btnExport = getElementById<HTMLButtonElement>('export')
+  btnExport.addEventListener('click', () => {
+    const text = caInst.getRaw() + '\n\n%%\n' + caMML.getRaw() + '\n'
+    const a = document.createElement('a')
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+    a.download = 'music.mml'
+    a.click()
+  })
+
   // build button
   const btnBuild = getElementById<HTMLButtonElement>('build')
   btnBuild.addEventListener('click', () => {

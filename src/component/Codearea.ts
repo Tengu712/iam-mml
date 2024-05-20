@@ -18,17 +18,19 @@ export class Codearea {
 
     this.taNumbers.value = '1\n'
 
-    this.ta.addEventListener('input', () => {
-      const linesCount = this.ta.value.split('\n').length
-      let taNumbersValue = ''
-      for (let i = 1; i < linesCount + 1; ++i) {
-        taNumbersValue += i + '\n'
-      }
-      this.taNumbers.value = taNumbersValue
-      this.taNumbers.scrollTop = this.ta.scrollTop
-      this.isReaded = false
-    })
+    this.ta.addEventListener('input', () => this.update())
     this.ta.addEventListener('scroll', () => (this.taNumbers.scrollTop = this.ta.scrollTop))
+  }
+
+  private update() {
+    const linesCount = this.ta.value.split('\n').length
+    let taNumbersValue = ''
+    for (let i = 1; i < linesCount + 1; ++i) {
+      taNumbersValue += i + '\n'
+    }
+    this.taNumbers.value = taNumbersValue
+    this.taNumbers.scrollTop = this.ta.scrollTop
+    this.isReaded = false
   }
 
   public get(): string {
@@ -43,5 +45,15 @@ export class Codearea {
     } else {
       return null
     }
+  }
+
+  public getRaw(): string {
+    return this.ta.value
+  }
+
+  public set(value: string) {
+    this.isReaded = false
+    this.ta.value = value
+    this.update()
   }
 }
