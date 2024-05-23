@@ -81,7 +81,7 @@ export class App {
       } else {
         const chars = new Characters(partChars)
         const commands = new Commands(chars, preprocessor.getMacroDefs(), this.instDefsCache)
-        const wave = Evaluator.eval(commands.get())
+        const wave = Evaluator.eval(commands, preprocessor.getMacroDefs(), this.instDefsCache)
         waves.push(wave)
         waveCache.set(partName, wave)
       }
@@ -113,10 +113,9 @@ export class App {
     const waves = []
     const waveCache = new Map()
     for (const [partName, partChars] of preprocessor.getPartDefs().iter()) {
-      const cached = this.partDefsCache.get(partName)
       const chars = new Characters(partChars)
       const commands = new Commands(chars, preprocessor.getMacroDefs(), this.instDefsCache)
-      const wave = Evaluator.eval(commands.get())
+      const wave = Evaluator.eval(commands, preprocessor.getMacroDefs(), this.instDefsCache)
       waves.push(wave)
       waveCache.set(partName, wave)
     }

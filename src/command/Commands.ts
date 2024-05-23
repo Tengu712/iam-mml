@@ -6,10 +6,12 @@ import {Octave} from './Octave'
 import {Tempo} from './Tempo'
 import {Volume} from './Volume'
 import {Instrument} from './Instrument'
+import {Macro} from './Macro'
 
-import type {Insts} from '@/inst/Insts'
 import type {Characters} from '@/parse/Characters'
 import type {MacroDefs} from '@/parse/MacroDefs'
+import type {Insts} from '@/inst/Insts'
+import type {Buffer} from '@/evaluate/Buffer'
 
 export class Commands {
   private readonly commands: ICommand[]
@@ -58,10 +60,22 @@ export class Commands {
         this.commands.push(instrument)
         continue
       }
+      const macro = Macro.from(chars)
+      if (macro !== null) {
+        this.commands.push(macro)
+        continue
+      }
       throw new Error(`[syntax error] Undefined token found: ${ln} line, ${cn} char.`)
     }
   }
 
+  public eval(buffer: Buffer) {
+    for (const command of this.commands) {
+      command.eval(buffer)
+    }
+  }
+
+  /** A getter for tests. */
   public get(): readonly ICommand[] {
     return this.commands
   }
