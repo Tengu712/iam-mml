@@ -9,14 +9,12 @@ import {Instrument} from './Instrument'
 import {Macro} from './Macro'
 
 import type {Characters} from '@/parse/Characters'
-import type {MacroDefs} from '@/parse/MacroDefs'
-import type {Insts} from '@/inst/Insts'
 import type {Buffer} from '@/evaluate/Buffer'
 
 export class Commands {
   private readonly commands: ICommand[]
 
-  public constructor(chars: Characters, macroDefs: MacroDefs, instDefs: Insts) {
+  public constructor(chars: Characters) {
     this.commands = []
     while (chars.get() !== null) {
       const first = chars.get()!
@@ -55,7 +53,7 @@ export class Commands {
         this.commands.push(volume)
         continue
       }
-      const instrument = Instrument.from(chars, instDefs)
+      const instrument = Instrument.from(chars)
       if (instrument !== null) {
         this.commands.push(instrument)
         continue

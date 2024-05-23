@@ -1,29 +1,14 @@
-import {Lines} from './Lines'
 import {Operators} from './Operators'
 
+import type {Characters} from '@/parse/Characters'
+
 export class Inst {
-  private readonly name: string
   private readonly carrier: Operators
   private readonly release: number
 
-  public constructor(lines: Lines) {
-    const name = lines.get()
-    if (name === null) {
-      throw new Error(`[unexpected error] Tried to read an inexistent instrument.`)
-    }
-    if (!name.body.startsWith('@')) {
-      throw new Error(
-        `[syntax error] The instrument name must be started with '@': ${name.ln} line.`
-      )
-    }
-    this.name = name.body
-    lines.forward()
-    this.carrier = new Operators(lines, 0)
+  public constructor(chars: Characters) {
+    this.carrier = new Operators(chars, 1)
     this.release = this.carrier.getRelease()
-  }
-
-  public getName(): string {
-    return this.name
   }
 
   public getRelease(): number {

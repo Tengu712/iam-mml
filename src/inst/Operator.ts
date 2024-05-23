@@ -1,6 +1,7 @@
-import {PER_SAMPLE_RATE} from '../constants'
-import {Lines} from './Lines'
 import {Operators} from './Operators'
+
+import {PER_SAMPLE_RATE} from '@/constants'
+import type {Characters} from '@/parse/Characters'
 
 export class Operator {
   private readonly v: number
@@ -12,56 +13,71 @@ export class Operator {
   private readonly fbl: number
   private readonly modulator: Operators | null
 
-  public constructor(lines: Lines, indent: number) {
-    const line = lines.get()
-    if (line === null) {
+  public constructor(chars: Characters, indent: number) {
+    // get the line number for an error message
+    const first = chars.get()
+    if (first === null) {
       throw new Error(`[unexpected error] Tried to an inexistent operator.`)
     }
-    lines.forward()
+    const ln = first.ln
 
-    const params = line.body
-      .trim()
-      .split(' ')
-      .map((n) => {
-        if (Number.isNaN(n)) {
-          throw new Error(
-            `[syntax error] The operator parameter must be a number: ${line.ln} line.`
-          )
-        } else if (Number(n) < 0) {
-          throw new Error(
-            `[syntax error] The operator parameter must not be negative value: ${line.ln} line.`
-          )
-        } else {
-          return Number(n)
-        }
-      })
-    if (params.length > 7) {
+    // check an unexpected error
+    if (first.cn !== indent) {
       throw new Error(
-        `[syntax error] The number of operator parameters is too many: ${line.ln} line.`
+        `[unexpected error] The indent is expected ${indent} but found ${first.cn}: ${ln} line.`
       )
     }
-    if (params.length < 6) {
-      throw new Error(
-        `[syntax error] The number of operator parameters is too few: ${line.ln} line.`
-      )
-    }
-    this.v = params[0]
-    this.f = params[1]
-    this.a = params[2]
-    this.d = params[3]
-    this.s = params[4]
-    this.r = params[5]
-    this.fbl = params.length === 7 ? Math.floor(params[6]) : 0
 
+    // define an closure to check
+    const check = (s: string, n: number | null): number => {
+      if (n === null) {
+        throw new Error(`[syntax error] The operator parameter, ${s}, is not defined: ${ln} line.`)
+      } else {
+        return n
+      }
+    }
+
+    // parse parameters
+    chars.eatSpaces()
+    this.v = check('volume', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    this.f = check('frequency', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    this.a = check('attack', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    this.d = check('decay', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    this.s = check('sustain', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    this.r = check('release', chars.eatNNFloat(ln))
+    chars.eatSpaces()
+    const fbl = chars.eatNNFloat(ln)
+    if (fbl !== null) {
+      this.fbl = fbl
+    } else {
+      this.fbl = 0
+    }
+
+    // set modulator null
     this.modulator = null
-    const nextLineIndent = lines.getIndent()
-    if (nextLineIndent > indent) {
+
+    // check the next line
+    const next = chars.get()
+    if (next === null) {
+      return
+    }
+    if (next.ln === ln) {
+      throw new Error(`[syntax error] Unexpected token is found: ${next.ln} line, ${next.cn} char.`)
+    }
+
+    // recurse
+    if (next.cn > indent) {
       if (this.fbl > 0) {
         throw new Error(
-          `[syntax error] The operator with feedback must be in the deepest indent: ${line.ln} line.`
+          `[syntax error] The operator with feedback must be in the deepest indent: ${ln} line.`
         )
       }
-      this.modulator = new Operators(lines, nextLineIndent)
+      this.modulator = new Operators(chars, next.cn)
     }
   }
 

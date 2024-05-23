@@ -1,9 +1,9 @@
 import type {Character} from './Character'
 
-import {CommandsOnDemand} from '@/command/CommandsOnDemand'
+import {InstOnDemand} from '@/inst/InstOnDemand'
 
-export class MacroDefs {
-  private readonly map: Map<string, CommandsOnDemand>
+export class InstDefs {
+  private readonly map: Map<string, InstOnDemand>
 
   public constructor() {
     this.map = new Map()
@@ -13,12 +13,12 @@ export class MacroDefs {
     if (this.map.has(key)) {
       return false
     } else {
-      this.map.set(key, new CommandsOnDemand(value))
+      this.map.set(key, new InstOnDemand(value))
       return true
     }
   }
 
-  public get(key: string): CommandsOnDemand | null {
+  public get(key: string): InstOnDemand | null {
     return this.map.get(key) ?? null
   }
 }

@@ -1,12 +1,11 @@
-import {Player} from './Player'
-import {Wave} from './Wave'
-import {Commands} from './command/Commands'
-import {Evaluator} from './evaluate/Evaluator'
-import {Insts} from './inst/Insts'
-import type {Character} from './parse/Character'
-import {Characters} from './parse/Characters'
-import {PartDefs} from './parse/PartDefs'
-import {Preprocessor} from './parse/Preprocessor'
+import {Player} from '@/Player'
+import {Wave} from '@/Wave'
+import {Commands} from '@/command/Commands'
+import {Evaluator} from '@/evaluate/Evaluator'
+import type {Character} from '@/parse/Character'
+import {Characters} from '@/parse/Characters'
+import {PartDefs} from '@/parse/PartDefs'
+import {Parser} from '@/parse/Parser'
 
 function isCharsSame(
   a: readonly Character[] | undefined,
@@ -28,60 +27,35 @@ function isCharsSame(
 }
 
 export class App {
-  private instDefsCache: Insts
   private partDefsCache: PartDefs
   private waveCache: Map<string, Float32Array>
   private player: Player | null
 
   public constructor() {
-    this.instDefsCache = new Insts('')
     this.partDefsCache = new PartDefs()
     this.waveCache = new Map()
     this.player = null
   }
 
-  public play(mml: string | null, inst: string | null) {
-    // check an unexpected error
-    if (inst !== null && mml === null) {
-      throw new Error(
-        `[unexpected error] If the instrument definition is changed, mml is needed to be reparsed.`
-      )
-    }
-
-    // if there are no changes
-    if (mml === null && this.player !== null) {
-      this.player.play()
-      return
-    }
-
-    // check an unexpected error
-    if (mml === null) {
-      throw new Error(`[fatal error] No input is passed. Try again after changing the code.`)
-    }
-
-    // parse inst
-    if (inst !== null) {
-      this.instDefsCache = new Insts(inst)
-    }
-
-    // preprocess
-    const preprocessor = new Preprocessor(mml)
-    if (preprocessor.getPartDefs().len() === 0) {
+  public prepare(mml: string, inst: string) {
+    // parse
+    const [partDefs, macroDefs, instDefs] = Parser.parse(mml, inst)
+    if (partDefs.len() === 0) {
       throw new Error('[fatal error] No parts found.')
     }
 
     // evaluate commands and create wave
     const waves = []
     const waveCache = new Map()
-    for (const [partName, partChars] of preprocessor.getPartDefs().iter()) {
+    for (const [partName, partChars] of partDefs.iter()) {
       const cached = this.partDefsCache.get(partName)
       if (cached !== null && isCharsSame(cached, partChars) && this.waveCache.has(partName)) {
         waves.push(this.waveCache.get(partName)!)
         waveCache.set(partName, this.waveCache.get(partName)!)
       } else {
         const chars = new Characters(partChars)
-        const commands = new Commands(chars, preprocessor.getMacroDefs(), this.instDefsCache)
-        const wave = Evaluator.eval(commands, preprocessor.getMacroDefs(), this.instDefsCache)
+        const commands = new Commands(chars)
+        const wave = Evaluator.eval(commands, macroDefs, instDefs)
         waves.push(wave)
         waveCache.set(partName, wave)
       }
@@ -90,37 +64,28 @@ export class App {
     // cache
     this.partDefsCache.clear()
     this.waveCache.clear()
-    this.partDefsCache = preprocessor.getPartDefs()
+    this.partDefsCache = partDefs
     this.waveCache = waveCache
 
-    // play
+    // recreate this.player
     if (this.player !== null) {
       this.player.close()
     }
     this.player = new Player(new Wave(waves))
+  }
+
+  public play() {
+    if (this.player === null) {
+      throw new Error(`[unexpected error] Tried to play null player.`)
+    }
     this.player.play()
   }
 
-  public build(mml: string, inst: string) {
-    this.partDefsCache.clear()
-    this.waveCache.clear()
-
-    this.instDefsCache = new Insts(inst)
-    const preprocessor = new Preprocessor(mml)
-    if (preprocessor.getPartDefs().len() === 0) {
-      throw new Error('[fatal error] No parts found.')
-    }
+  public build() {
     const waves = []
-    const waveCache = new Map()
-    for (const [partName, partChars] of preprocessor.getPartDefs().iter()) {
-      const chars = new Characters(partChars)
-      const commands = new Commands(chars, preprocessor.getMacroDefs(), this.instDefsCache)
-      const wave = Evaluator.eval(commands, preprocessor.getMacroDefs(), this.instDefsCache)
+    for (const wave of this.waveCache.values()) {
       waves.push(wave)
-      waveCache.set(partName, wave)
     }
-    this.partDefsCache = preprocessor.getPartDefs()
-    this.waveCache = waveCache
     new Wave(waves).build()
   }
 

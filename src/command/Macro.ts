@@ -55,6 +55,6 @@ export class Macro implements ICommand {
     if (commandsOnDemand === null) {
       throw new Error(`[syntax error] The macro is not defined: ${this.ln} line, ${this.cn} char.`)
     }
-    commandsOnDemand.get(buffer.macroDefs, buffer.instDefs).eval(buffer)
+    commandsOnDemand.get().eval(buffer)
   }
 }

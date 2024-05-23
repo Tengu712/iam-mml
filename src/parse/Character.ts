@@ -13,11 +13,7 @@ export type Character = {
  * @param cn Column number starting from 0
  * @returns a converted character array.
  */
-export function convertStringToCharacters(
-  line: string,
-  ln: number,
-  cn: number
-): readonly Character[] {
+export function convertStringToCharacters(line: string, ln: number, cn: number): Character[] {
   const chars = []
   for (; cn < line.length; ++cn) {
     chars.push({c: line[cn], ln: ln + 1, cn: cn + 1})

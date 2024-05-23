@@ -38,17 +38,12 @@ export class Codearea {
     return this.ta.value
   }
 
-  public getNew(): string | null {
-    if (!this.isReaded) {
-      this.isReaded = true
-      return this.ta.value
-    } else {
-      return null
-    }
-  }
-
   public getRaw(): string {
     return this.ta.value
+  }
+
+  public getIsReaded(): boolean {
+    return this.isReaded
   }
 
   public set(value: string) {

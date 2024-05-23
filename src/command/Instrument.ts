@@ -1,23 +1,25 @@
 import type {ICommand} from './ICommand'
-import type {Buffer} from '../evaluate/Buffer'
-import {Characters} from '../parse/Characters'
-import {Inst} from '../inst/Inst'
-import type {Insts} from '../inst/Insts'
+
+import type {Buffer} from '@/evaluate/Buffer'
+import type {Characters} from '@/parse/Characters'
 
 export class Instrument implements ICommand {
-  private readonly inst: Inst
+  private readonly ln: number
+  private readonly cn: number
+  private readonly name: string
 
-  private constructor(inst: Inst) {
-    this.inst = inst
+  private constructor(ln: number, cn: number, name: string) {
+    this.ln = ln
+    this.cn = cn
+    this.name = name
   }
 
-  public static from(chars: Characters, insts: Insts): Instrument | null {
+  public static from(chars: Characters): Instrument | null {
     const first = chars.get()
     if (first === null) {
       return null
     }
 
-    // get ln and cn for me
     const ln = first.ln
     const cn = first.cn
 
@@ -32,22 +34,28 @@ export class Instrument implements ICommand {
       throw new Error(`[syntax error] The instrument id is not found: ${ln} line, ${cn} char.`)
     }
 
-    // check
-    const inst = insts.get('@' + name)
-    if (inst === null) {
-      throw new Error(
-        `[syntax error] The instrument "@${name}" is undefined: ${ln} line, ${cn} char.`
-      )
-    }
-
-    return new Instrument(inst)
+    return new Instrument(ln, cn, '@' + name)
   }
 
-  public getInst(): Inst {
-    return this.inst
+  public getLn(): number {
+    return this.ln
+  }
+
+  public getCn(): number {
+    return this.cn
+  }
+
+  public getName(): string {
+    return this.name
   }
 
   public eval(buffer: Buffer): void {
-    buffer.inst = this.inst
+    const instOnDemand = buffer.instDefs.get(this.name)
+    if (instOnDemand === null) {
+      throw new Error(
+        `[syntax error] The instrument "@${this.name}" is undefined: ${this.ln} line, ${this.cn} char.`
+      )
+    }
+    buffer.inst = instOnDemand.get()
   }
 }

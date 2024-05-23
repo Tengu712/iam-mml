@@ -2,8 +2,6 @@ import {Commands} from './Commands'
 
 import {Characters} from '@/parse/Characters'
 import type {Character} from '@/parse/Character'
-import type {MacroDefs} from '@/parse/MacroDefs'
-import type {Insts} from '@/inst/Insts'
 
 export class CommandsOnDemand {
   private readonly chars: readonly Character[]
@@ -14,9 +12,9 @@ export class CommandsOnDemand {
     this.commands = null
   }
 
-  public get(macroDefs: MacroDefs, instDefs: Insts): Commands {
+  public get(): Commands {
     if (this.commands === null) {
-      this.commands = new Commands(new Characters(this.chars), macroDefs, instDefs)
+      this.commands = new Commands(new Characters(this.chars))
     }
     return this.commands
   }

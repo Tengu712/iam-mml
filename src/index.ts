@@ -19,9 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnPlay = getElementById<HTMLButtonElement>('play')
   btnPlay.addEventListener('click', () => {
     try {
-      const inst = caInst.getNew()
-      const mml = inst ? caMML.get() : caMML.getNew()
-      app.play(mml, inst)
+      if (!caMML.getIsReaded() || !caInst.getIsReaded()) {
+        app.prepare(caMML.get(), caInst.get())
+      }
+      app.play()
     } catch (err: unknown) {
       if (err instanceof Error) {
         sidebar.log(err.message + '\n')
@@ -85,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnBuild = getElementById<HTMLButtonElement>('build')
   btnBuild.addEventListener('click', () => {
     try {
-      app.build(caMML.get(), caInst.get())
+      if (!caMML.getIsReaded() || !caInst.getIsReaded()) {
+        app.prepare(caMML.get(), caInst.get())
+      }
+      app.build()
     } catch (err: unknown) {
       if (err instanceof Error) {
         sidebar.log(err.message + '\n')
