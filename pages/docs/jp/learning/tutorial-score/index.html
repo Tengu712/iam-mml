@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf8">
-  <title>楽譜/チュートリアル: IAM.mml Docs</title>
+  <title>学習/楽譜定義: IAM.mml Docs</title>
   <link rel="icon" href="../../../../iam-mml-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" type="text/css" href="../../index.css?0">
   <script src="../../index.js?0"></script>
@@ -17,15 +17,15 @@
   <script>createMenu("../")</script>
   
   <div id="main">
-    <h1>楽譜/チュートリアル</h1>
+    <h1>学習/楽譜定義</h1>
 
     <hr>
 
     <h2>概要</h2>
 
     <p>
-      IAM.mmlのアプリケーションページには、コードエリアが2個あります。
-      左側のコードエリアで楽譜を、右側のコードエリアで音源を定義します。
+      IAM.mmlでは、楽譜定義と音源定義の2種類を分けて考えています。
+      本頁は楽譜定義のチュートリアルです。
     </p>
 
     <p>
@@ -43,7 +43,7 @@
 
     <p>
       簡単な例として「ドレミ」を鳴らしてみましょう。
-      次のコードを左側のコードエリアに記述し、「Play」ボタンを押すと、目的の曲が再生されます。
+      次のコードを左側のコードエリアに記述し、再生ボタンを押すと、「ドレミ」が再生されます。
     </p>
 
     <pre><code class="plaintext">melody cde</code></pre>
@@ -106,6 +106,40 @@ chord3 e- f
 chord1 b >c
 chord2 d  e-
 chord3 f  g</code></pre>
+
+    <h2>ループ</h2>
+
+    <p>
+      特定のフレーズを繰り返したいことがあります。
+      愚直にコピー&ペーストするのは、可読性及び変更容易性の観点から良い選択とは言えません。
+      この問題を解決するために、特定の楽譜を指定回数繰り返す<a href="../../command/loop/">ループコマンド</a>が用意されています。
+    </p>
+
+    <p>
+      次のコードには、ループコマンドを用いて繰り返している部分があります。
+    </p>
+
+    <pre><code class="plaintext">melody l8 cd [aedecd]3 &lt;b&gt;c&lt;be</code></pre>
+
+    <h2>マクロ</h2>
+
+    <p>
+      特定のコマンド列に名前を付けて管理したいことがあります。
+      この需要はマクロによって実現されます。
+      マクロを展開するためには、<a href="../../command/macro/">マクロコマンド</a>を用います。
+    </p>
+
+    <p>
+      次のコードでは、初期設定や楽譜をマクロ化しています。
+    </p>
+
+    <pre><code class="plaintext">!cic t140l1v0.2
+!c1-1451 c1 f1g1 c1
+!c2-1451 e1 a1b1 e1
+!c3-1451 g1&gt;c1d1&lt;g1
+chord1 !cic o3 !c1-1451
+chord2 !cic o4 !c2-1451
+chord3 !cic o4 !c3-1451</code></pre>
   </div>
 
 </body>

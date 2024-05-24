@@ -15,8 +15,15 @@ function createMenu(path) {
         </div>
         <br>
         <div>
+          <b>学習</b><br>
+          　<a href="${path}../learning/screen/">画面の見方</a><br>
+          　<a href="${path}../learning/sample">サンプルコード</a><br>
+          　<a href="${path}../learning/tutorial-score">楽譜定義</a><br>
+          　<a href="${path}../learning/tutorial-inst">音源定義</a>
+        </div>
+        <br>
+        <div>
           <b>楽譜</b><br>
-          　<a href="${path}../score/tutorial">チュートリアル</a><br>
           　<a href="${path}../score/grammer">文法</a>
         </div>
         <br>
@@ -28,15 +35,18 @@ function createMenu(path) {
           　<a href="${path}../command/octave">オクターブ</a><br>
           　<a href="${path}../command/tempo">テンポ</a><br>
           　<a href="${path}../command/volume">音量</a><br>
-          　<a href="${path}../command/instrument">音源</a>
+          　<a href="${path}../command/instrument">音源</a><br>
+          　<a href="${path}../command/macro">マクロ</a><br>
+          　<a href="${path}../command/loop">ループ</a>
         </div>
         <br>
         <div>
           <b>音源</b><br>
-          　<a href="${path}../instrument/tutorial">チュートリアル</a><br>
           　<a href="${path}../instrument/theory">理論</a><br>
           　<a href="${path}../instrument/grammer">文法</a>
         </div>
+        <br>
+        <a href="https://github.com/Tengu712/iam-mml">GitHub</a>
       </div>
     </div>
   `
