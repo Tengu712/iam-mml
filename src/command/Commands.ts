@@ -7,6 +7,7 @@ import {Tempo} from './Tempo'
 import {Volume} from './Volume'
 import {Instrument} from './Instrument'
 import {Macro} from './Macro'
+import {Loop} from './Loop'
 
 import type {Characters} from '@/parse/Characters'
 import type {Buffer} from '@/evaluate/Buffer'
@@ -14,7 +15,7 @@ import type {Buffer} from '@/evaluate/Buffer'
 export class Commands {
   private readonly commands: ICommand[]
 
-  public constructor(chars: Characters) {
+  public constructor(chars: Characters, isInScope?: boolean) {
     this.commands = []
     while (chars.get() !== null) {
       const first = chars.get()!
@@ -63,7 +64,16 @@ export class Commands {
         this.commands.push(macro)
         continue
       }
-      throw new Error(`[syntax error] Undefined token found: ${ln} line, ${cn} char.`)
+      const loop = Loop.from(chars)
+      if (loop !== null) {
+        this.commands.push(loop)
+        continue
+      }
+      if (isInScope === undefined || isInScope === false) {
+        throw new Error(`[syntax error] Undefined token found: ${ln} line, ${cn} char.`)
+      } else {
+        break
+      }
     }
   }
 
@@ -71,6 +81,10 @@ export class Commands {
     for (const command of this.commands) {
       command.eval(buffer)
     }
+  }
+
+  public isEmpty(): boolean {
+    return this.commands.length === 0
   }
 
   /** A getter for tests. */
