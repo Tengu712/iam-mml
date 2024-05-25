@@ -23,9 +23,10 @@
 
     <h2>文法</h2>
 
-    <pre><code class="ebnf">commands = ? commands ? ;
-count    = natural-number ;
-loop     = "[" , commands , "]" , count ;</code></pre>
+    <pre><code class="ebnf">commands  = ? commands ? ;
+count     = natural-number ;
+delimiter = ":" ;
+loop      = "[" , commands , [ delimiter , commands ] , "]" , count ;</code></pre>
 
     <h2>解説</h2>
 
@@ -35,6 +36,10 @@ loop     = "[" , commands , "]" , count ;</code></pre>
 
     <ul>
       <li><code>commands</code>は繰り返す楽譜を指定する。</li>
+      <li>
+        <code>delimiter</code>は最後の繰り返しで演奏しない部分の区切りを指定する。
+        <code>delimiter</code>以降"]"までのコマンドは最後の繰り返しでは演奏されない。
+      </li>
       <li><code>count</code>は繰り返す回数を指定する。</li>
     </ul>
   </div>
