@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>IAM.mml</title>
+  <link rel="icon" href="./iam-mml-logo.svg" type="image/svg+xml">
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="index.css?20240224">
+  <script src="index.js?20240224"></script>
+</head>
+
+<body>
+
+  <div id="main">
+    <div id="button-wrapper">
+      <button id="play" class="red-button" title="Play the music">
+        <img src="./play.svg">
+      </button>
+      <button id="pause" class="red-button" title="Pause the music">
+        <img src="./pause.svg">
+      </button>
+      <button id="stop" class="red-button" title="Stop the music">
+        <img src="./stop.svg">
+      </button>
+      <button id="import" class="white-button" title="Import the MML">
+        <img src="./import.svg">
+      </button>
+      <button id="export" class="white-button" title="Export the MML">
+        <img src="./export.svg">
+      </button>
+      <button id="build" class="white-button" title="Build and download the music">
+        <img src="./build.svg">
+      </button>
+      <button id="info" class="white-button" title="Go to IAM.mml Docs">
+        <img src="./info.svg">
+      </button>
+    </div>
+
+    <div id="textarea-wrapper">
+      <div id="textarea-upper">
+        <div id="mml-wrapper">
+          <textarea id="mml-numbers" readonly></textarea>
+          <textarea id="mml" spellcheck="false"></textarea>
+        </div>
+        <div id="textarea-resizer"></div>
+        <div id="inst-wrapper">
+          <textarea id="inst-numbers" readonly></textarea>
+          <textarea id="inst" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="blinder"></div>
+
+  <div id="sidebar-wrapper">
+    <div id="sidebar-button">
+      <div id="sidebar-button-icon" class="left-triangle"></div>
+    </div>
+    <div id="sidebar">
+      <div id="sidebar-resizer"></div>
+      <textarea id="log"></textarea>
+    </div>
+  </div>
+
+</body>
+
+</html>
