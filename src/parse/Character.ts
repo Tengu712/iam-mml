@@ -20,3 +20,20 @@ export function convertStringToCharacters(line: string, ln: number, cn: number):
   }
   return chars
 }
+
+/**
+ * A function to check if the contents of two given Character arrays are the same.
+ *
+ * @param a
+ * @param b
+ * @returns true if both are the same.
+ */
+export function checkCharsSame(a: readonly Character[], b: readonly Character[]): boolean {
+  if (a.length !== b.length) {
+    return false
+  }
+  if (JSON.stringify(a) !== JSON.stringify(b)) {
+    return false
+  }
+  return true
+}

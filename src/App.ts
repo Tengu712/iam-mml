@@ -2,36 +2,25 @@ import {Player} from '@/Player'
 import {Wave} from '@/Wave'
 import {Commands} from '@/command/Commands'
 import {Evaluator} from '@/evaluate/Evaluator'
-import type {Character} from '@/parse/Character'
+import {checkCharsSame} from '@/parse/Character'
 import {Characters} from '@/parse/Characters'
 import {PartDefs} from '@/parse/PartDefs'
 import {Parser} from '@/parse/Parser'
-
-function isCharsSame(
-  a: readonly Character[] | undefined,
-  b: readonly Character[] | undefined
-): boolean {
-  if (a === undefined) {
-    return false
-  }
-  if (b === undefined) {
-    return false
-  }
-  if (a.length !== b.length) {
-    return false
-  }
-  if (JSON.stringify(a) !== JSON.stringify(b)) {
-    return false
-  }
-  return true
-}
+import type {MacroDefs} from '@/parse/MacroDefs'
+import type {InstDefs} from '@/parse/InstDefs'
 
 export class App {
+  private macroDefsCache: MacroDefs | null
+  private instDefsCache: InstDefs | null
+
   private partDefsCache: PartDefs
   private waveCache: Map<string, Float32Array>
   private player: Player | null
 
   public constructor() {
+    this.macroDefsCache = null
+    this.instDefsCache = null
+
     this.partDefsCache = new PartDefs()
     this.waveCache = new Map()
     this.player = null
@@ -45,11 +34,27 @@ export class App {
     }
 
     // evaluate commands and create wave
+    // Use the cached wave when the following conditions are met:
+    //   - score cache is found
+    //   - wave cache is found
+    //   - score is the same as that cache
+    //   - macro defs cache isn't null
+    //   - inst defs cache isn't null
+    //   - macro defs is the same as that cache
+    //   - inst defs is the same as that cache
     const waves = []
     const waveCache = new Map()
     for (const [partName, partChars] of partDefs.iter()) {
       const cached = this.partDefsCache.get(partName)
-      if (cached !== null && isCharsSame(cached, partChars) && this.waveCache.has(partName)) {
+      if (
+        cached !== null &&
+        this.waveCache.has(partName) &&
+        this.macroDefsCache !== null &&
+        this.instDefsCache !== null &&
+        checkCharsSame(cached, partChars) &&
+        this.macroDefsCache.isSame(macroDefs) &&
+        this.instDefsCache.isSame(instDefs)
+      ) {
         waves.push(this.waveCache.get(partName)!)
         waveCache.set(partName, this.waveCache.get(partName)!)
       } else {
