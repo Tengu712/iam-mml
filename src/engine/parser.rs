@@ -1,39 +1,72 @@
 mod directive;
+mod instrument;
 mod key;
 mod part;
 
+use crate::engine::{instrument::Instrument, note::Note};
 use std::collections::HashMap;
-use crate::engine::note::Note;
 
 pub struct ParsedInfo {
     pub est: f32,
+    pub insts: Vec<Instrument>,
     pub parts: HashMap<String, Vec<Note>>,
 }
 
 pub fn parse(src: &str) -> Result<ParsedInfo, String> {
     let mut di = directive::DirectiveInfo::default();
+    let mut insts = Vec::new();
+    let mut inst_idx_map = HashMap::new();
     let mut parts = HashMap::new();
     let mut envs = HashMap::new();
 
-    for (ln, line) in src.lines().enumerate() {
-        let cn = line.chars().take_while(|c| c.is_whitespace()).count();
-        let ln = ln + 1;
+    let (inst, _) = instrument::parse(&Vec::from(["1 1 0 0 1 0"]), 0)?;
+    insts.push(inst);
+
+    let lines = src.lines().collect::<Vec<&str>>();
+    let mut ln = 0;
+    while ln < lines.len() {
+        let line = lines[ln];
+        let ln_d = ln + 1;
+
+        // instrument line
+        if line.starts_with('@') {
+            // get name
+            let name = line;
+            if inst_idx_map.contains_key(name) {
+                return Err(format!(
+                    "instrument '{name}' is already defined: line {ln_d}."
+                ));
+            }
+            ln += 1;
+            // parse
+            let (inst, nln) = instrument::parse(&lines, ln)?;
+            // finish
+            inst_idx_map.insert(name.to_string(), insts.len());
+            insts.push(inst);
+            ln = nln;
+            continue;
+        }
+
+        let cn = count_leading_whitespace(line);
         let line = line.trim();
 
         // skip whiteline and comment line
         if line.is_empty() || line.starts_with(';') {
+            ln += 1;
             continue;
         }
 
         // directive line
         if line.starts_with('#') {
             di.apply(&line, ln, cn)?;
+            ln += 1;
             continue;
         }
 
         // part line
         let splitted = line.split_whitespace().collect::<Vec<&str>>();
         if splitted.len() < 2 {
+            ln += 1;
             continue;
         }
         let cn = line.find(splitted[1]).unwrap() + cn;
@@ -45,7 +78,8 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         }
         let vec = parts.get_mut(name).unwrap();
         let env = envs.get_mut(name).unwrap();
-        part::parse(&body, vec, env, ln, cn)?;
+        part::parse(&body, vec, env, &inst_idx_map, ln, cn)?;
+        ln += 1;
     }
 
     let est = envs
@@ -54,7 +88,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         .unwrap()
         .est;
 
-    Ok(ParsedInfo { est, parts })
+    Ok(ParsedInfo { est, insts, parts })
 }
 
 // 2^(1/12)
@@ -128,6 +162,35 @@ impl Accidental {
             Some('=') => (Some(Accidental::Natural), i + 1),
             _ => (None, i),
         }
+    }
+}
+
+fn count_leading_whitespace(s: &str) -> usize {
+    s.chars().take_while(|c| c.is_whitespace()).count()
+}
+
+fn count_leading_tab(s: &str) -> usize {
+    s.chars().take_while(|c| *c == '\t').count()
+}
+
+/// A function that eats a string from the i-th character of s to a whitespace.
+pub fn eat_to_whitespace(s: &str, i: usize) -> (Option<String>, usize) {
+    let oi = i;
+    let mut i = i;
+    let mut ss = String::new();
+    while i < s.len() {
+        let c = s.chars().nth(i).unwrap();
+        if c.is_whitespace() {
+            break;
+        } else {
+            ss.push(c);
+            i += 1;
+        }
+    }
+    if ss.is_empty() {
+        (None, oi)
+    } else {
+        (Some(ss), i)
     }
 }
 

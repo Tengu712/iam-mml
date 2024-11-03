@@ -1,5 +1,4 @@
 use super::parser::*;
-use std::f32::consts::PI;
 
 pub const SAMPLE_RATE: f32 = 44100.0;
 pub const PER_SAMPLE_RATE: f32 = 1.0 / SAMPLE_RATE;
@@ -16,10 +15,11 @@ pub fn evaluate(pi: ParsedInfo) -> Vec<f32> {
     for ns in pi.parts.values() {
         let mut ci = 0;
         for n in ns {
-            let duration = sec_to_len(n.duration);
+            let inst = &pi.insts[n.instrument];
+            let duration = sec_to_len(n.duration + inst.release);
             for i in 0..duration {
                 let t = i as f32 * PER_SAMPLE_RATE;
-                let v = n.amplitude * (2.0 * PI * n.frequency * t).sin();
+                let v = n.amplitude * inst.eval(n.frequency, n.duration, t);
                 if ci + i < length {
                     buffer[ci + i] += v;
                 } else {
@@ -27,7 +27,7 @@ pub fn evaluate(pi: ParsedInfo) -> Vec<f32> {
                     length += 1;
                 }
             }
-            ci += duration;
+            ci += sec_to_len(n.duration);
         }
     }
 

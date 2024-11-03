@@ -1,4 +1,5 @@
 mod evaluator;
+mod instrument;
 mod note;
 mod parser;
 

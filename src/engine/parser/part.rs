@@ -16,6 +16,8 @@ pub struct Environment {
     pub vol: f32,
     /// Current denominator of the envme signature.
     pub dnm: u32,
+    /// Current instrument index.
+    pub inst: usize,
 }
 
 impl Environment {
@@ -28,6 +30,7 @@ impl Environment {
             tmp: di.tempo,
             vol: 0.5,
             dnm: di.denom,
+            inst: 0,
         }
     }
 }
@@ -36,6 +39,7 @@ pub fn parse(
     body: &str,
     vec: &mut Vec<Note>,
     env: &mut Environment,
+    inst_idx_map: &HashMap<String, usize>,
     ln: usize,
     cn: usize,
 ) -> Result<(), String> {
@@ -93,6 +97,7 @@ pub fn parse(
                     amplitude,
                     frequency,
                     duration,
+                    instrument: env.inst,
                 });
                 i = ni;
             }
@@ -110,8 +115,8 @@ pub fn parse(
                         i += 1;
                     } else {
                         return Err(format!(
-                                "octave must be an integer between {MIN_OCTAVE} and {MAX_OCTAVE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                            ));
+                            "octave must be an integer between {MIN_OCTAVE} and {MAX_OCTAVE}, inclusive, but {n} is found: line {ln}, char {cn}."
+                        ));
                     }
                 }
                 _ => {
@@ -128,8 +133,8 @@ pub fn parse(
                         i = ni;
                     } else {
                         return Err(format!(
-                                "note value must be an integer between {MIN_NOTE_VALUE} and {MAX_NOTE_VALUE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                            ));
+                            "note value must be an integer between {MIN_NOTE_VALUE} and {MAX_NOTE_VALUE}, inclusive, but {n} is found: line {ln}, char {cn}."
+                        ));
                     }
                 }
                 _ => {
@@ -146,8 +151,8 @@ pub fn parse(
                         i = ni;
                     } else {
                         return Err(format!(
-                                "tempo must be an integer between {MIN_TEMPO} and {MAX_TEMPO}, inclusive, but {n} is found: line {ln}, char {cn}."
-                            ));
+                            "tempo must be an integer between {MIN_TEMPO} and {MAX_TEMPO}, inclusive, but {n} is found: line {ln}, char {cn}."
+                        ));
                     }
                 }
                 _ => {
@@ -164,8 +169,8 @@ pub fn parse(
                         i = ni;
                     } else {
                         return Err(format!(
-                                "amplitude must be a float between {MIN_AMPLITUDE} and {MAX_AMPLITUDE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                            ));
+                            "amplitude must be a float between {MIN_AMPLITUDE} and {MAX_AMPLITUDE}, inclusive, but {n} is found: line {ln}, char {cn}."
+                        ));
                     }
                 }
                 _ => {
@@ -173,6 +178,20 @@ pub fn parse(
                         "the value of the volume command is not found: line {ln}, char {cn}."
                     ))
                 }
+            },
+
+            '@' => match eat_to_whitespace(&body, i) {
+                (Some(n), ni) => {
+                    if let Some(n) = inst_idx_map.get(&n) {
+                        env.inst = *n;
+                        i = ni;
+                    } else {
+                        return Err(format!(
+                            "undefined instrument is using: line {ln}, char {cn}."
+                        ));
+                    }
+                }
+                _ => panic!("unexpected error"),
             },
 
             '>' => {
