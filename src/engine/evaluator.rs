@@ -10,10 +10,10 @@ fn sec_to_len(sec: f32) -> usize {
 }
 
 pub fn evaluate(pi: ParsedInfo) -> Vec<f32> {
-    let mut buffer = Vec::<f32>::with_capacity(sec_to_len(pi.pi.est + EXTRA_EST));
+    let mut buffer = Vec::<f32>::with_capacity(sec_to_len(pi.est + EXTRA_EST));
     let mut length = 0;
 
-    for ns in pi.pi.parts.values() {
+    for ns in pi.parts.values() {
         let mut ci = 0;
         for n in ns {
             let duration = sec_to_len(n.duration);

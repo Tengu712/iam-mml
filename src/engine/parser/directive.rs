@@ -11,22 +11,20 @@ pub struct DirectiveInfo {
     pub key: Key,
 }
 
-/// A function to read the directive infomation from a MML code.
-///
-/// * `src` - The MML code.
-pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
-    let mut di = DirectiveInfo {
-        denom: 4,
-        tempo: 100,
-        key: Key::default(),
-    };
+impl Default for DirectiveInfo {
+    fn default() -> Self {
+        Self {
+            denom: 4,
+            tempo: 100,
+            key: Key::default(),
+        }
+    }
+}
 
-    for (ln, line) in src.lines().enumerate() {
-        let line = line.trim();
-
-        // skip
+impl DirectiveInfo {
+    pub fn apply(&mut self, line: &str, ln: usize, cn: usize) -> Result<(), String> {
         if !line.starts_with('#') {
-            continue;
+            panic!("unexpected error");
         }
 
         // split and get the index of tokens[1]
@@ -34,7 +32,7 @@ pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
         if tokens.len() < 2 {
             return Err(format!("value is missing for {}: line {ln}.", tokens[0]));
         }
-        let i = line.find(tokens[1]).unwrap();
+        let i = line.find(tokens[1]).unwrap() + cn;
 
         match tokens[0] {
             "#denom" => {
@@ -49,7 +47,7 @@ pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
                             "the value of #denom must be an integer between {MIN_DENOMINATOR} and {MAX_DENOMINATOR}, inclusive, but {n} is found: line {ln}, char {i}."
                         ));
                     }
-                    di.denom = n;
+                    self.denom = n;
                 } else {
                     return Err(format!(
                         "the value of #denom is not found: line {ln}, char {i}."
@@ -68,7 +66,7 @@ pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
                             "the value of #denom must be an integer between {MIN_TEMPO} and {MAX_TEMPO}, inclusive, but {n} is found: line {ln}, char {i}."
                         ));
                     }
-                    di.tempo = n;
+                    self.tempo = n;
                 } else {
                     return Err(format!(
                         "the value of #tempo is not found: line {ln}, char {i}."
@@ -82,7 +80,7 @@ pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
                         "unnecesary character is found: line {ln}, char {ni}."
                     ));
                 }
-                di.key = n;
+                self.key = n;
             }
             cmd => {
                 return Err(format!(
@@ -90,7 +88,7 @@ pub fn parse(src: &str) -> Result<DirectiveInfo, String> {
                 ))
             }
         }
-    }
 
-    Ok(di)
+        Ok(())
+    }
 }

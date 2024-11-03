@@ -2,15 +2,59 @@ mod directive;
 mod key;
 mod part;
 
+use std::collections::HashMap;
+use crate::engine::note::Note;
+
 pub struct ParsedInfo {
-    pub pi: part::PartInfo,
+    pub est: f32,
+    pub parts: HashMap<String, Vec<Note>>,
 }
 
 pub fn parse(src: &str) -> Result<ParsedInfo, String> {
-    let di = directive::parse(src)?;
-    // TODO: parse insts
-    let pi = part::parse(src, di)?;
-    Ok(ParsedInfo { pi })
+    let mut di = directive::DirectiveInfo::default();
+    let mut parts = HashMap::new();
+    let mut envs = HashMap::new();
+
+    for (ln, line) in src.lines().enumerate() {
+        let cn = line.chars().take_while(|c| c.is_whitespace()).count();
+        let ln = ln + 1;
+        let line = line.trim();
+
+        // skip whiteline and comment line
+        if line.is_empty() || line.starts_with(';') {
+            continue;
+        }
+
+        // directive line
+        if line.starts_with('#') {
+            di.apply(&line, ln, cn)?;
+            continue;
+        }
+
+        // part line
+        let splitted = line.split_whitespace().collect::<Vec<&str>>();
+        if splitted.len() < 2 {
+            continue;
+        }
+        let cn = line.find(splitted[1]).unwrap() + cn;
+        let name = splitted[0];
+        let body = splitted[1..].join(" ");
+        if !parts.contains_key(name) {
+            parts.insert(name.to_string(), Vec::new());
+            envs.insert(name.to_string(), part::Environment::new(&di));
+        }
+        let vec = parts.get_mut(name).unwrap();
+        let env = envs.get_mut(name).unwrap();
+        part::parse(&body, vec, env, ln, cn)?;
+    }
+
+    let est = envs
+        .values()
+        .max_by(|a, b| b.est.partial_cmp(&a.est).unwrap())
+        .unwrap()
+        .est;
+
+    Ok(ParsedInfo { est, parts })
 }
 
 // 2^(1/12)
@@ -140,7 +184,13 @@ where
 
     let ni = match s.chars().nth(ni) {
         Some('.') => ni + 1,
-        _ => return (None, i),
+        _ => {
+            if let Ok(n) = former.parse::<T>() {
+                return (Some(n), ni);
+            } else {
+                return (None, i);
+            }
+        }
     };
 
     let (latter, ni) = if let (Some(ns), ni) =
@@ -186,8 +236,22 @@ mod test {
     }
 
     #[test]
-    fn eat_float_no_float_return_none() {
-        let res = eat_float::<f32>("abc00123defg", 3);
+    fn eat_float_only_former_return_expected() {
+        let res = eat_float("abc00123d", 3);
+        let ans = (Some(123.0), 8);
+        assert_eq!(res, ans);
+    }
+
+    #[test]
+    fn eat_float_no_former_return_none() {
+        let res = eat_float::<f32>("abc.0456d", 3);
+        let ans = (None, 3);
+        assert_eq!(res, ans);
+    }
+
+    #[test]
+    fn eat_float_no_latter_return_none() {
+        let res = eat_float::<f32>("abc00123.d", 3);
         let ans = (None, 3);
         assert_eq!(res, ans);
     }
