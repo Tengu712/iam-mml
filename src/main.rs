@@ -15,7 +15,7 @@ fn run() -> Result<(), String> {
 
     let src = fs::read_to_string(src_path).map_err(|e| e.to_string())?;
 
-    engine::generate(out_path, engine::run(src.as_str())?).map_err(|e| e.to_string())
+    engine::generate_file(out_path, engine::run(src.as_str())?).map_err(|e| e.to_string())
 }
 
 fn main() {

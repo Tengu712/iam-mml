@@ -65,9 +65,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         if line.starts_with('!') {
             let splitted = line.split_whitespace().collect::<Vec<&str>>();
             if splitted.len() < 2 {
-                return  Err(format!(
-                    "the content of the macro is empty: line {ln_d}."
-                ));
+                return Err(format!("the content of the macro is empty: line {ln_d}."));
             }
             let cn_d = line.find(splitted[1]).unwrap() + 1;
             let name = splitted[0];
@@ -99,6 +97,10 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         let env = envs.get_mut(name).unwrap();
         part::parse(&body, vec, env, &macros, &inst_idx_map, ln_d, cn_d)?;
         ln += 1;
+    }
+
+    if parts.is_empty() {
+        return Err(format!("there are no playing parts at all."));
     }
 
     for (name, env) in envs.iter() {

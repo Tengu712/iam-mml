@@ -241,10 +241,9 @@ pub fn parse(
                             "undefined macro is using: line {ln_d}, char {cn_d}."
                         ));
                     }
-                },
+                }
                 _ => panic!("unexpected error"),
             },
-
 
             _ => {
                 return Err(format!(

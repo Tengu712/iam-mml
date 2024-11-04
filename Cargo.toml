@@ -1,6 +1,16 @@
 [package]
-name = "iam-mml"
+name = "iamc"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+wasm-bindgen = "0.2.95"
+
+[[bin]]
+name = "iamc"
+path = "src/main.rs"
+
+[lib]
+name = "iamw"
+path = "src/lib.rs"
+crate-type = ["cdylib"]

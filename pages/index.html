@@ -3,10 +3,10 @@
 
 <head>
   <title>IAM.mml</title>
-  <link rel="icon" href="./iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="icon" href="./img/iam-mml-logo.svg" type="image/svg+xml">
   <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="index.css?20240224">
-  <script src="index.js?20240224"></script>
+  <link rel="stylesheet" type="text/css" href="index.css?20241104">
+  <script type="module" src="index.js?20241104"></script>
 </head>
 
 <body>
@@ -14,25 +14,19 @@
   <div id="main">
     <div id="button-wrapper">
       <button id="play" class="red-button" title="Play the music">
-        <img src="./play.svg">
+        <img src="./img/play.svg">
       </button>
       <button id="pause" class="red-button" title="Pause the music">
-        <img src="./pause.svg">
+        <img src="./img/pause.svg">
       </button>
       <button id="stop" class="red-button" title="Stop the music">
-        <img src="./stop.svg">
-      </button>
-      <button id="import" class="white-button" title="Import the MML">
-        <img src="./import.svg">
-      </button>
-      <button id="export" class="white-button" title="Export the MML">
-        <img src="./export.svg">
+        <img src="./img/stop.svg">
       </button>
       <button id="build" class="white-button" title="Build and download the music">
-        <img src="./build.svg">
+        <img src="./img/build.svg">
       </button>
       <button id="info" class="white-button" title="Go to IAM.mml Docs">
-        <img src="./info.svg">
+        <img src="./img/info.svg">
       </button>
     </div>
 
@@ -43,26 +37,12 @@
           <textarea id="mml" spellcheck="false"></textarea>
         </div>
         <div id="textarea-resizer"></div>
-        <div id="inst-wrapper">
-          <textarea id="inst-numbers" readonly></textarea>
-          <textarea id="inst" spellcheck="false"></textarea>
+        <div id="log-wrapper">
+          <textarea id="log" spellcheck="false"></textarea>
         </div>
       </div>
     </div>
   </div>
-
-  <div id="blinder"></div>
-
-  <div id="sidebar-wrapper">
-    <div id="sidebar-button">
-      <div id="sidebar-button-icon" class="left-triangle"></div>
-    </div>
-    <div id="sidebar">
-      <div id="sidebar-resizer"></div>
-      <textarea id="log"></textarea>
-    </div>
-  </div>
-
 </body>
 
 </html>

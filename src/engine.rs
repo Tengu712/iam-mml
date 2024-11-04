@@ -7,11 +7,16 @@ pub fn run(src: &str) -> Result<Vec<f32>, String> {
     Ok(evaluator::evaluate(parser::parse(src)?))
 }
 
-pub fn generate(name: &str, wave: Vec<f32>) -> Result<(), Box<dyn std::error::Error>> {
-    use std::{
-        fs::File,
-        io::{BufWriter, Write},
-    };
+#[cfg(not(target_arch = "wasm32"))]
+pub fn generate_file(name: &str, wave: Vec<f32>) -> Result<(), Box<dyn std::error::Error>> {
+    Ok(generate_wave(wave, std::fs::File::create(name)?)?)
+}
+
+pub fn generate_wave<W>(wave: Vec<f32>, buffer: W) -> Result<(), Box<dyn std::error::Error>>
+where
+    W: std::io::Write,
+{
+    use std::io::Write;
 
     const RIFF: [u8; 4] = ['R' as u8, 'I' as u8, 'F' as u8, 'F' as u8];
     const WAVE: [u8; 4] = ['W' as u8, 'A' as u8, 'V' as u8, 'E' as u8];
@@ -19,8 +24,7 @@ pub fn generate(name: &str, wave: Vec<f32>) -> Result<(), Box<dyn std::error::Er
     const DATA: [u8; 4] = ['d' as u8, 'a' as u8, 't' as u8, 'a' as u8];
     const BYTES_COUNT_PER_SAMPLE: u32 = 2;
 
-    let file = File::create(name)?;
-    let mut writer = BufWriter::new(file);
+    let mut writer = std::io::BufWriter::new(buffer);
 
     let length = wave.len() as u32;
 
