@@ -1,5 +1,12 @@
+use std::usize;
+
 use super::{directive::*, key::*, *};
 use crate::engine::note::*;
+
+pub struct LoopInfo {
+    pub delim: usize,
+    pub notes: Vec<Note>,
+}
 
 pub struct Environment {
     /// The total duraenvon (in seconds) of the note values.
@@ -18,6 +25,8 @@ pub struct Environment {
     pub dnm: u32,
     /// Current instrument index.
     pub inst: usize,
+    ///
+    pub stack: Vec<LoopInfo>,
 }
 
 impl Environment {
@@ -31,7 +40,17 @@ impl Environment {
             vol: 0.5,
             dnm: di.denom,
             inst: 0,
+            stack: Vec::new(),
         }
+    }
+}
+
+fn push(vec: &mut Vec<Note>, env: &mut Environment, note: Note) {
+    if let Some(li) = env.stack.last_mut() {
+        li.notes.push(note);
+    } else {
+        env.est += note.duration;
+        vec.push(note);
     }
 }
 
@@ -103,13 +122,13 @@ pub fn parse(
                 let duration = (60.0 / env.tmp as f32) * (env.dnm as f32 / value as f32);
                 let duration = if dot { duration * 1.5 } else { duration };
                 // finish
-                env.est += duration;
-                vec.push(Note {
+                let note = Note {
                     amplitude,
                     frequency,
                     duration,
                     instrument: env.inst,
-                });
+                };
+                push(vec, env, note);
                 i = ni;
             }
 
@@ -119,6 +138,51 @@ pub fn parse(
             }
             '<' => {
                 env.oct = std::cmp::max(env.oct - 1, MIN_OCTAVE);
+                i += 1;
+            }
+
+            '[' => {
+                env.stack.push(LoopInfo {
+                    delim: usize::MAX,
+                    notes: Vec::new(),
+                });
+                i += 1;
+            }
+            ']' => {
+                // prepare
+                let li = env
+                    .stack
+                    .pop()
+                    .ok_or_else(|| format!("matching '[' is not found: line {ln_d}, char {i}."))?;
+                let (cnt, ni) = eat_int::<usize>(&body, i + 1);
+                let cnt =
+                    cnt.ok_or_else(|| format!("loop count is not found: line {ln_d}, char {i}."))?;
+                if cnt == 0 {
+                    return Err(format!(
+                        "loop count must be greater than 0: line {ln_d}, char {i}."
+                    ));
+                }
+                // push
+                for _ in 0..(cnt - 1) {
+                    for n in &li.notes {
+                        push(vec, env, n.clone());
+                    }
+                }
+                // push last
+                for (i, n) in li.notes.into_iter().enumerate() {
+                    if i >= li.delim {
+                        break;
+                    }
+                    push(vec, env, n);
+                }
+                i = ni;
+            }
+            ':' => {
+                let li = env
+                    .stack
+                    .last_mut()
+                    .ok_or_else(|| format!("':' outside loop is found: line {ln_d}, char {i}."))?;
+                li.delim = li.notes.len();
                 i += 1;
             }
 

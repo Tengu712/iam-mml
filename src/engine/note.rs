@@ -1,4 +1,5 @@
 /// A struct which represents a note.
+#[derive(Clone)]
 pub struct Note {
     /// The amplitude of the note.
     /// If the note is `r`, it is `0.0`.
