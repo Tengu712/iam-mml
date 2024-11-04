@@ -5,23 +5,22 @@ pub fn parse(lines: &Vec<&str>, ln: usize) -> Result<(Instrument, usize), String
     let mut ln = ln;
     let mut cind = 0;
     let mut cmds = Vec::new();
-    let mut max_release = 0.0;
+    let mut release = 0.0;
 
     while ln < lines.len() {
         let line = lines[ln];
+        let ln_d = ln + 1;
 
         if line.trim().is_empty() || line.trim().starts_with('#') || line.trim().starts_with('@') {
             break;
         }
 
-        let ln_d = ln + 1;
-        let ind = count_leading_tab(line);
-
-        if ind > 0 && cmds.is_empty() {
+        let indent = count_leading_tab(line);
+        if indent > 0 && cmds.is_empty() {
             return Err(format!("base carrier must not be indented: line {ln_d}."));
         }
 
-        let outdent = cind - ind as i32;
+        let outdent = cind - indent as i32;
         if outdent > 0 {
             cmds.push(Command::Stack(outdent as usize));
         } else if outdent < -1 {
@@ -34,56 +33,41 @@ pub fn parse(lines: &Vec<&str>, ln: usize) -> Result<(Instrument, usize), String
                 "the number of parameters of an operator must be 6 or 7: line {ln_d}."
             ));
         }
-        let (amplitude, _) = eat_float(tokens[0], 0);
-        let (freqratio, _) = eat_float(tokens[1], 0);
-        let (attack, _) = eat_float(tokens[2], 0);
-        let (decay, _) = eat_float(tokens[3], 0);
-        let (sustain, _) = eat_float(tokens[4], 0);
-        let (release, _) = eat_float(tokens[5], 0);
-        let amplitude = amplitude
-            .ok_or_else(|| format!("invalid operator amplitude is found: line {ln_d}."))?;
-        let freqratio = freqratio
-            .ok_or_else(|| format!("invalid operator freqratio is found: line {ln_d}."))?;
-        let attack =
-            attack.ok_or_else(|| format!("invalid operator attack is found: line {ln_d}."))?;
-        let decay =
-            decay.ok_or_else(|| format!("invalid operator decay is found: line {ln_d}."))?;
-        let sustain =
-            sustain.ok_or_else(|| format!("invalid operator sustain is found: line {ln_d}."))?;
-        let release =
-            release.ok_or_else(|| format!("invalid operator release is found: line {ln_d}."))?;
-        let feedback = if tokens.len() == 7 {
-            if let (Some(n), _) = eat_int(tokens[6], 0) {
-                n
-            } else {
-                return Err(format!("invalid operator feedback is found: line {ln_d}."));
-            }
+        let (v, _) = eat_float(tokens[0], 0);
+        let (f, _) = eat_float(tokens[1], 0);
+        let (a, _) = eat_float(tokens[2], 0);
+        let (d, _) = eat_float(tokens[3], 0);
+        let (s, _) = eat_float(tokens[4], 0);
+        let (r, _) = eat_float(tokens[5], 0);
+        let (fd, _) = if tokens.len() == 7 {
+            eat_int(tokens[6], 0)
         } else {
-            0
+            (Some(0), 0)
         };
+        let v = v.ok_or_else(|| format!("operator amplitude is invalid: line {ln_d}."))?;
+        let f = f.ok_or_else(|| format!("operator freqratio is invalid: line {ln_d}."))?;
+        let a = a.ok_or_else(|| format!("operator attack is invalid: line {ln_d}."))?;
+        let d = d.ok_or_else(|| format!("operator decay is invalid: line {ln_d}."))?;
+        let s = s.ok_or_else(|| format!("operator sustain is invalid: line {ln_d}."))?;
+        let r = r.ok_or_else(|| format!("operator release is invalid: line {ln_d}."))?;
+        let fd = fd.ok_or_else(|| format!("operator feedback is invalid: line {ln_d}."))?;
         cmds.push(Command::Operator(Operator {
-            amplitude,
-            freqratio,
-            attack,
-            decay,
-            sustain,
-            release,
-            feedback,
+            amplitude: v,
+            freqratio: f,
+            attack: a,
+            decay: d,
+            sustain: s,
+            release: r,
+            feedback: fd,
         }));
 
-        if release > max_release {
-            max_release = release;
+        if r > release {
+            release = r;
         }
-        cind = ind as i32;
+        cind = indent as i32;
         ln += 1;
     }
 
     cmds.reverse();
-    Ok((
-        Instrument {
-            release: max_release,
-            cmds,
-        },
-        ln,
-    ))
+    Ok((Instrument { release, cmds }, ln))
 }

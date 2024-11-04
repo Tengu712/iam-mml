@@ -37,19 +37,20 @@ impl Key {
                 break;
             }
         }
-        let (accidental, ni) = Accidental::from(s, i);
-        if let Some(accidental) = accidental {
-            Ok((
+        match Accidental::from(s, i) {
+            (Some(accidental), ni) => Ok((
                 Self {
                     pitch_names,
                     accidental,
                 },
                 ni,
-            ))
-        } else {
-            Err(format!(
-                "accidental is not found for modulation: line {ln_d}, char {i}."
-            ))
+            )),
+            _ => {
+                let cn_d = i + 1;
+                Err(format!(
+                    "accidental is not found for modulation: line {ln_d}, char {cn_d}."
+                ))
+            }
         }
     }
 

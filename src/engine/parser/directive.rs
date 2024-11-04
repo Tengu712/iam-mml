@@ -42,20 +42,8 @@ impl DirectiveInfo {
         match tokens[0] {
             "#tempo" => self.tempo = int_directive(line, i, ln_d, "#tempo", MIN_TEMPO, MAX_TEMPO)?,
             "#denom" => self.denom = int_directive(line, i, ln_d, "#denom", MIN_DENOM, MAX_DENOM)?,
-            "#key" => {
-                let (n, ni) = Key::from(line, i, ln_d)?;
-                if ni != line.len() {
-                    return Err(format!(
-                        "unnecesary character is found: line {ln_d}, char {ni}."
-                    ));
-                }
-                self.key = n;
-            }
-            cmd => {
-                return Err(format!(
-                    "undefined directive {cmd} found: line {ln_d}, char {i}."
-                ))
-            }
+            "#key" => (self.key, _) = Key::from(line, i, ln_d)?,
+            cmd => return Err(format!("undefined directive {cmd} found: line {ln_d}.")),
         }
 
         Ok(())
@@ -73,12 +61,8 @@ fn int_directive<T>(
 where
     T: std::str::FromStr + std::fmt::Display + std::cmp::PartialOrd,
 {
-    if let (Some(n), ni) = eat_int::<T>(line, i) {
-        if ni != line.len() {
-            Err(format!(
-                "unnecesary character is found: line {ln_d}, char {ni}."
-            ))
-        } else if n < min || n > max {
+    if let (Some(n), _) = eat_int::<T>(line, i) {
+        if n < min || n > max {
             Err(format!(
                 "the value of {name} must be an integer between {min} and {max}, inclusive, but {n} is found: line {ln_d}, char {i}."
             ))
@@ -87,7 +71,7 @@ where
         }
     } else {
         Err(format!(
-            "the value of #tempo is not found: line {ln_d}, char {i}."
+            "the value of {name} is not found: line {ln_d}, char {i}."
         ))
     }
 }
