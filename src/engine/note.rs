@@ -7,6 +7,6 @@ pub struct Note {
     pub frequency: f32,
     /// The duration of the note (in seconds).
     pub duration: f32,
-    /// The instrument that the note use.
+    /// The instrument that the note uses.
     pub instrument: usize,
 }

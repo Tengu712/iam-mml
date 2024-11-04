@@ -25,8 +25,8 @@ impl Key {
     ///
     /// * `s` - The string which contains the command.
     /// * `i` - The index of the content of the command on `s`.
-    /// * `ln` - The line number of `s`.
-    pub fn from(s: &str, i: usize, ln: usize) -> Result<(Self, usize), String> {
+    /// * `ln_d` - The line number of `s` for an error message.
+    pub fn from(s: &str, i: usize, ln_d: usize) -> Result<(Self, usize), String> {
         let mut i = i;
         let mut pitch_names = HashSet::new();
         while i < s.len() {
@@ -48,7 +48,7 @@ impl Key {
             ))
         } else {
             Err(format!(
-                "accidental is not found for modulation: line {ln}, char {i}."
+                "accidental is not found for modulation: line {ln_d}, char {i}."
             ))
         }
     }

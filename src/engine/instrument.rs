@@ -39,7 +39,7 @@ impl Operator {
     }
 }
 
-/// A enum which represents the instruction of an instrument.
+/// An enum which represents the instruction of an instrument.
 pub enum Command {
     Operator(Operator),
     Stack(usize),

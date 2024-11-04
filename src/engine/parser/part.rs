@@ -35,19 +35,30 @@ impl Environment {
     }
 }
 
+/// A function to parse the body of a part line, change the environment and push notes.
+///
+/// * `body` - the body of a part line.
+/// * `vec` - the notes vector of the part.
+/// * `env` - the environment of the part.
+/// * `inst_idx_map` - the map: instrument name -> the index of the instrument in the instrument vector.
+/// * `ln_d` - the line number for an error message.
+/// * `cn_d` - the char number for an error message.
 pub fn parse(
     body: &str,
     vec: &mut Vec<Note>,
     env: &mut Environment,
     inst_idx_map: &HashMap<String, usize>,
-    ln: usize,
-    cn: usize,
+    ln_d: usize,
+    cn_d: usize,
 ) -> Result<(), String> {
     let mut i = 0;
     while i < body.len() {
-        let cn = cn + i;
+        let cn_d = cn_d + i;
         let c = body.chars().nth(i).unwrap();
         match c {
+            ';' => break,
+            ' ' | '\t' => i += 1,
+
             'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'r' => {
                 // parse
                 let pn = PitchName::from_with_r(c).unwrap();
@@ -62,9 +73,9 @@ pub fn parse(
                 let accidental = accidental.unwrap_or(env.key.get(&pn));
                 let value = value.unwrap_or(env.dv);
                 // validate
-                if value < MIN_NOTE_VALUE || value > MAX_NOTE_VALUE {
+                if value < MIN_VALUE || value > MAX_VALUE {
                     return Err(format!(
-                        "note value must be an integer btween {MIN_NOTE_VALUE} and {MAX_NOTE_VALUE}, inclusive, but {value} is found: line {ln}, char {cn}."
+                        "note value must be an integer btween {MIN_VALUE} and {MAX_VALUE}, inclusive, but {value} is found: line {ln_d}, char {cn_d}."
                     ));
                 }
                 // amplitude
@@ -89,8 +100,8 @@ pub fn parse(
                 let frequency = frequency + 12 * env.oct as i32;
                 let frequency = 440.0 * SEMINOTE_STEP.powi(frequency - 57);
                 // eval length
-                let value = value as f32 * if dot { 1.5 } else { 1.0 };
-                let duration = (60.0 / env.tmp as f32) * (env.dnm as f32 / value);
+                let duration = (60.0 / env.tmp as f32) * (env.dnm as f32 / value as f32);
+                let duration = if dot { duration * 1.5 } else { duration };
                 // finish
                 env.est += duration;
                 vec.push(Note {
@@ -102,83 +113,43 @@ pub fn parse(
                 i = ni;
             }
 
+            '>' => {
+                env.oct = std::cmp::min(env.oct + 1, MAX_OCTAVE);
+                i += 1;
+            }
+            '<' => {
+                env.oct = std::cmp::max(env.oct - 1, MIN_OCTAVE);
+                i += 1;
+            }
+
+            'o' => {
+                (env.oct, i) =
+                    int_command(&body, i + 1, ln_d, cn_d, "octave", MIN_OCTAVE, MAX_OCTAVE)?
+            }
+            'l' => {
+                (env.dv, i) =
+                    int_command(&body, i + 1, ln_d, cn_d, "note value", MIN_VALUE, MAX_VALUE)?
+            }
+            't' => {
+                (env.tmp, i) = int_command(&body, i + 1, ln_d, cn_d, "tempo", MIN_TEMPO, MAX_TEMPO)?
+            }
+            'v' => {
+                (env.vol, i) = float_command(
+                    &body,
+                    i + 1,
+                    ln_d,
+                    cn_d,
+                    "amplitude",
+                    MIN_AMPLITUDE,
+                    MAX_AMPLITUDE,
+                )?
+            }
+
             'k' => {
-                let (n, ni) = Key::from(&body, i + 1, ln)?;
+                let (n, ni) = Key::from(&body, i + 1, ln_d)?;
                 env.key = n;
                 i = ni;
             }
-
-            'o' => match c.to_digit(10) {
-                Some(n) => {
-                    if n >= MIN_OCTAVE && n <= MAX_OCTAVE {
-                        env.oct = n;
-                        i += 1;
-                    } else {
-                        return Err(format!(
-                            "octave must be an integer between {MIN_OCTAVE} and {MAX_OCTAVE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                        ));
-                    }
-                }
-                _ => {
-                    return Err(format!(
-                        "the value of the octave command is not found: line {ln}, char {cn}."
-                    ));
-                }
-            },
-
-            'l' => match eat_int(&body, i + 1) {
-                (Some(n), ni) => {
-                    if n >= MIN_NOTE_VALUE || n <= MAX_NOTE_VALUE {
-                        env.dv = n;
-                        i = ni;
-                    } else {
-                        return Err(format!(
-                            "note value must be an integer between {MIN_NOTE_VALUE} and {MAX_NOTE_VALUE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                        ));
-                    }
-                }
-                _ => {
-                    return Err(format!(
-                        "the value of the length command is not found: {ln}, char {cn}."
-                    ));
-                }
-            },
-
-            't' => match eat_int(&body, i + 1) {
-                (Some(n), ni) => {
-                    if n >= MIN_TEMPO || n <= MAX_TEMPO {
-                        env.tmp = n;
-                        i = ni;
-                    } else {
-                        return Err(format!(
-                            "tempo must be an integer between {MIN_TEMPO} and {MAX_TEMPO}, inclusive, but {n} is found: line {ln}, char {cn}."
-                        ));
-                    }
-                }
-                _ => {
-                    return Err(format!(
-                        "the value of the tempo command is not found: {ln}, char {cn}."
-                    ));
-                }
-            },
-
-            'v' => match eat_float(&body, i + 1) {
-                (Some(n), ni) => {
-                    if n >= MIN_AMPLITUDE && n <= MAX_AMPLITUDE {
-                        env.vol = n;
-                        i = ni;
-                    } else {
-                        return Err(format!(
-                            "amplitude must be a float between {MIN_AMPLITUDE} and {MAX_AMPLITUDE}, inclusive, but {n} is found: line {ln}, char {cn}."
-                        ));
-                    }
-                }
-                _ => {
-                    return Err(format!(
-                        "the value of the volume command is not found: line {ln}, char {cn}."
-                    ))
-                }
-            },
 
             '@' => match eat_to_whitespace(&body, i) {
                 (Some(n), ni) => {
@@ -187,34 +158,74 @@ pub fn parse(
                         i = ni;
                     } else {
                         return Err(format!(
-                            "undefined instrument is using: line {ln}, char {cn}."
+                            "undefined instrument is using: line {ln_d}, char {cn_d}."
                         ));
                     }
                 }
                 _ => panic!("unexpected error"),
             },
 
-            '>' => {
-                env.oct = std::cmp::min(env.oct + 1, MAX_OCTAVE);
-                i += 1;
-            }
-
-            '<' => {
-                env.oct = std::cmp::max(env.oct - 1, MIN_OCTAVE);
-                i += 1;
-            }
-
-            ' ' | '\t' => i += 1,
-
-            ';' => break,
-
             _ => {
                 return Err(format!(
-                    "undefined character '{c}' is found: line {ln}, char {cn}."
+                    "undefined character '{c}' is found: line {ln_d}, char {cn_d}."
                 ))
             }
         }
     }
 
     Ok(())
+}
+
+fn int_command<T>(
+    body: &str,
+    i: usize,
+    ln_d: usize,
+    cn_d: usize,
+    name: &str,
+    min: T,
+    max: T,
+) -> Result<(T, usize), String>
+where
+    T: std::str::FromStr + std::fmt::Display + std::cmp::PartialOrd,
+{
+    if let (Some(n), ni) = eat_int::<T>(&body, i) {
+        if n < min || n > max {
+            Err(format!(
+                "{name} must be an integer between {min} and {max}, inclusive, but {n} is found: line {ln_d}, char {cn_d}."
+            ))
+        } else {
+            Ok((n, ni))
+        }
+    } else {
+        Err(format!(
+            "the value of the {name} command is not found: line {ln_d}, char {cn_d}."
+        ))
+    }
+}
+
+fn float_command<T>(
+    body: &str,
+    i: usize,
+    ln_d: usize,
+    cn_d: usize,
+    name: &str,
+    min: T,
+    max: T,
+) -> Result<(T, usize), String>
+where
+    T: std::str::FromStr + std::fmt::Display + std::cmp::PartialOrd,
+{
+    if let (Some(n), ni) = eat_float::<T>(&body, i) {
+        if n < min || n > max {
+            Err(format!(
+                "{name} must be a float between {min} and {max}, inclusive, but {n} is found: line {ln_d}, char {cn_d}."
+            ))
+        } else {
+            Ok((n, ni))
+        }
+    } else {
+        Err(format!(
+            "the value of the {name} command is not found: line {ln_d}, char {cn_d}."
+        ))
+    }
 }

@@ -28,6 +28,12 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         let line = lines[ln];
         let ln_d = ln + 1;
 
+        // skip whiteline and comment line
+        if line.is_empty() || line.starts_with(';') {
+            ln += 1;
+            continue;
+        }
+
         // instrument line
         if line.starts_with('@') {
             // get name
@@ -47,18 +53,9 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
             continue;
         }
 
-        let cn = count_leading_whitespace(line);
-        let line = line.trim();
-
-        // skip whiteline and comment line
-        if line.is_empty() || line.starts_with(';') {
-            ln += 1;
-            continue;
-        }
-
         // directive line
         if line.starts_with('#') {
-            di.apply(&line, ln, cn)?;
+            di.apply(&line, ln_d)?;
             ln += 1;
             continue;
         }
@@ -69,7 +66,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
             ln += 1;
             continue;
         }
-        let cn = line.find(splitted[1]).unwrap() + cn;
+        let cn_d = line.find(splitted[1]).unwrap() + 1;
         let name = splitted[0];
         let body = splitted[1..].join(" ");
         if !parts.contains_key(name) {
@@ -78,7 +75,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         }
         let vec = parts.get_mut(name).unwrap();
         let env = envs.get_mut(name).unwrap();
-        part::parse(&body, vec, env, &inst_idx_map, ln, cn)?;
+        part::parse(&body, vec, env, &inst_idx_map, ln_d, cn_d)?;
         ln += 1;
     }
 
@@ -93,10 +90,10 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
 
 // 2^(1/12)
 pub const SEMINOTE_STEP: f32 = 1.0594630943592952645618253;
-pub const MIN_DENOMINATOR: u32 = 1;
-pub const MAX_DENOMINATOR: u32 = 128;
-pub const MIN_NOTE_VALUE: u32 = 1;
-pub const MAX_NOTE_VALUE: u32 = 128;
+pub const MIN_DENOM: u32 = 1;
+pub const MAX_DENOM: u32 = 128;
+pub const MIN_VALUE: u32 = 1;
+pub const MAX_VALUE: u32 = 128;
 pub const MIN_OCTAVE: u32 = 1;
 pub const MAX_OCTAVE: u32 = 8;
 pub const MIN_TEMPO: u32 = 1;
@@ -165,11 +162,8 @@ impl Accidental {
     }
 }
 
-fn count_leading_whitespace(s: &str) -> usize {
-    s.chars().take_while(|c| c.is_whitespace()).count()
-}
-
-fn count_leading_tab(s: &str) -> usize {
+/// A function to count the number of the leading tabs of s.
+pub fn count_leading_tab(s: &str) -> usize {
     s.chars().take_while(|c| *c == '\t').count()
 }
 

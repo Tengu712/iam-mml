@@ -79,5 +79,11 @@ pub fn parse(lines: &Vec<&str>, ln: usize) -> Result<(Instrument, usize), String
     }
 
     cmds.reverse();
-    Ok((Instrument { release: max_release, cmds }, ln))
+    Ok((
+        Instrument {
+            release: max_release,
+            cmds,
+        },
+        ln,
+    ))
 }
