@@ -79,6 +79,13 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         ln += 1;
     }
 
+    for (name, env) in envs.iter() {
+        if env.stack.is_empty() {
+            continue;
+        }
+        return Err(format!("the loop for the part '{name}' is not finished."));
+    }
+
     let est = envs
         .values()
         .max_by(|a, b| b.est.partial_cmp(&a.est).unwrap())
