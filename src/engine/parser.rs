@@ -14,6 +14,7 @@ pub struct ParsedInfo {
 
 pub fn parse(src: &str) -> Result<ParsedInfo, String> {
     let mut di = directive::DirectiveInfo::default();
+    let mut macros = HashMap::new();
     let mut insts = Vec::new();
     let mut inst_idx_map = HashMap::new();
     let mut parts = HashMap::new();
@@ -60,6 +61,27 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
             continue;
         }
 
+        // macro line
+        if line.starts_with('!') {
+            let splitted = line.split_whitespace().collect::<Vec<&str>>();
+            if splitted.len() < 2 {
+                return  Err(format!(
+                    "the content of the macro is empty: line {ln_d}."
+                ));
+            }
+            let cn_d = line.find(splitted[1]).unwrap() + 1;
+            let name = splitted[0];
+            let body = splitted[1..].join(" ");
+            if macros.contains_key(name) {
+                return Err(format!(
+                    "the macro '{name}' has been already defined: line {ln_d}."
+                ));
+            }
+            macros.insert(name.to_string(), (body, ln_d, cn_d));
+            ln += 1;
+            continue;
+        }
+
         // part line
         let splitted = line.split_whitespace().collect::<Vec<&str>>();
         if splitted.len() < 2 {
@@ -75,7 +97,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         }
         let vec = parts.get_mut(name).unwrap();
         let env = envs.get_mut(name).unwrap();
-        part::parse(&body, vec, env, &inst_idx_map, ln_d, cn_d)?;
+        part::parse(&body, vec, env, &macros, &inst_idx_map, ln_d, cn_d)?;
         ln += 1;
     }
 

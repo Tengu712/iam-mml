@@ -14,11 +14,17 @@
 0.25 2 0 0.1 0.8 0.1
 	0.8 8 0.1 0.05 0.75 0.1 2
 
+!theme-melody cc  gg aa gg ff  ee   d8.e48d48c48d8.e16 c2
+!theme-base   c>c ec fc ec d<b >c<a fg                 c2
+
 melody @bell   v0.5 l4 o5
 base   @string v0.5 l4 o2
 
-melody cc  gg aa gg ff  ee   d8.e48d48c48d8.e16 c2
-base   c>c ec fc ec d<b >c<a fg                 c2
+melody !theme-melody
+base   !theme-base
 
 melody gg   ff   ee   dd gg   ff   e8.f48e48d48e8.f16 ed
 base   >e<g >d<g >c<g bg >e<g >d<g >cc8.d16           <g2
+
+melody !theme-melody
+base   !theme-base

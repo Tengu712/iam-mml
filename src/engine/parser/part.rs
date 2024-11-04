@@ -59,6 +59,7 @@ fn push(vec: &mut Vec<Note>, env: &mut Environment, note: Note) {
 /// * `body` - the body of a part line.
 /// * `vec` - the notes vector of the part.
 /// * `env` - the environment of the part.
+/// * `macros` - the map: macro name -> macro string.
 /// * `inst_idx_map` - the map: instrument name -> the index of the instrument in the instrument vector.
 /// * `ln_d` - the line number for an error message.
 /// * `cn_d` - the char number for an error message.
@@ -66,6 +67,7 @@ pub fn parse(
     body: &str,
     vec: &mut Vec<Note>,
     env: &mut Environment,
+    macros: &HashMap<String, (String, usize, usize)>,
     inst_idx_map: &HashMap<String, usize>,
     ln_d: usize,
     cn_d: usize,
@@ -228,6 +230,21 @@ pub fn parse(
                 }
                 _ => panic!("unexpected error"),
             },
+
+            '!' => match eat_to_whitespace(&body, i) {
+                (Some(n), ni) => {
+                    if let Some((n, ln_d, cn_d)) = macros.get(&n) {
+                        parse(n, vec, env, macros, inst_idx_map, *ln_d, *cn_d)?;
+                        i = ni;
+                    } else {
+                        return Err(format!(
+                            "undefined macro is using: line {ln_d}, char {cn_d}."
+                        ));
+                    }
+                },
+                _ => panic!("unexpected error"),
+            },
+
 
             _ => {
                 return Err(format!(
