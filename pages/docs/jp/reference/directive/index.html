@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>ディレクティブ: IAM.mml Docs</title>
+  <link rel="icon" href="/img/iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" type="text/css" href="../../index.css?0">
+  <script src="../../index.js?0"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+
+  <div id="main">
+    <h1>ディレクティブ</h1>
+
+    <hr>
+
+    <h2>#tempo</h2>
+
+    <pre><code class="plaintext">#tempo(\s|\t)[0-9]+</code></pre>
+
+    <p>
+      すべてのパートにおいてテンポを設定します。
+      例えば、拍子の分母が4に設定されているとき、「#tempo 120」を評価すると、四分音符の長さは0.5秒になります。
+      テンポは1から1000までの整数値でなければなりません。
+      テンポは標準で100に設定されています。
+    </p>
+
+
+
+    <h2>#denom</h2>
+
+    <pre><code class="plaintext">#denom(\s|\t)[0-9]+</code></pre>
+
+    <p>
+      すべてのパートにおいて拍子の分母を設定します。
+      例えば、テンポが120に設定されているとき、「#denom 8」を評価すると、四分音符の長さは1秒になります。
+      分母の値は1から128までの整数値でなければなりません。
+      分母は標準で4に設定されています。
+    </p>
+
+
+
+    <h2>#key</h2>
+
+    <pre><code class="plaintext">#key(\s|\t)[abcdefg]*(+|-|=)</code></pre>
+
+    <p>
+      すべてのパートにおいて調を設定します。
+      例えば、「#key cf+」を評価すると、ロ短調（B mimor key）になります。
+    </p>
+  </div>
+</body>
+
+</html>

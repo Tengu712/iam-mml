@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>マクロと楽器: IAM.mml Docs</title>
+  <link rel="icon" href="/img/iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" type="text/css" href="../../index.css?0">
+  <script src="../../index.js?0"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+
+  <div id="main">
+    <h1>マクロと楽器</h1>
+
+    <hr>
+
+    <h2>マクロ</h2>
+
+    <pre><code class="plaintext">!MACRO-IDENTIFIER(\s|\t)COMMANDS</code></pre>
+
+    <p>
+      マクロを定義します。
+      行頭から「!」「マクロ名」「区切り文字」「コマンド列」の順で連ねます。
+      演奏パートの楽譜中にコマンド列を展開できます。
+      マクロの展開については<a href="../command">こちら</a>を参照してください。
+    </p>
+
+
+
+    <h2>楽器</h2>
+
+    <pre><code class="plaintext">@INST-IDENTIFIER\n
+(
+  \t*([0-9]+('.'[0-9]+)(\s|\t)){6}([0-9]+('.'[0-9]+))?\n
+)*</code></pre>
+
+    <p>
+      楽器を定義します。
+      一行目は「@」「楽器名」「改行」の順で連ね、楽器名を指定します。
+      二行目以降に「インデント」「振幅」「周波数比」「アタックタイム」「ディケイタイム」「サステインレベル」「リリースタイム」「フィードバック回数」の順に「区切り文字」で区切りながら連ね、オペレータを定義します。
+      インデントを用いてn分木構造で表します。
+      楽器の適用については<a href="../command">こちら</a>を参照してください。
+    </p>
+  </div>
+</body>
+
+</html>

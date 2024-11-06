@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>コマンド: IAM.mml Docs</title>
+  <link rel="icon" href="/img/iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" type="text/css" href="../../index.css?0">
+  <script src="../../index.js?0"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+
+  <div id="main">
+    <h1>コマンド</h1>
+
+    <hr>
+
+    <h2>音符</h2>
+
+    <pre><code class="plaintext">[abcdefgr](++|--|+|-|=)?[0-9]*'.'?</code></pre>
+
+    <p>
+      音符一個を表します。
+      「音名」「臨時記号」「音価」「付点」の順で連ねます。
+      音名以外は省略可能であり、順に「調に合わせて」「標準音価に合わせて」「無付点として」解釈されます。
+      音名に「r」を指定すると、休符として扱われます。
+      音価に「1」を指定すると、全音符としては扱われず、一分音符として扱われます。
+      また、音価は1から128までの整数値でなければなりません。
+    </p>
+
+
+
+    <h2>移調</h2>
+
+    <pre><code class="plaintext">k[abcdefg]*(+|-|=)</code></pre>
+
+    <p>
+      移調を行います。
+      「k」「変化記号の付くすべての音名」「変化記号」の順で連ねます。
+    </p>
+
+
+
+    <h2>標準音価</h2>
+
+    <pre><code class="plaintext">l[0-9]+</code></pre>
+
+    <p>
+      音符コマンドにおいて音価を省略した場合に適用される標準の音価を設定します。
+      「l」「音価」の順で連ねます。
+      音価は1から128までの整数値でなければなりません。
+      標準音価コマンドが初めて現れるまでは、標準音価は4に設定されています。
+    </p>
+
+
+
+    <h2>音量</h2>
+
+    <pre><code class="plaintext">v[0-9]+('.'[0-9]+)?</code></pre>
+
+    <p>
+      音量を設定します。
+      「v」「音量」の順で連ねます。
+      音量は0.0から1.0の小数値でなければなりません。
+      音量コマンドが初めて現れるまでは、音量は0.5に設定されています。
+    </p>
+
+
+
+    <h2>オクターブ</h2>
+
+    <pre><code class="plaintext">&lt;|&gt;|o[1-8]</code></pre>
+
+    <p>
+      オクターブの移動を行います。
+      「&lt;」は1オクターブ下へ移動します。
+      「&gt;」は1オクターブ上へ移動します。
+      「o」「番号」は番号で表されるオクターブへ移動します。
+      ただし、オクターブは1から8までの間しか移動できません。
+    </p>
+
+
+
+    <h2>テンポ</h2>
+
+    <pre><code class="plaintext">t[0-9]+</code></pre>
+
+    <p>
+      テンポの変更します。
+      「t」「テンポ」の順で連ねます。
+      例えば、拍子の分母が4に設定されているとき、「t120」を評価すると、四分音符の長さは0.5秒になります。
+      テンポは1から1000までの整数値でなければなりません。
+      テンポは標準で100に設定されています。
+    </p>
+
+
+
+    <h2>ループ</h2>
+
+    <pre><code class="plaintext">'['.*:?.*']'[0-9]+</code></pre>
+
+    <p>
+      繰返しを表現します。
+      繰返したいコマンド列を「[]」で囲い、「]」に続いて「繰り返し回数」を指定します。
+      コマンド列を「:」で区切ると、「:」の右側が最後の繰返しにだけ評価されなくなります。
+      繰返しは入れ子にできます。
+      繰返し回数は1以上の整数値でなければなりません。
+    </p>
+
+
+
+    <h2>マクロ</h2>
+
+    <pre><code class="plaintext">!MACRO-IDENTIFIER(\s|\t|\n)</code></pre>
+
+    <p>
+      マクロを展開します。
+      「!」「マクロ名」「区切り文字」の順で連ねます。
+      マクロの定義については<a href="../macro-inst">こちら</a>を参照してください。
+    </p>
+
+
+
+    <h2>楽器</h2>
+
+    <pre><code class="plaintext">@INST-IDENTIFIER(\s|\t|\n)</code></pre>
+
+    <p>
+      楽器を変更します。
+      「@」「楽器名」「区切り文字」の順で連ねます。
+      楽器の定義については<a href="../macro-inst">こちら</a>を参照してください。
+    </p>
+  </div>
+</body>
+
+</html>
