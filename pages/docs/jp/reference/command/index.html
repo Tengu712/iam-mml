@@ -6,9 +6,9 @@
   <title>コマンド: IAM.mml Docs</title>
   <link rel="icon" href="/img/iam-mml-logo.svg" type="image/svg+xml">
   <link rel="stylesheet" type="text/css" href="../../index.css?0">
-  <script src="../../index.js?0"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-light.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="../../index.js?0"></script>
   <script>hljs.highlightAll();</script>
 </head>
 
@@ -25,12 +25,37 @@
 
     <pre><code class="plaintext">[abcdefgr](++|--|+|-|=)?[0-9]*'.'?</code></pre>
 
+    <ol>
+      <li>
+        音名
+        <ul>
+          <li>c：ド(C)</li>
+          <li>d：レ(D)</li>
+          <li>e：ミ(E)</li>
+          <li>f：ファ(F)</li>
+          <li>g：ソ(G)</li>
+          <li>a：ラ(A)</li>
+          <li>b：シ(B)</li>
+          <li>r：休符</li>
+        </ul>
+      </li>
+      <li>
+        臨時記号
+        <ul>
+          <li>++：ダブルシャープ</li>
+          <li>--：ダブルフラット</li>
+          <li>+：シャープ</li>
+          <li>-：フラット</li>
+        </ul>
+      </li>
+      <li>音価</li>
+      <li>付点</li>
+    </ol>
+
     <p>
-      音符一個を表します。
-      「音名」「臨時記号」「音価」「付点」の順で連ねます。
+      十二平均律における音符一個を表します。
       音名以外は省略可能であり、順に「調に合わせて」「標準音価に合わせて」「無付点として」解釈されます。
-      音名に「r」を指定すると、休符として扱われます。
-      音価に「1」を指定すると、全音符としては扱われず、一分音符として扱われます。
+      音価に「1」を指定すると、全音符としては扱われず、一分音符(二分音符2個分)として扱われます。
       また、音価は1から128までの整数値でなければなりません。
     </p>
 

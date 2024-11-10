@@ -1,3 +1,18 @@
+if (hljs) {
+  hljs.registerLanguage("mml", function(hljs) {
+    return {
+      contains: [
+        {
+          className: "comment",
+          begin: /^;/,
+          end: /$/,
+          relevance: 0
+        }
+      ]
+    }
+  })
+}
+
 function createMenu(path) {
   const menu = document.getElementById("menu")
   menu.innerHTML = `
@@ -11,6 +26,12 @@ function createMenu(path) {
           <b>一般</b><br>
           　<a href="${path}../about">IAM.mmlとは？</a><br>
           　<a href="${path}../releasenote">リリースノート</a>
+        </div>
+        <br>
+        <div>
+          <b>学習</b><br>
+          　<a href="${path}../learning/cdefgab">1.ドレミファソラシ</a><br>
+          　<a href="${path}../learning/commands">2.各種コマンド</a>
         </div>
         <br>
         <div>
