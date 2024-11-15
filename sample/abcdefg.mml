@@ -1,0 +1,10 @@
+; The simplest sample consisting of a note name and octave shift.
+;
+; The following settings are configured by default:
+; - key: A minor
+; - tempo: 100
+; - denominator: 4
+; - note value: 4
+; - octave: 4
+
+melody ab>cdefg gfedc<ba

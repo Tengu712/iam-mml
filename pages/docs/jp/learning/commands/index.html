@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf8">
+  <title>2. 各種コマンド: IAM.mml Docs</title>
+  <link rel="icon" href="/img/iam-mml-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" type="text/css" href="../../index.css?0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/stackoverflow-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="../../index.js?0"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+  <div id="menu"></div>
+  <script>createMenu("../")</script>
+
+  <div id="main">
+    <h1>2. 各種コマンド</h1>
+
+    <hr>
+
+    <h2>2.1. オクターブ移動</h2>
+
+    <p>
+      オクターブを移動するためには「&lt;」と「&gt;」が使えます。
+      それぞれ「1オクターブ下がる」「1オクターブ上がる」コマンドです。
+      試しに下の楽曲を再生してみましょう。
+      日本の童謡「赤とんぼ」の一部です。
+    </p>
+
+    <pre><code class="mml">; オクターブが移動できるため、音域を広く使える。
+; やたら八分音符のための8が多い。
+part c8f8f.g8 a8&gt;c8f8d8c d8&lt;f8fg a2r</code></pre>
+
+    <p>
+      また、「o」「1から8までの整数値」を連ねたオクターブコマンドによって、整数値のオクターブに直接移動することもできます。
+      1.4.の問題を、1オクターブ下げた状態で解決してみましょう。
+    </p>
+
+    <pre><code class="mml">; やたら二分音符のための2が多い。
+; 音量が調整できないため、音が割れている。
+part1 o3 g2&gt;c2 d2&lt;g2
+part2 o3 e2 a2 b2 e2
+part3 o3 c2 f2 g2 c2</code></pre>
+
+    <h2>2.2. 標準音価</h2>
+
+    <p>
+      2.1.のどちらの例も「8」や「2」という音価の指定が多く目立っています。
+      多用される音価がわかっている場合は、標準音価コマンドによって音価指定省略時の音価を設定することができます。
+      標準音価コマンドは「l」「1から128までの整数値」を連ねます。
+    </p>
+
+    <p>
+      2.1.の例をどちらも標準音価コマンドを使って簡単化すると、次のようになります。
+    </p>
+
+    <pre><code class="mml">part l8 cff4.g a&gt;cfdc4 d&lt;ff4g4 a2r</code></pre>
+
+    <pre><code class="mml">; 音量が調整できないため、音が割れている。
+part1 o3l2 g&gt;c d&lt;g
+part2 o3l2 e a b e
+part3 o3l2 c f g c</code></pre>
+
+    <h2>2.3. 音量</h2>
+
+    <p>
+      2.2.の2個目の例では、音量が調整できないために音が割れてしまっています。
+      音量を調整するためには、音量コマンドを用います。
+      音量コマンドは「v」「0.0から1.0までの小数値」を連ねます。
+    </p>
+
+    <p>
+      2.2.の2個目の例の音量の問題を解決しましょう。
+    </p>
+
+    <pre><code class="mml">part1 o3l2 v0.2 g&gt;c d&lt;g
+part2 o3l2 v0.2 e a b e
+part3 o3l2 v0.2 c f g c</code></pre>
+
+    <h2>2.4. テンポ</h2>
+
+    <p>
+      IAM.mmlにおいて、テンポの設定方法にもコマンドによるもの・ディレクティブによるものの2種類があります。
+      ディレクティブについて、詳しくは次章<a href="../directive">3. ディレクティブ</a>を参照してください。
+    </p>
+
+    <p>
+      テンポコマンドは「t」「1から1000までの整数値」を連ねます。
+      次の楽曲を再生すると、テンポが変わっていることがわかります。
+    </p>
+
+    <pre><code class="mml">; 標準で、一拍：四分音符、テンポ：100が設定されている。
+part cdef t138 cdef t80 cdef t120 cdef</code></pre>
+
+    <h2>2.5. 移調</h2>
+
+    <p>
+      IAM.mmlにおいて、調の設定方法にはコマンドによるもの・ディレクティブによるものの2種類があります。
+      ディレクティブについて、詳しくは次章<a href="../directive">3. ディレクティブ</a>を参照してください。
+    </p>
+
+    <p>
+      移調コマンドは「k」「変化記号が付く音名」「変化記号」を連ねます。
+      移調コマンドを用いて調を設定することで、1.3.の「革命のエチュード」の例の問題を解決しましょう。
+    </p>
+
+    <pre><code class="mml">; 移調コマンドによってハ短調に設定。
+; ついでにオクターブコマンドによって正しく音を下げる。
+part keab- c16d8.e16 e2r8r18&lt;g16g8.g16 a2r8r16&gt;c16d8.e16 e2r8r18&lt;g16g8.g16 a=1</code></pre>
+
+    <p>
+      実際の楽譜同様、音符コマンドの臨時記号は現在の調号を上書きするため、時にはダブルシャープやダブルフラットが必要になるときがあります。
+      下はショパンの「即興曲第4番嬰ハ短調遺作作品66」いわゆる「幻想即興曲」の一部です。
+    </p>
+
+    <pre><code class="mml">; 同じコマンド列を2回繰り返している。
+part kcdfg+ l16 rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt; rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt;</code></pre>
+
+    <h2>2.6. ループ</h2>
+
+    <p>
+      2.5.の2個目の例では、同じコマンド列が2回繰り返されています。
+      このように同じコマンド列が繰り返されることがわかっている場合は、ループコマンドによって簡単化できます。
+      ループコマンドは「[」「繰り返されるコマンド列」「]」「繰り返し回数」を連ねます。
+    </p>
+
+    <p>
+      2.5.の2個目の例の繰返しの問題を解決しましょう。
+    </p>
+
+    <pre><code class="mml">part kcdfg+ l16 [rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt;]2</code></pre>
+
+    <p>
+      ループコマンドは入れ子にできます。
+      また、「:」により最後の繰返しにおける脱出点を設定できます。
+    </p>
+
+    <pre><code class="mml">; | d d8c8 a g | g a g a | d a g a | d a d8c8 a |
+; | d d8c8 a g | g a g a | d a g a | d f g    a |
+melody t120 [d&gt;d8c8&lt;ag [ga]2 : [da:ga]2 &gt;d8c8&lt;a]2 daga dfga</code></pre>
+
+    <br>
+    <br>
+    <br>
+
+    <div style="text-align: center;">
+      <a href="../directive">次章へ進む</a>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+
+  </div>
+</body>
+
+</html>

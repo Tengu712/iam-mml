@@ -1,17 +1,7 @@
 {
-  "name": "iam-mml",
-  "module": "index.ts",
-  "type": "module",
+  "name": "iamw",
+  "version": "0.3.0",
   "scripts": {
-    "build": "bunx prettier --write ./src && bun build ./src/index.ts --outdir ./pages --minify",
-    "format": "bunx prettier --write ./src",
-    "test": "bun test"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "prettier": "^3.2.5"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "build": "npx wasm-pack build --target web --out-dir ./pages/pkg --no-typescript"
   }
 }

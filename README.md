@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./pages/iam-mml-logo.svg" alt="Logo" height=120></a>
+  <img src="./pages/img/iam-mml-logo.svg" alt="Logo" height=120></a>
 </p>
 
 <h1 align="center">IAM.mml</h1>
@@ -11,13 +11,20 @@
 
 ## What is this?
 
-Online AM/FM Synthesizer for Generating and Playing WAV from MML.
+AM/FM Synthesizer for Generating and Playing WAV from MML.
 
 ## Build
 
-To build, follow these steps:
+### CLI
 
-1. Install [bun](https://bun.sh/)
-2. Run `bun install`
-3. Run `bun run build`
-4. Host the pages directory
+1. Install [Rust](https://www.rust-lang.org/).
+2. Run `cargo build --release`.
+3. Then `target/release/iamc` is generated.
+
+### Web
+
+1. Install [Rust](https://www.rust-lang.org/).
+2. Install [npm](https://www.npmjs.com/) or something that's compatible with npm.
+3. Run `npm run build`.
+4. Then `pages/pkg/` is generated.
+5. Host a local web server with `pages` as the root directory.
