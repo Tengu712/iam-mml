@@ -1,62 +1,57 @@
-use super::{key::*, *};
+use super::{environment::Environment, *};
+use std::collections::HashMap;
 
-pub struct DirectiveInfo {
-    /// The tempo.
-    /// The default is 100.
-    pub tempo: u32,
-    /// The denominator of the time signature.
-    /// The default is 4.
-    pub denom: u32,
-    /// The key.
-    pub key: Key,
-}
-
-impl Default for DirectiveInfo {
-    fn default() -> Self {
-        Self {
-            key: Key::default(),
-            tempo: 100,
-            denom: 4,
-        }
+pub fn parse(
+    line: &str,
+    env: &mut Environment,
+    envs: &mut HashMap<String, Environment>,
+    ln_d: usize,
+) -> Result<(), String> {
+    // split and get the index of tokens[1]
+    let tokens = line.split_whitespace().collect::<Vec<&str>>();
+    if tokens.len() < 2 {
+        return Err(format!("value is missing for {}: line {ln_d}.", tokens[0]));
     }
-}
+    let i = line.find(tokens[1]).unwrap();
+    let cn_d = i + 1;
 
-impl DirectiveInfo {
-    /// A method to apply a directive line to this instance.
-    ///
-    /// * `line` - the directive line.
-    /// * `ln_d` - the line number for an error message.
-    pub fn apply(&mut self, line: &str, ln_d: usize) -> Result<(), String> {
-        if !line.starts_with('#') {
-            panic!("unexpected error");
+    // parse
+    match tokens[0] {
+        "#tempo" => {
+            let n = int_directive(line, i, MIN_TEMPO, MAX_TEMPO, "#tempo", ln_d, cn_d)?;
+            env.tmp = n;
+            for env in envs.values_mut() {
+                env.tmp = n;
+            }
         }
-
-        // split and get the index of tokens[1]
-        let tokens = line.split_whitespace().collect::<Vec<&str>>();
-        if tokens.len() < 2 {
-            return Err(format!("value is missing for {}: line {ln_d}.", tokens[0]));
+        "#denom" => {
+            let n = int_directive(line, i, MIN_DENOM, MAX_DENOM, "#denom", ln_d, cn_d)?;
+            env.dnm = n;
+            for env in envs.values_mut() {
+                env.dnm = n;
+            }
         }
-        let i = line.find(tokens[1]).unwrap();
-
-        // parse
-        match tokens[0] {
-            "#tempo" => self.tempo = int_directive(line, i, ln_d, "#tempo", MIN_TEMPO, MAX_TEMPO)?,
-            "#denom" => self.denom = int_directive(line, i, ln_d, "#denom", MIN_DENOM, MAX_DENOM)?,
-            "#key" => (self.key, _) = Key::from(line, i, ln_d)?,
-            cmd => return Err(format!("undefined directive {cmd} found: line {ln_d}.")),
+        "#key" => {
+            let (key, _) = key::Key::from(line, i, ln_d)?;
+            env.key = key.clone();
+            for env in envs.values_mut() {
+                env.key = key.clone();
+            }
         }
-
-        Ok(())
+        cmd => return Err(format!("undefined directive {cmd} found: line {ln_d}.")),
     }
+
+    Ok(())
 }
 
 fn int_directive<T>(
     line: &str,
     i: usize,
-    ln_d: usize,
-    name: &str,
     min: T,
     max: T,
+    name: &str,
+    cn_d: usize,
+    ln_d: usize,
 ) -> Result<T, String>
 where
     T: std::str::FromStr + std::fmt::Display + std::cmp::PartialOrd,
@@ -64,14 +59,14 @@ where
     if let (Some(n), _) = eat_int::<T>(line, i) {
         if n < min || n > max {
             Err(format!(
-                "the value of {name} must be an integer between {min} and {max}, inclusive, but {n} is found: line {ln_d}, char {i}."
+                "the value of {name} must be an integer between {min} and {max}, inclusive, but {n} is found: line {ln_d}, char {cn_d}."
             ))
         } else {
             Ok(n)
         }
     } else {
         Err(format!(
-            "the value of {name} is not found: line {ln_d}, char {i}."
+            "the value of {name} is not found: line {ln_d}, char {cn_d}."
         ))
     }
 }

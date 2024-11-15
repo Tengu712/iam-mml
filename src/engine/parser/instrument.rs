@@ -11,7 +11,11 @@ pub fn parse(lines: &Vec<&str>, ln: usize) -> Result<(Instrument, usize), String
         let line = lines[ln];
         let ln_d = ln + 1;
 
-        if line.trim().is_empty() || line.trim().starts_with('#') || line.trim().starts_with('@') {
+        if line.trim().is_empty()
+            || line.trim().starts_with('#')
+            || line.trim().starts_with('@')
+            || line.trim().starts_with(';')
+        {
             break;
         }
 

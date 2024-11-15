@@ -45,6 +45,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (isPaused) {
         audioContext.resume().then(() => (isPaused = false))
       }
+      audioBufferSource = null
     }
   }
 

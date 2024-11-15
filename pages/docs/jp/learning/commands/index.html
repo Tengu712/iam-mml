@@ -64,10 +64,42 @@ part1 o3l2 g&gt;c d&lt;g
 part2 o3l2 e a b e
 part3 o3l2 c f g c</code></pre>
 
-    <h2>2.3. 移調</h2>
+    <h2>2.3. 音量</h2>
+
+    <p>
+      2.2.の2個目の例では、音量が調整できないために音が割れてしまっています。
+      音量を調整するためには、音量コマンドを用います。
+      音量コマンドは「v」「0.0から1.0までの小数値」を連ねます。
+    </p>
+
+    <p>
+      2.2.の2個目の例の音量の問題を解決しましょう。
+    </p>
+
+    <pre><code class="mml">part1 o3l2 v0.2 g&gt;c d&lt;g
+part2 o3l2 v0.2 e a b e
+part3 o3l2 v0.2 c f g c</code></pre>
+
+    <h2>2.4. テンポ</h2>
+
+    <p>
+      IAM.mmlにおいて、テンポの設定方法にもコマンドによるもの・ディレクティブによるものの2種類があります。
+      ディレクティブについて、詳しくは次章<a href="../directive">3. ディレクティブ</a>を参照してください。
+    </p>
+
+    <p>
+      テンポコマンドは「t」「1から1000までの整数値」を連ねます。
+      次の楽曲を再生すると、テンポが変わっていることがわかります。
+    </p>
+
+    <pre><code class="mml">; 標準で、一拍：四分音符、テンポ：100が設定されている。
+part cdef t138 cdef t80 cdef t120 cdef</code></pre>
+
+    <h2>2.5. 移調</h2>
 
     <p>
       IAM.mmlにおいて、調の設定方法にはコマンドによるもの・ディレクティブによるものの2種類があります。
+      ディレクティブについて、詳しくは次章<a href="../directive">3. ディレクティブ</a>を参照してください。
     </p>
 
     <p>
@@ -85,28 +117,44 @@ part keab- c16d8.e16 e2r8r18&lt;g16g8.g16 a2r8r16&gt;c16d8.e16 e2r8r18&lt;g16g8.
     </p>
 
     <pre><code class="mml">; 同じコマンド列を2回繰り返している。
-part kcdfg+ l16 rgagf++g>cedcdc&lt;b+&gt;ceg&lt; rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt;</code></pre>
+part kcdfg+ l16 rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt; rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt;</code></pre>
 
-    <h2>2.4. テンポ</h2>
+    <h2>2.6. ループ</h2>
 
     <p>
-      IAM.mmlにおいて、テンポの設定方法にもコマンドによるもの・ディレクティブによるものの2種類があります。
+      2.5.の2個目の例では、同じコマンド列が2回繰り返されています。
+      このように同じコマンド列が繰り返されることがわかっている場合は、ループコマンドによって簡単化できます。
+      ループコマンドは「[」「繰り返されるコマンド列」「]」「繰り返し回数」を連ねます。
     </p>
 
     <p>
-      テンポコマンドは「t」「1から1000までの整数値」を連ねます。
-      次の楽曲を再生すると、テンポが変わっていることがわかります。
+      2.5.の2個目の例の繰返しの問題を解決しましょう。
     </p>
 
-    <pre><code class="mml">; 標準で、一拍：四分音符、テンポ：100が設定されている。
-part cdef t138 cdef t80 cdef t120 cdef</code></pre>
-
-    <h2>2.5. 音量</h2>
+    <pre><code class="mml">part kcdfg+ l16 [rgagf++g&gt;cedcdc&lt;b+&gt;ceg&lt;]2</code></pre>
 
     <p>
-      一パートにおける音量は「v」「0.0から1.0までの小数値」を連ねた音量コマンドによって設定できます。
-      
+      ループコマンドは入れ子にできます。
+      また、「:」により最後の繰返しにおける脱出点を設定できます。
     </p>
+
+    <pre><code class="mml">; | d d8c8 a g | g a g a | d a g a | d a d8c8 a |
+; | d d8c8 a g | g a g a | d a g a | d f g    a |
+melody t120 [d&gt;d8c8&lt;ag [ga]2 : [da:ga]2 &gt;d8c8&lt;a]2 daga dfga</code></pre>
+
+    <br>
+    <br>
+    <br>
+
+    <div style="text-align: center;">
+      <a href="../directive">次章へ進む</a>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+
   </div>
 </body>
 

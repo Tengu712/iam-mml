@@ -1,49 +1,5 @@
-use std::usize;
-
-use super::{directive::*, key::*, *};
+use super::{environment::*, key::*, *};
 use crate::engine::note::*;
-
-pub struct LoopInfo {
-    pub delim: usize,
-    pub notes: Vec<Note>,
-}
-
-pub struct Environment {
-    /// The total duraenvon (in seconds) of the note values.
-    pub est: f32,
-    /// Current key.
-    pub key: Key,
-    /// Current octave number.
-    pub oct: u32,
-    /// Current default note value.
-    pub dv: u32,
-    /// Current tempo.
-    pub tmp: u32,
-    /// Current amplitude
-    pub vol: f32,
-    /// Current denominator of the envme signature.
-    pub dnm: u32,
-    /// Current instrument index.
-    pub inst: usize,
-    ///
-    pub stack: Vec<LoopInfo>,
-}
-
-impl Environment {
-    pub fn new(di: &DirectiveInfo) -> Self {
-        Self {
-            est: 0.0,
-            key: di.key.clone(),
-            oct: 4,
-            dv: 4,
-            tmp: di.tempo,
-            vol: 0.5,
-            dnm: di.denom,
-            inst: 0,
-            stack: Vec::new(),
-        }
-    }
-}
 
 fn push(vec: &mut Vec<Note>, env: &mut Environment, note: Note) {
     if let Some(li) = env.stack.last_mut() {

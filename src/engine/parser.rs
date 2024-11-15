@@ -1,4 +1,5 @@
 mod directive;
+mod environment;
 mod instrument;
 mod key;
 mod part;
@@ -13,13 +14,17 @@ pub struct ParsedInfo {
 }
 
 pub fn parse(src: &str) -> Result<ParsedInfo, String> {
-    let mut di = directive::DirectiveInfo::default();
     let mut macros = HashMap::new();
     let mut insts = Vec::new();
     let mut inst_idx_map = HashMap::new();
     let mut parts = HashMap::new();
+
+    // default environment
+    let mut env = environment::Environment::default();
+    // current environments for each part
     let mut envs = HashMap::new();
 
+    // push the default instrument (sin wave)
     let (inst, _) = instrument::parse(&Vec::from(["1 1 0 0 1 0"]), 0)?;
     insts.push(inst);
 
@@ -56,7 +61,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
 
         // directive line
         if line.starts_with('#') {
-            di.apply(&line, ln_d)?;
+            directive::parse(line, &mut env, &mut envs, ln_d)?;
             ln += 1;
             continue;
         }
@@ -91,7 +96,7 @@ pub fn parse(src: &str) -> Result<ParsedInfo, String> {
         let body = splitted[1..].join(" ");
         if !parts.contains_key(name) {
             parts.insert(name.to_string(), Vec::new());
-            envs.insert(name.to_string(), part::Environment::new(&di));
+            envs.insert(name.to_string(), env.clone());
         }
         let vec = parts.get_mut(name).unwrap();
         let env = envs.get_mut(name).unwrap();
