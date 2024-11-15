@@ -1,0 +1,16 @@
+; A simple sample to check loop behavior.
+;
+; - Loops can be nested.
+; - By using ':', only the innermost loop can be exited early.
+
+#tempo 120
+#denom 4
+#key =
+
+@bell
+1 1 0 1 0 0
+	1 8.5 0 0 1 0 1
+
+; | d d8c8 a g | g a g a | d a g a | d a d8c8 a |
+; | d d8c8 a g | g a g a | d a g a | d f g    a |
+melody @bell [d>d8c8<ag [ga]2 : [da:ga]2 >d8c8<a]2 daga dfga

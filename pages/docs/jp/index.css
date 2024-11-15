@@ -13,6 +13,7 @@ code {
     'Courier New',
     Meiryo,
     monospace;
+  tab-size: 4;
 }
 
 ul>li {

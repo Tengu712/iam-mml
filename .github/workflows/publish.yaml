@@ -15,9 +15,10 @@ jobs:
         with:
           path: skdassoc.com
       - uses: actions/setup-node@v4
-      - uses: oven-sh/setup-bun@v1
-      - run: bun test
-      - run: bun run build
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pages
