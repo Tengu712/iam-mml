@@ -45,7 +45,7 @@ function createMenu(path) {
         <br>
         <div>
           <b>理論</b><br>
-          　<a href="${path}../theory/synthesizer">シンセサイズ</a>
+          　<a href="${path}../theory/synthesize">シンセサイズ</a>
         </div>
         <br>
         <a href="https://github.com/Tengu712/iam-mml">GitHub</a>
