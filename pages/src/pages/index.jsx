@@ -7,9 +7,60 @@ import buildIcon from '../assets/build.svg'
 import infoIcon from '../assets/info.svg'
 import styles from './index.module.css'
 
+function Resizer({ targetRef, maxWidth }) {
+  const [isDragging, setIsDragging] = useState(false)
+  const startXRef = useRef(0)
+  const startWidthRef = useRef(0)
+
+  const handleMouseDown = useCallback((evt) => {
+    setIsDragging(true)
+    startXRef.current = evt.clientX
+    startWidthRef.current = targetRef.current.clientWidth
+  }, [targetRef])
+  const handleMouseUp = useCallback(() => setIsDragging(false), [])
+  const handleMouseMove = useCallback((evt) => {
+    if (!isDragging || !targetRef.current) {
+      return
+    }
+    const deltaX = evt.clientX - startXRef.current
+    const newWidth = startWidthRef.current + deltaX
+    const clampedWidth = Math.min(newWidth, maxWidth)
+    targetRef.current.style.width = clampedWidth + 'px'
+  }, [isDragging, targetRef, maxWidth])
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp])
+
+  return (
+    <div
+      className={styles.textareaResizer}
+      onMouseDown={handleMouseDown}
+    />
+  )
+}
+
 function TextAreas() {
   const [numbers, setNumbers] = useState("1")
+  const [mmlWrapperMaxWidth, setMmlWrapperMaxWidth] = useState(200)
   const numbersRef = useRef(null)
+  const mmlWrapperRef = useRef(null)
+
+  useEffect(() => {
+    if (mmlWrapperRef.current) {
+      setMmlWrapperMaxWidth(mmlWrapperRef.current.parentElement.clientWidth - 3 - 100)
+    }
+  }, [])
 
   const setScrollTop = useCallback((n) => {
     if (numbersRef.current) {
@@ -40,7 +91,7 @@ function TextAreas() {
 
   return (
     <div className={styles.textareaWrapper}>
-      <div id="mml-wrapper" className={styles.mmlWrapper}>
+      <div ref={mmlWrapperRef} className={styles.mmlWrapper}>
         <textarea
           ref={numbersRef}
           className={styles.mmlNumbers}
@@ -55,7 +106,10 @@ function TextAreas() {
           spellCheck={false}
         />
       </div>
-      <div id="textarea-resizer" className={styles.textareaResizer}></div>
+      <Resizer
+        targetRef={mmlWrapperRef} 
+        maxWidth={mmlWrapperMaxWidth}
+      />
       <div className={styles.logWrapper}>
         <textarea
           className={styles.log}
