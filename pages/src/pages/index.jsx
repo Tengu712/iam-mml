@@ -1,87 +1,12 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import useAudioPlayer from '../hooks/useAudioPlayer'
 import playIcon from '../assets/play.svg'
 import pauseIcon from '../assets/pause.svg'
 import stopIcon from '../assets/stop.svg'
 import buildIcon from '../assets/build.svg'
 import infoIcon from '../assets/info.svg'
 import styles from './index.module.css'
-
-function useAudioPlayer() {
-  const [audioContext] = useState(() => new AudioContext())
-  const [audioBuffer, setAudioBuffer] = useState(null)
-  const [audioBufferSource, setAudioBufferSource] = useState(null)
-  const [isPaused, setIsPaused] = useState(false)
-  const [prevMml, setPrevMml] = useState("")
-
-  const end = useCallback(() => {
-    if (audioBufferSource !== null) {
-      audioBufferSource.stop()
-      audioBufferSource.disconnect()
-      if (isPaused) {
-        audioContext.resume().then(() => setIsPaused(false))
-      }
-      setAudioBufferSource(null)
-    }
-  }, [audioBufferSource, isPaused, audioContext])
-
-  const play = useCallback(() => {
-    const source = audioContext.createBufferSource()
-    source.buffer = audioBuffer
-    source.connect(audioContext.destination)
-    source.addEventListener("ended", () => end())
-    source.start()
-    setAudioBufferSource(source)
-    setIsPaused(false)
-  }, [audioContext, audioBuffer, end])
-
-  const handlePlay = useCallback((mmlValue, build, logCallback) => {
-    if (mmlValue === prevMml && audioBuffer !== null) {
-      if (isPaused) {
-        audioContext.resume().then(() => setIsPaused(false))
-      } else if (audioBufferSource === null) {
-        play()
-      }
-      return
-    }
-
-    end()
-    setAudioBuffer(null)
-
-    let wave
-    try {
-      wave = build(mmlValue)
-      logCallback("info: compile succeeded.\n")
-    } catch (err) {
-      logCallback("error: " + err + "\n")
-      return
-    }
-
-    const buffer = audioContext.createBuffer(1, wave.length, 44100)
-    buffer.copyToChannel(wave, 0)
-    setAudioBuffer(buffer)
-
-    const source = audioContext.createBufferSource()
-    source.buffer = buffer
-    source.connect(audioContext.destination)
-    source.addEventListener("ended", () => end())
-    source.start()
-    setAudioBufferSource(source)
-    setIsPaused(false)
-
-    setPrevMml(mmlValue)
-  }, [prevMml, audioBuffer, isPaused, audioBufferSource, audioContext, end, play])
-
-  const handlePause = useCallback(() => {
-    if (audioBufferSource !== null && !isPaused) {
-      audioContext.suspend().then(() => setIsPaused(true))
-    }
-  }, [audioBufferSource, isPaused, audioContext])
-
-  const handleStop = useCallback(() => end(), [end])
-
-  return { handlePlay, handlePause, handleStop }
-}
 
 function Resizer({ targetRef, maxWidth }) {
   const [isDragging, setIsDragging] = useState(false)
