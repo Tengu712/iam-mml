@@ -23,7 +23,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   background-color: #222;
 }
 
@@ -95,26 +95,12 @@
 /* MML or instruments or status textarea */
 
 .textareaWrapper {
-  width: 100%;
   flex-grow: 1;
-  margin: 0;
-  padding: 15px;
-  flex-grow: 1;
-}
-
-.textareaUpper {
   display: flex;
   width: 100%;
-  height: 100%; /* calc(100% - 1.5rem); */
+  height: 100%;
   margin: 0;
-  padding: 0;
-}
-
-.textareaLower {
-  width: 100%;
-  height: 1.5rem;
-  margin: 0;
-  padding: 0;
+  padding: 15px;
 }
 
 .textareaResizer {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import playIcon from '../assets/play.svg'
 import pauseIcon from '../assets/pause.svg'
@@ -6,6 +6,65 @@ import stopIcon from '../assets/stop.svg'
 import buildIcon from '../assets/build.svg'
 import infoIcon from '../assets/info.svg'
 import styles from './index.module.css'
+
+function TextAreas() {
+  const [numbers, setNumbers] = useState("1")
+  const numbersRef = useRef(null)
+
+  const setScrollTop = useCallback((n) => {
+    if (numbersRef.current) {
+      numbersRef.current.scrollTop = n
+    }
+  }, [])
+  const handleScroll = useCallback((evt) => setScrollTop(evt.target.scrollTop), [])
+  const handleInput = useCallback((evt) => {
+    const linesCount = evt.target.value.split("\n").length
+    let numbersValue = ""
+    for (let i = 1; i < linesCount + 1; ++i) {
+      numbersValue += i + "\n"
+    }
+    setNumbers(numbersValue)
+    setScrollTop(evt.target.scrollTop)
+  }, [])
+  const handleKeyDown = useCallback((evt) => {
+    if (evt.key !== "Tab") {
+      return
+    }
+    evt.preventDefault()
+    const start = evt.target.selectionStart
+    const end = evt.target.selectionEnd
+    evt.target.value = evt.target.value.substring(0, start) + "\t" + evt.target.value.substring(end)
+    evt.target.selectionStart = start + 1
+    evt.target.selectionEnd = start + 1
+  }, [])
+
+  return (
+    <div className={styles.textareaWrapper}>
+      <div id="mml-wrapper" className={styles.mmlWrapper}>
+        <textarea
+          ref={numbersRef}
+          className={styles.mmlNumbers}
+          value={numbers}
+          readOnly
+        />
+        <textarea
+          className={styles.mml}
+          onScroll={handleScroll}
+          onInput={handleInput}
+          onKeyDown={handleKeyDown}
+          spellCheck={false}
+        />
+      </div>
+      <div id="textarea-resizer" className={styles.textareaResizer}></div>
+      <div className={styles.logWrapper}>
+        <textarea
+          className={styles.log}
+          spellCheck={false}
+        />
+      </div>
+    </div>
+  )
+}
 
 function PlaygroundPage() {
   useEffect(() => { document.title = 'IAM.mml' }, [])
@@ -24,6 +83,7 @@ function PlaygroundPage() {
     }
     loadWasm()
   }, [])
+
 
   return (
     <div className={styles.main}>
@@ -47,18 +107,7 @@ function PlaygroundPage() {
         </button>
       </div>
 
-      <div className={styles.textareaWrapper}>
-        <div className={styles.textareaUpper}>
-          <div id="mml-wrapper" className={styles.mmlWrapper}>
-            <textarea id="mml-numbers" className={styles.mmlNumbers} readOnly></textarea>
-            <textarea id="mml" className={styles.mml} spellCheck="false"></textarea>
-          </div>
-          <div id="textarea-resizer" className={styles.textareaResizer}></div>
-          <div className={styles.logWrapper}>
-            <textarea id="log" className={styles.log} spellCheck="false"></textarea>
-          </div>
-        </div>
-      </div>
+      <TextAreas />
     </div>
   )
 }
