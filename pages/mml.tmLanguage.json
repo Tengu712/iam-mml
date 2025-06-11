@@ -1,0 +1,24 @@
+{
+  "name": "mml",
+  "id": "mml",
+  "scopeName": "source.mml",
+  "fileTypes": ["mml"],
+  "patterns": [
+    {
+      "name": "comment.line.semicolon.mml",
+      "match": ";.*$"
+    },
+    {
+      "name": "keyword.control.mml",
+      "match": "^#S+"
+    },
+    {
+      "name": "constant.language.mml",
+      "match": "^S+"
+    },
+    {
+      "name": "support.function.mml",
+      "match": "\\b@S+\\b"
+    }
+  ]
+}
