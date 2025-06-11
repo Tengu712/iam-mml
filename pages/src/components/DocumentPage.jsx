@@ -6,6 +6,8 @@ import style from './DocumentPage.module.css'
 const mdxModules = Object.entries(import.meta.glob('../pages/**/*.mdx')).map(([path, module]) => ({ module: module, path: path.slice(9, -4) }))
 
 function DocumentPage({ children }) {
+  useEffect(() => { document.title = 'IAM.mml Docs' }, [])
+
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [MdxComponent, setMdxComponent] = useState(null)
   const [hasError, setHasError] = useState(false)

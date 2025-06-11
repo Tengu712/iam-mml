@@ -8,6 +8,8 @@ import infoIcon from '../assets/info.svg'
 import styles from './index.module.css'
 
 function PlaygroundPage() {
+  useEffect(() => { document.title = 'IAM.mml' }, [])
+
   const wasmLoading = useRef(true)
 
   useEffect(() => {
