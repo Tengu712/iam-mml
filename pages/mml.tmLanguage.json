@@ -10,15 +10,15 @@
     },
     {
       "name": "keyword.control.mml",
-      "match": "^#S+"
+      "match": "#[^\\s]+"
     },
     {
       "name": "constant.language.mml",
-      "match": "^S+"
+      "match": "^[^\\s]+"
     },
     {
       "name": "support.function.mml",
-      "match": "\\b@S+\\b"
+      "match": "@[^\\s]+"
     }
   ]
 }
