@@ -2,6 +2,6 @@
   "name": "iamw",
   "version": "0.3.0",
   "scripts": {
-    "build": "npx wasm-pack build --target web --out-dir ./pages/pkg --no-typescript"
+    "build": "npx wasm-pack build --target web --out-dir ./pages/src/assets/wasm --no-typescript"
   }
 }
