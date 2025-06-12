@@ -2,16 +2,12 @@ name: Build and Deploy
 
 on:
   pull_request:
-    paths:
-      - 'pages/**'
     types:
       - opened
       - synchronize
   push:
     branches:
       - master
-    paths:
-      - 'pages/**'
 
 jobs:
   build:
