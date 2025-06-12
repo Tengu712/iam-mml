@@ -26,5 +26,5 @@ AM/FM Synthesizer for Generating and Playing WAV from MML.
 1. Install [Rust](https://www.rust-lang.org/).
 2. Install [npm](https://www.npmjs.com/) or something that's compatible with npm.
 3. Run `npm run build`.
-4. Then `pages/pkg/` is generated.
-5. Host a local web server with `pages` as the root directory.
+4. Change directory to `pages`.
+5. Run `npm run dev`.
