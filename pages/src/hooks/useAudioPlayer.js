@@ -34,7 +34,6 @@ function resume(context, buffer, source, setSource, paused, setPaused) {
     context.resume().then(() => setPaused(false))
   }
   // ended
-  // TODO: check
   else if (source === null) {
     play(context, buffer, setSource, setPaused)
   }
