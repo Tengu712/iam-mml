@@ -203,11 +203,11 @@ function PlaygroundPage() {
         <button onClick={onBuildClick} className={styles.whiteButton} title="Build and download the music">
           <img src={buildIcon} />
         </button>
-        <button className={`${styles.whiteButton} ${styles.info}`} title="Go to IAM.mml Docs">
-          <Link to="/docs/jp/about/">
+        <Link to="/docs/jp/about/" onClick={handleStop}>
+          <button className={`${styles.whiteButton} ${styles.info}`} title="Go to IAM.mml Docs">
             <img src={infoIcon} />
-          </Link>
-        </button>
+          </button>
+        </Link>
       </div>
 
       <TextAreas 
