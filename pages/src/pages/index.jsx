@@ -165,7 +165,7 @@ function PlaygroundPage() {
   // for play
   const onPlayClick = useCallback(() => {
     if (wasm) {
-      handlePlay(mmlValue, wasm.build, (n) => setLogValue((p) => { p += n }))
+      handlePlay(mmlValue, wasm.build, (n) => setLogValue((p) => p + n))
     }
   }, [mmlValue, wasm, handlePlay])
 
@@ -181,9 +181,9 @@ function PlaygroundPage() {
         a.download = 'output.wav'
         a.click()
         URL.revokeObjectURL(url)
-        setLogValue((p) => { p += "info: build and download succeeded.\n" })
+        setLogValue((p) => p + "info: build and download succeeded.\n")
       } catch (err) {
-        setLogValue((p) => { p += "error: " + err + "\n" })
+        setLogValue((p) => p + "error: " + err + "\n")
       }
     }
   }, [mmlValue, wasm])
