@@ -150,6 +150,11 @@
   tab-size: 4;
 }
 
+.mml {
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
 .mmlNumbers {
   user-select: none;
   width: 3rem;
