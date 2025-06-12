@@ -19,7 +19,7 @@ function play(context, buffer, setSource, setPaused) {
   const source = context.createBufferSource()
   source.buffer = buffer
   source.connect(context.destination)
-  source.addEventListener("ended", () => end())
+  source.addEventListener("ended", () => end(context, source, setSource, false, setPaused))
   source.start()
   setSource(source)
   setPaused(false)
@@ -72,7 +72,7 @@ function useAudioPlayer() {
     b.copyToChannel(wave, 0)
     setBuffer(b)
 
-    play(context, buffer, setSource, setPaused)
+    play(context, b, setSource, setPaused)
   }
 
   const handlePause = () => {
