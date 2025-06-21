@@ -4,11 +4,6 @@
 
 <h1 align="center">IAM.mml</h1>
 
-<p align="center">
-  <img src="https://github.com/Tengu712/iam-mml/actions/workflows/pages.yml/badge.svg" alt="Deployment">
-  <img height=20 src="https://img.shields.io/badge/license-CC0_1.0-blue">
-</p>
-
 ## What is this?
 
 AM/FM Synthesizer for Generating and Playing WAV from MML.
