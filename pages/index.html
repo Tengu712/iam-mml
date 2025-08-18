@@ -11,6 +11,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function() {
+        const query = new URLSearchParams(window.location.search);
+        const path = query.get('path');
+        if (path) {
+          window.history.replaceState(null, '', '/iam-mml' + path);
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

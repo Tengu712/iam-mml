@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>IAM.mml</title>
+  <script>
+    const path = window.location.pathname.slice('/iam-mml'.length);
+    const query = window.location.search;
+    const hash = window.location.hash;
+    window.location.replace('/iam-mml/' + '?path=' + encodeURIComponent(path) + query.slice(1 ? '&' + query.slice(1) : '') + hash);
+  </script>
+</head>
+<body>
+</body>
+</html>
