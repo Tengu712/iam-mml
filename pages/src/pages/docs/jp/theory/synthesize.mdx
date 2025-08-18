@@ -1,3 +1,6 @@
+import { InlineMath, BlockMath } from 'react-katex'
+import 'katex/dist/katex.min.css'
+
 # シンセサイズ
 
 ## 楽器
@@ -18,16 +21,14 @@
 - リリースタイム
 
 以降の数式を単純化させるために、便宜上次の数式を定義する。
-オペレータの振幅を\\(v\\)、ADSRエンベロープの係数を\\(k(t)\\)、楽器への入力の音高(周波数)を\\(f\\)、オペレータの周波数比を\\(f_r\\)、時刻を\\(t(\\geq0)\\)、FM変調に用いる別の波を\\(m(t)\\)、オペレータの生成する波\\(w_{'{'}base{'}'}(t, m)\\)は次のように表される。
+オペレータの振幅を<InlineMath math="v" />、ADSRエンベロープの係数を<InlineMath math="k(t)" />、楽器への入力の音高(周波数)を<InlineMath math="f" />、オペレータの周波数比を<InlineMath math="f_r" />、時刻を<InlineMath math="t(\geq0)" />、FM変調に用いる別の波を<InlineMath math="m(t)" />、オペレータの生成する波<InlineMath math="w_{\text{base}}(t, m)" />は次のように表される。
 
-\\[
-  w_{'{'}base{'}'}(t, m) = v \\cdot k(t) \\cdot \\sin(2\\pi f f_r t + m(t))
-\\]
+<BlockMath math="w_{\text{base}}(t, m) = v \cdot k(t) \cdot \sin(2\pi f f_r t + m(t))" />
 
 ## アルゴリズム
 
 オペレータの組合わせ方をアルゴリズムと言う。
-オペレータは\\(N\\)分木構造に組み合わせられ、次のように評価される。
+オペレータは<InlineMath math="N" />分木構造に組み合わせられ、次のように評価される。
 
 - 葉から根にかけて順番に評価される。
 - 兄弟のオペレータはすべてAM変調される。
@@ -38,52 +39,36 @@
 ある波の周波数を別の波で変調することをFM変調と言う。
 また、変調する側のオペレータをモジュレータ、変調される側のオペレータをキャリアと言う。
 
-オペレータの振幅を\\(v\\)、オペレータの周波数比を\\(f_r\\)、楽器への入力の音高(周波数)を\\(f\\)、時刻を\\(t(\\geq0)\\)、モジュレータの生成する波を\\(w_m(t)\\)としたとき、キャリアの生成する波\\(w_c(t)\\)は次のように表される。
+オペレータの振幅を<InlineMath math="v" />、オペレータの周波数比を<InlineMath math="f_r" />、楽器への入力の音高(周波数)を<InlineMath math="f" />、時刻を<InlineMath math="t(\geq0)" />、モジュレータの生成する波を<InlineMath math="w_m(t)" />としたとき、キャリアの生成する波<InlineMath math="w_c(t)" />は次のように表される。
 
-\\[
-  w_c(t) = w_{'{'}base{'}'}(t, w_m(t))
-\\]
+<BlockMath math="w_c(t) = w_{\text{base}}(t, w_m(t))" />
 
 ## AM変調
 
 ある波の振幅を別の波で変調することをAM変調と言う。
 
-時刻を\\(t(\\geq0)\\)、対象となるオペレータの数を\\(N(>0)\\)、それぞれオペレータの生成する波を\\(w_i(t)\\)としたとき、(仮想的な)オペレータの生成する波\\(w(t)\\)は次のように表される。
+時刻を<InlineMath math="t(\geq0)" />、対象となるオペレータの数を<InlineMath math="N(>0)" />、それぞれオペレータの生成する波を<InlineMath math="w_i(t)" />としたとき、(仮想的な)オペレータの生成する波<InlineMath math="w(t)" />は次のように表される。
 
-\\[
-  w(t) = \\sum^N_{'{'}i=1{'}'} w_i(t)
-\\]
+<BlockMath math="w(t) = \sum^N_{i=1} w_i(t)" />
 
 ## ADSRエンベロープ
 
 波の時間的変化をエンベロープと言う。
 また、次の4種類のパラメータによってエンベロープを決定するものをADSRエンベロープと言う。
 
-- アタックタイム\\(a\\)：入力が始まってから係数が1になるまでの時間
-- ディケイタイム\\(d\\)：アタックタイムが経過してから係数がサステインレベルになるまでの時間
-- サステインレベル\\(s\\)：ディケイタイムが経過してから入力が終わるまでの係数
-- リリースタイム\\(r\\)：入力が終わってから係数が0になるまでの時間
+- アタックタイム<InlineMath math="a" />：入力が始まってから係数が1になるまでの時間
+- ディケイタイム<InlineMath math="d" />：アタックタイムが経過してから係数がサステインレベルになるまでの時間
+- サステインレベル<InlineMath math="s" />：ディケイタイムが経過してから入力が終わるまでの係数
+- リリースタイム<InlineMath math="r" />：入力が終わってから係数が0になるまでの時間
 
-時刻を\\(t(\\geq0)\\)、入力が終了する時刻を\\(T(\\geq t)\\)、オペレータの生成する波を\\(w(t)\\)としたとき、ADSRエンベロープの係数\\(k(t)\\)は次のように表される。
+時刻を<InlineMath math="t(\geq0)" />、入力が終了する時刻を<InlineMath math="T(\geq t)" />、オペレータの生成する波を<InlineMath math="w(t)" />としたとき、ADSRエンベロープの係数<InlineMath math="k(t)" />は次のように表される。
 
-\\[
-  k(t) =
-  \\left\\{
-    \\begin{'{'}array{'}'}{'{'}cl{'}'}
-      t/a & (t < a)\\\\
-      s + (1 - s)(1 - (t-a)/d) & (a \\leq t < a + d)\\\\
-      s & (a + d \\leq t < T) \\\\
-      s (1 - (t - T) / r) & (T \\leq t < T + r)
-    \\end{'{'}array{'}'}
-  \\right.
-\\]
+<BlockMath math="k(t) = \left\{\begin{array}{cl} t/a & (t < a)\\ s + (1 - s)(1 - (t-a)/d) & (a \leq t < a + d)\\ s & (a + d \leq t < T) \\ s (1 - (t - T) / r) & (T \leq t < T + r) \end{array}\right." />
 
 ## フィードバック
 
 オペレータが自身の出力でFM変調する機能をフィードバックと言う。
 
-時刻を\\(t(\\geq0)\\)、フィードバックの回数を\\(N\\)、\\(n\\)回フィードバックを行ったオペレータの生成する波を\\(w_n(t)\\)、\\(w_0(t)=w_{'{'}base{'}'}(t, 0)\\)としたとき、生成される波\\(w_N(t)\\)は次のように表される。
+時刻を<InlineMath math="t(\geq0)" />、フィードバックの回数を<InlineMath math="N" />、<InlineMath math="n" />回フィードバックを行ったオペレータの生成する波を<InlineMath math="w_n(t)" />、<InlineMath math="w_0(t)=w_{\text{base}}(t, 0)" />としたとき、生成される波<InlineMath math="w_N(t)" />は次のように表される。
 
-\\[
-  w_N(t)=w_{'{'}base{'}'}(t, w_{'{'}N-1{'}'}(t))
-\\]
+<BlockMath math="w_N(t)=w_{\text{base}}(t, w_{N-1}(t))" />
