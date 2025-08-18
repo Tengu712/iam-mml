@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { mdxModules } from '../pages/mdxModules.js'
 import style from './DocumentPage.module.css'
-
-const mdxModules = Object.entries(import.meta.glob('../pages/**/*.mdx')).map(([path, module]) => ({ module: module, path: path.slice(9, -4) }))
 
 function DocumentPage({ children }) {
   useEffect(() => { document.title = 'IAM.mml Docs' }, [])
@@ -19,10 +18,12 @@ function DocumentPage({ children }) {
     setHasError(false)
     window.scrollTo(0, 0);
     const path = location.pathname.replace(/^\/|\/$/g, '') || 'index'
-    mdxModules.find((n) => n.path === path)?.module()
-        .then((n) => setMdxComponent(() => n.default))
-        .catch(() => setHasError(true))
-      ?? setHasError(true)
+    const component = mdxModules[path]
+    if (component) {
+      setMdxComponent(() => component)
+    } else {
+      setHasError(true)
+    }
   }, [location])
 
   return hasError
