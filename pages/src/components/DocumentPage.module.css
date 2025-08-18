@@ -137,7 +137,7 @@
   }
 }
 
-.mdxContent * {
+.mdxContent *:not(.katex):not(.katex *) {
   all: revert;
 }
 
