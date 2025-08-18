@@ -1,5 +1,4 @@
-import { InlineMath, BlockMath } from 'react-katex'
-import 'katex/dist/katex.min.css'
+import { InlineMath, BlockMath } from '../../../../components/Math'
 
 # シンセサイズ
 
@@ -63,7 +62,14 @@ import 'katex/dist/katex.min.css'
 
 時刻を<InlineMath math="t(\geq0)" />、入力が終了する時刻を<InlineMath math="T(\geq t)" />、オペレータの生成する波を<InlineMath math="w(t)" />としたとき、ADSRエンベロープの係数<InlineMath math="k(t)" />は次のように表される。
 
-<BlockMath math="k(t) = \left\{\begin{array}{cl} t/a & (t < a)\\ s + (1 - s)(1 - (t-a)/d) & (a \leq t < a + d)\\ s & (a + d \leq t < T) \\ s (1 - (t - T) / r) & (T \leq t < T + r) \end{array}\right." />
+<BlockMath math="k(t) = \left\{
+\begin{array}{cl} 
+\frac{t}{a} & (t < a)\\ 
+s + (1 - s)\left(1 - \frac{t-a}{d}\right) & (a \leq t < a + d)\\ 
+s & (a + d \leq t < T) \\ 
+s \left(1 - \frac{t - T}{r}\right) & (T \leq t < T + r) 
+\end{array}
+\right." />
 
 ## フィードバック
 
